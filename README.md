@@ -1,4 +1,4 @@
-# 🐧 chevp.dev — Personal Dev Projects
+# 🐧 chevp.dev - Personal Dev Projects
 
 Welcome to **chevp.dev**, a collection of personal development projects focused on:
 
