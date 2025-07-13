@@ -1,6 +1,183 @@
-<html>
-  <header></header>
-  <body>
-    <h1>Hello World!</h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>chevp – Penguin Projects</title>
+  <link rel="icon" href="78725490.png" type="image/png" sizes="256x256">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --color-bg: #0a0f1c;
+      --color-primary: #1f2937;
+      --color-accent: #60c0ff;
+      --color-accent-hover: #3daeff;
+      --color-text: #f1f5f9;
+      --color-muted: #94a3b8;
+      --color-border: #334155;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #0a0f1c, #1e293b);
+      color: var(--color-text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      z-index: 0;
+      color: rgba(255, 255, 255, 0.1);
+      font-size: 1.2rem;
+      user-select: none;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: linear-gradient(to right, #0f172a, #1e293b);
+      position: relative;
+    }
+
+    header img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid var(--color-accent);
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: var(--color-muted);
+      font-size: 16px;
+    }
+
+    .section {
+      max-width: 960px;
+      margin: auto;
+      padding: 60px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section h2 {
+      text-align: center;
+      color: var(--color-accent);
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .project {
+      background-color: var(--color-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .project:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-accent);
+    }
+
+    .project h3 {
+      color: var(--color-text);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .project p {
+      font-size: 14px;
+      color: var(--color-muted);
+    }
+
+    .project a {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    .project a:hover {
+      color: var(--color-accent-hover);
+    }
+
+    footer {
+      background-color: #0a0f1c;
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+      font-size: 14px;
+      border-top: 1px solid var(--color-border);
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    for (let i = 0; i < 40; i++) {
+      const snowflake = document.createElement('div');
+      snowflake.className = 'snowflake';
+      snowflake.textContent = '❄';
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      snowflake.style.animationDuration = (Math.random() * 20 + 10) + 's';
+      snowflake.style.animationDelay = (Math.random() * 10) + 's';
+      document.body.appendChild(snowflake);
+    }
+  </script>
+
+  <header>
+    <img src="78725490.png" alt="chevp profile pic">
+    <h1>chevp</h1>
+    <p>Personal Dev Projects | Arctic Code Adventures 🐧</p>
+  </header>
+
+  <section class="section">
+    <h2>GitHub Projects</h2>
+    <div class="projects">
+      <div class="project">
+        <h3>ECS Studio</h3>
+        <p>Visual configuration & structured asset management for ECS systems.</p>
+        <a href="https://github.com/chevp/ecs-studio" target="_blank">GitHub Repo →</a>
+      </div>
+      <div class="project">
+        <h3>vulkan-playground</h3>
+        <p>Experimentation with Vulkan rendering pipelines and custom shaders.</p>
+        <a href="https://github.com/chevp/vulkan-playground" target="_blank">GitHub Repo →</a>
+      </div>
+      <div class="project">
+        <h3>tracy-plugins</h3>
+        <p>Custom profiling tools built around Tracy, tailored for embedded analysis.</p>
+        <a href="https://github.com/chevp/tracy-plugins" target="_blank">GitHub Repo →</a>
+      </div>
+      <!-- Weitere Projekte kannst du hier einfach ergänzen -->
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 chevp – All rights reserved · <a href="https://github.com/chevp" target="_blank">GitHub Profile</a>
+  </footer>
+
+</body>
 </html>
