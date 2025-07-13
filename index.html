@@ -1,621 +1,663 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>chevp – Penguin Projects</title>
-  <link rel="icon" href="https://avatars.githubusercontent.com/u/78725490?v=4" type="image/png" sizes="256x256">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --color-bg: #0a0f1c;
-      --color-primary: #1f2937;
-      --color-accent: #60c0ff;
-      --color-accent-hover: #3daeff;
-      --color-text: #f1f5f9;
-      --color-muted: #94a3b8;
-      --color-border: #334155;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chevp – Penguin Projects</title>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/78725490?v=4" type="image/png" sizes="256x256">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --color-bg: #0a0f1c;
+            --color-primary: #1f2937;
+            --color-accent: #60c0ff;
+            --color-accent-hover: #3daeff;
+            --color-text: #f1f5f9;
+            --color-muted: #94a3b8;
+            --color-border: #334155;
+        }
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #0a0f1c, #1e293b);
-      color: var(--color-text);
-      overflow-x: hidden;
-      position: relative;
-    }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #0a0f1c, #1e293b);
+            color: var(--color-text);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      z-index: 0;
-      color: rgba(255, 255, 255, 0.1);
-      font-size: 1.2rem;
-      user-select: none;
-      animation: fall linear infinite;
-    }
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            z-index: 0;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 1.2rem;
+            user-select: none;
+            animation: fall linear infinite;
+        }
 
-    @keyframes fall {
-      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-    }
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 1;
+            }
 
-    header {
-      text-align: center;
-      padding: 80px 20px 60px;
-      background: linear-gradient(to right, #0f172a, #1e293b);
-      position: relative;
-    }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
 
-    header img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid var(--color-accent);
-      margin-bottom: 20px;
-    }
+        header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(to right, #0f172a, #1e293b);
+            position: relative;
+        }
 
-    header h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
+        header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--color-accent);
+            margin-bottom: 20px;
+        }
 
-    header p {
-      color: var(--color-muted);
-      font-size: 16px;
-    }
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
 
-    .section {
-      max-width: 960px;
-      margin: auto;
-      padding: 60px 20px;
-      position: relative;
-      z-index: 1;
-    }
+        header p {
+            color: var(--color-muted);
+            font-size: 16px;
+        }
 
-    .section h2 {
-      text-align: center;
-      color: var(--color-accent);
-      font-size: 28px;
-      margin-bottom: 30px;
-    }
+        .section {
+            max-width: 960px;
+            margin: auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
 
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 30px;
-    }
+        .section h2 {
+            text-align: center;
+            color: var(--color-accent);
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
 
-    .project {
-      background-color: var(--color-primary);
-      border: 1px solid var(--color-border);
-      border-radius: 10px;
-      padding: 20px;
-      transition: transform 0.2s ease;
-    }
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
 
-    .project:hover {
-      transform: translateY(-4px);
-      border-color: var(--color-accent);
-    }
+        .project {
+            background-color: var(--color-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+        }
 
-    .project h3 {
-      color: var(--color-text);
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+        .project:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-accent);
+        }
 
-    .project p {
-      font-size: 14px;
-      color: var(--color-muted);
-    }
+        .project h3 {
+            color: var(--color-text);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
 
-    .project a {
-      display: inline-block;
-      margin-top: 10px;
-      color: var(--color-accent);
-      text-decoration: none;
-    }
+        .project p {
+            font-size: 14px;
+            color: var(--color-muted);
+        }
 
-    .project a:hover {
-      color: var(--color-accent-hover);
-    }
+        .project a {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
 
-    a {
-      color: var(--color-accent);
-      text-decoration: none;
-    }
+        .project a:hover {
+            color: var(--color-accent-hover);
+        }
 
-    a:hover {
-      color: var(--color-accent-hover);
-    }
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
 
-    footer {
-      background-color: #0a0f1c;
-      text-align: center;
-      padding: 40px 20px;
-      color: #6b7280;
-      font-size: 14px;
-      border-top: 1px solid var(--color-border);
-    }
-  </style>
+        a:hover {
+            color: var(--color-accent-hover);
+        }
+
+        footer {
+            background-color: #0a0f1c;
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid var(--color-border);
+        }
+    </style>
 </head>
+
 <body>
 
-  <script>
-    for (let i = 0; i < 40; i++) {
-      const snowflake = document.createElement('div');
-      snowflake.className = 'snowflake';
-      snowflake.textContent = '❄';
-      snowflake.style.left = Math.random() * 100 + 'vw';
-      snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-      snowflake.style.animationDuration = (Math.random() * 20 + 10) + 's';
-      snowflake.style.animationDelay = (Math.random() * 10) + 's';
-      document.body.appendChild(snowflake);
-    }
-  </script>
+    <script>
+        for (let i = 0; i < 40; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.textContent = '❄';
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            snowflake.style.animationDuration = (Math.random() * 20 + 10) + 's';
+            snowflake.style.animationDelay = (Math.random() * 10) + 's';
+            document.body.appendChild(snowflake);
+        }
+    </script>
 
-  <header>
-    <img src="https://avatars.githubusercontent.com/u/78725490?v=4" alt="chevp profile pic">
-    <h1>chevp</h1>
-    <p>Personal Dev Projects | Arctic Code Adventures 🐧</p>
-  </header>
+    <header>
+        <img src="https://avatars.githubusercontent.com/u/78725490?v=4" alt="chevp profile pic">
+        <h1>chevp</h1>
+        <p>Personal Dev Projects | Arctic Code Adventures 🐧</p>
+    </header>
 
-  <section class="section">
-    <h2>Projects</h2>
-    <div class="projects">
-      <div class="project">
-        <h3>ECS Studio</h3>
-        <p>Visual configuration & structured asset management for ECS systems.</p>
-        <a href="https://chevp.github.io/ecs-studio-site/" target="_blank">ECS Studio →</a>
-      </div>
-      <div class="project">
-        <h3>Vulkan Playground</h3>
-        <p>Experimentation with Vulkan rendering pipelines and custom shaders.</p>
-        <a href="https://github.com/chevp/vulkan-playground" target="_blank">GitHub Repo →</a>
-      </div>
-      <div class="project">
-        <h3>Tutorials</h3>
-        <p>Curated code examples and guides on graphics, tools, and performance topics.</p>
-        <a href="https://github.com/chevp/tutorials" target="_blank">GitHub Repo →</a>
-      </div>
-      <div class="project">
-        <h3>chevp-dev</h3>
-        <p>List of all tools, configs, and setup steps for a Win11 dev environment.</p>
-        <a href="https://chevp.github.io/chevp-dev/" target="_blank">DevEnv List →</a>
-      </div>
-      <div class="project">
-      <h3>angular-three-render</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>next-three-render</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>ngx-three-scene</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>angular-threejs-websocket-quick-start</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>cross-platform-angular-vulkan</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>vulkan-grpc-renderer</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>coregfx</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>render-forge</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>scoe-cpp-renderer</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>csharp-opengl-grpc-node</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>pbr-material-dump-tool</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>blender-assets-library</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>scene-assets-library</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>scoe-assets-library</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>lunara-assets-lib</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>lunara-studio-site</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>image-assets-library</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>pbr-materials-library</h3>
-      <p>Organisation: projects | Kategorie: assets</p>
-    </div>
-    <div class="project">
-      <h3>scoe-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nebulon-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>elyrion-studio-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>silvarin-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>lunara-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>coregfx-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>kalyra-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>ad-flow-sdk</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>che-sdk-dev</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>lunara-cli</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>lunara-quickstarts</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>arcane-horizon</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>arcane-horizon-nodejs</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>scape-sphere</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>scapestation</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>scapestation-admin</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>sprite-control</h3>
-      <p>Organisation: projects | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>chevp.github.io</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>atelier-art-gold.io</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>daily-display</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>shop-front-angular-webapp</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>cross-platform-angular</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>spring-native-app</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>spring-board</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>commerce-sphere</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>shop-front-native-script</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>scoe-cpp-engine</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>scoe-node</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>orion-framework</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>creative-node</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>lunara-nexus</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>fire-mesh</h3>
-      <p>Organisation: projects | Kategorie: engine</p>
-    </div>
-    <div class="project">
-      <h3>data-morph</h3>
-      <p>Organisation: projects | Kategorie: data</p>
-    </div>
-    <div class="project">
-      <h3>nexus-data</h3>
-      <p>Organisation: projects | Kategorie: data</p>
-    </div>
-    <div class="project">
-      <h3>nexus-json-server</h3>
-      <p>Organisation: projects | Kategorie: data</p>
-    </div>
-    <div class="project">
-      <h3>rust-genomics</h3>
-      <p>Organisation: projects | Kategorie: data</p>
-    </div>
-    <div class="project">
-      <h3>biomedical</h3>
-      <p>Organisation: projects | Kategorie: data</p>
-    </div>
-    <div class="project">
-      <h3>logic-hub</h3>
-      <p>Organisation: projects | Kategorie: frameworks</p>
-    </div>
-    <div class="project">
-      <h3>ecs-hub</h3>
-      <p>Organisation: projects | Kategorie: frameworks</p>
-    </div>
-    <div class="project">
-      <h3>nimbus</h3>
-      <p>Organisation: projects | Kategorie: frameworks</p>
-    </div>
-    <div class="project">
-      <h3>hecaris</h3>
-      <p>Organisation: projects | Kategorie: frameworks</p>
-    </div>
-    <div class="project">
-      <h3>nyx-broker</h3>
-      <p>Organisation: projects | Kategorie: frameworks</p>
-    </div>
-    <div class="project">
-      <h3>verto</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>direct-dispatch</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>scoe-dashboard</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>mapping-hub</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>nexus-control</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>nexus-editor-frame</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>nexus-frame</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>public-playground-site</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>nexus-map-frame</h3>
-      <p>Organisation: projects | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>vulkan-playground</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>snow-pipe</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>ice-hub</h3>
-      <p>Organisation: projects | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>elyx-workspace</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>helix-admin</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nex-editor</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nex-host</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexura-ui</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexura-view</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nex-workspace</h3>
-      <p>Organisation: helix-two | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>quantum-rift-csharp-mongodb</h3>
-      <p>Organisation: quantum-rift | Kategorie: graphics</p>
-    </div>
-    <div class="project">
-      <h3>quantum-rift-electron-client</h3>
-      <p>Organisation: quantum-rift | Kategorie: desktop</p>
-    </div>
-    <div class="project">
-      <h3>quantum-rift-sample-csharp-backend-project</h3>
-      <p>Organisation: quantum-rift | Kategorie: backend</p>
-    </div>
-    <div class="project">
-      <h3>quantum-rift-scene-converter</h3>
-      <p>Organisation: quantum-rift | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>playvibes</h3>
-      <p>Organisation: echo | Kategorie: platform</p>
-    </div>
-    <div class="project">
-      <h3>ecs-configurator</h3>
-      <p>Organisation: echo | Kategorie: tools</p>
-    </div>
-    <div class="project">
-      <h3>ecs-studio-site</h3>
-      <p>Organisation: echo | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>quon-cli</h3>
-      <p>Organisation: echo | Kategorie: platform</p>
-    </div>
-    <div class="project">
-      <h3>ice-box</h3>
-      <p>Organisation: projects | Kategorie: platform</p>
-    </div>
-    <div class="project">
-      <h3>ecs-studio-dev</h3>
-      <p>Organisation: echo | Kategorie: tool</p>
-    </div>
-    <div class="project">
-      <h3>axon-node-site</h3>
-      <p>Organisation: echo | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>coreflux-hub</h3>
-      <p>Organisation: projects | Kategorie: web</p>
-    </div>
-    <div class="project">
-      <h3>coreflux</h3>
-      <p>Organisation: projects | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>axon-node</h3>
-      <p>Organisation: echo | Kategorie: gaming</p>
-    </div>
-    <div class="project">
-      <h3>direct-dispatch</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>logic-hub</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>scoe-dashboard</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-data</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>shop-front-angular-webapp</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>shop-front-native-script</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>cross-platform-angular</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-json-server</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>mapping-hub</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-control</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-editor-frame</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-frame</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-    <div class="project">
-      <h3>nexus-map-frame</h3>
-      <p>Organisation: echo | Kategorie: development</p>
-    </div>
-      <!-- Weitere Projekte kannst du hier einfach ergänzen -->
-    </div>
-  </section>
+    <section class="section">
+        <h2>Projects</h2>
+        <div class="projects">
+            <div class="project">
+                <h3>ECS Studio</h3>
+                <p>Visual configuration & structured asset management for ECS systems.</p>
+                <a href="https://chevp.github.io/ecs-studio-site/" target="_blank">ECS Studio →</a>
+            </div>
+            <div class="project">
+                <h3>Vulkan Playground</h3>
+                <p>Experimentation with Vulkan rendering pipelines and custom shaders.</p>
+                <a href="https://github.com/chevp/vulkan-playground" target="_blank">GitHub Repo →</a>
+            </div>
+            <div class="project">
+                <h3>Tutorials</h3>
+                <p>Curated code examples and guides on graphics, tools, and performance topics.</p>
+                <a href="https://github.com/chevp/tutorials" target="_blank">GitHub Repo →</a>
+            </div>
+            <div class="project">
+                <h3>chevp-dev</h3>
+                <p>List of all tools, configs, and setup steps for a Win11 dev environment.</p>
+                <a href="https://chevp.github.io/chevp-dev/" target="_blank">DevEnv List →</a>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Assets</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>blender-assets-library</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scene-assets-library</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scoe-assets-library</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>lunara-assets-lib</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>image-assets-library</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>pbr-materials-library</h3>
+                <p>Organisation: projects</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Data</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>data-morph</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-data</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-json-server</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>rust-genomics</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>biomedical</h3>
+                <p>Organisation: projects</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Desktop</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>quantum-rift-electron-client</h3>
+                <p>Organisation: quantum-rift</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Development</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>scoe-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nebulon-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>elyrion-studio-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>silvarin-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>lunara-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>coregfx-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>kalyra-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>ad-flow-sdk</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>che-sdk-dev</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>lunara-cli</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>lunara-quickstarts</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>elyx-workspace</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>helix-admin</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>nex-editor</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>nex-host</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>nexura-ui</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>nexura-view</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>nex-workspace</h3>
+                <p>Organisation: helix-two</p>
+            </div>
+            <div class="project">
+                <h3>coreflux</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>direct-dispatch</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>logic-hub</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>scoe-dashboard</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-data</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>shop-front-angular-webapp</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>shop-front-native-script</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>cross-platform-angular</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-json-server</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>mapping-hub</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-control</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-editor-frame</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-frame</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>nexus-map-frame</h3>
+                <p>Organisation: echo</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Engine</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>scoe-cpp-engine</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scoe-node</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>orion-framework</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>creative-node</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>lunara-nexus</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>fire-mesh</h3>
+                <p>Organisation: projects</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Frameworks</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>logic-hub</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>ecs-hub</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nimbus</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>hecaris</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nyx-broker</h3>
+                <p>Organisation: projects</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Gaming</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>arcane-horizon</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>arcane-horizon-nodejs</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scape-sphere</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scapestation</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scapestation-admin</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>sprite-control</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>axon-node</h3>
+                <p>Organisation: echo</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Graphics</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>angular-three-render</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>next-three-render</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>ngx-three-scene</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>angular-threejs-websocket-quick-start</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>cross-platform-angular-vulkan</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>vulkan-grpc-renderer</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>coregfx</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>render-forge</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scoe-cpp-renderer</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>csharp-opengl-grpc-node</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>pbr-material-dump-tool</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>vulkan-playground</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>snow-pipe</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>ice-hub</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>quantum-rift-csharp-mongodb</h3>
+                <p>Organisation: quantum-rift</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Platform</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>playvibes</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>quon-cli</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>ice-box</h3>
+                <p>Organisation: projects</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Tool</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>ecs-studio-dev</h3>
+                <p>Organisation: echo</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Tools</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>verto</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>direct-dispatch</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>scoe-dashboard</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>mapping-hub</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-control</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-editor-frame</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-frame</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>nexus-map-frame</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>quantum-rift-scene-converter</h3>
+                <p>Organisation: quantum-rift</p>
+            </div>
+            <div class="project">
+                <h3>ecs-configurator</h3>
+                <p>Organisation: echo</p>
+            </div>
+        </div>
+        <h3 style="margin-top:40px;color:var(--color-accent);">Web</h3>
+        <div class="projects">
+            <div class="project">
+                <h3>lunara-studio-site</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>chevp.github.io</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>atelier-art-gold.io</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>daily-display</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>shop-front-angular-webapp</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>cross-platform-angular</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>spring-native-app</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>spring-board</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>commerce-sphere</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>shop-front-native-script</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>public-playground-site</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <div class="project">
+                <h3>ecs-studio-site</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>axon-node-site</h3>
+                <p>Organisation: echo</p>
+            </div>
+            <div class="project">
+                <h3>coreflux-hub</h3>
+                <p>Organisation: projects</p>
+            </div>
+            <!-- Weitere Projekte kannst du hier einfach ergänzen -->
+        </div>
+    </section>
 
-  <footer>
-    &copy; 2025 chevp – All rights reserved · <a href="https://github.com/chevp" target="_blank">GitHub Profile</a>
-  </footer>
+    <footer>
+        &copy; 2025 chevp – All rights reserved · <a href="https://github.com/chevp" target="_blank">GitHub Profile</a>
+    </footer>
 
 </body>
+
 </html>
