@@ -52,8 +52,25 @@
         header {
             text-align: center;
             padding: 80px 20px 60px;
-            background: linear-gradient(to right, #0f172a, #1e293b);
+            background: url('assets/artic_landscape.png') center/cover no-repeat;
             position: relative;
+            color: #fff;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        header * {
+            position: relative;
+            z-index: 1;
         }
 
         header img {
@@ -70,7 +87,7 @@
         }
 
         header p {
-            color: var(--color-muted);
+            color: var(--color-text);
             font-size: 16px;
         }
 
