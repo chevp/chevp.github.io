@@ -13,7 +13,7 @@ Explore clean code, high-performance C++, and modern game dev utilities — all 
 - [ECS Studio](https://chevp.github.io/ecs-studio-site/)  
   Visual configuration & asset management for ECS pipelines
 
-- [tutorials](https://github.com/chevp/tutorials)  
+- [Tutorials](https://github.com/chevp/tutorials)  
   Collection of Markdown tutorials covering various programming themes and tools
 
 ## 🌐 GitHub Pages
