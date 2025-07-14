@@ -13,8 +13,8 @@ Explore clean code, high-performance C++, and modern game dev utilities — all 
 - [ECS Studio](https://chevp.github.io/ecs-studio-site/)  
   Visual configuration & asset management for ECS pipelines
 
-- [vulkan-playground](https://github.com/chevp/vulkan-playground)  
-  Real-time rendering experiments with Vulkan
+- [tutorials](https://github.com/chevp/tutorials)  
+  Collection of Markdown tutorials covering various programming themes and tools
 
 ## 🌐 GitHub Pages
 
