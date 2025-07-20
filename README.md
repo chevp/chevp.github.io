@@ -10,7 +10,7 @@ Explore clean code, high-performance C++, and modern game dev utilities — all 
 
 ## Featured Projects
 
-- [ECS Studio](https://chevp.github.io/ecs-studio-site/)  
+- [ECS Configurator](https://chevp.github.io/ecs-configurator-site/)  
   Visual configuration & asset management for ECS pipelines
 
 - [Tutorials](https://github.com/chevp/tutorials)  
