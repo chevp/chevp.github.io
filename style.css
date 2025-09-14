@@ -105,13 +105,13 @@ header p {
 .project {
     background-color: var(--color-primary);
     border: 1px solid var(--color-border);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 20px;
     transition: transform 0.2s ease;
 }
 
 .project:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     border-color: var(--color-accent);
 }
 
