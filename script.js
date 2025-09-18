@@ -133,7 +133,7 @@ const projectData = {
         { name: "commerce-sphere", desc: "Organisation: projects" },
         { name: "shop-front-native-script", desc: "Organisation: projects" },
         { name: "public-playground-site", desc: "Organisation: projects" },
-        { name: "ecs-studio-site", desc: "Organisation: echo" },
+        { name: "ecs-studio-site", desc: "Organisation: projects" },
         { name: "axon-node-site", desc: "Organisation: projects" },
         { name: "coreflux-hub", desc: "Organisation: projects" }
     ]
