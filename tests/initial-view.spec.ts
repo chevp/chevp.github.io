@@ -32,7 +32,7 @@ test.describe('Initial Page View', () => {
     await expect(projectsHeading).toBeVisible();
 
     // Check if project cards are visible
-    const projectCards = page.locator('.grid > div').first();
+    const projectCards = page.locator('.projects > div').first();
     await expect(projectCards).toBeVisible();
 
     // Check if ECS Configurator project is present

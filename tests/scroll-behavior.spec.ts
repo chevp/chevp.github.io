@@ -138,7 +138,7 @@ test.describe('Scroll Behavior - 50% Down Page', () => {
     }
 
     // Some project sections should be visible
-    const projectCards = page.locator('[class*="grid"] > div');
+    const projectCards = page.locator('.projects > div');
     await expect(projectCards.first()).toBeVisible();
 
     // Footer should not be visible yet at 50% scroll

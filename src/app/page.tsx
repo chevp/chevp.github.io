@@ -11,7 +11,7 @@ export default function Home() {
       <Snowflakes />
       <ScrollEffect />
       <Header />
-      <section className="max-w-5xl mx-auto py-15 px-5 relative z-10">
+      <section className="section">
         {Object.entries(projectData).map(([category, projects]) => (
           <ProjectSection key={category} title={category} projects={projects} />
         ))}
