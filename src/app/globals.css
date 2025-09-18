@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0a0f1c;
+  --color-primary: #1f2937;
+  --color-accent: #60c0ff;
+  --color-accent-hover: #3daeff;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-border: #334155;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #0a0f1c, #1e293b);
+  color: var(--color-text);
+  overflow-x: hidden;
+  position: relative;
+}
+
+.snowflake {
+  position: fixed;
+  top: -10px;
+  z-index: 0;
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 1.2rem;
+  user-select: none;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
