@@ -16,9 +16,31 @@ Explore clean code, high-performance C++, and modern game dev utilities — all 
 - [Tutorials](https://github.com/chevp/tutorials)  
   Collection of Markdown tutorials covering various programming themes and tools
 
+## 🚀 Quick Start
+
+### Development
+```bash
+npm install
+npm run dev
+```
+Open [http://localhost:3000/chevp.github.io/](http://localhost:3000/chevp.github.io/)
+
+### Build for Production
+```bash
+npm run build
+npm run preview
+```
+
+### Technologies
+- ⚡ **Vite** - Lightning fast development
+- 🎨 **Vanilla CSS** - Custom styling with CSS variables
+- 📱 **Responsive Design** - Mobile-first approach
+- ❄️ **Animated Snowflakes** - Custom CSS animations
+- 🌈 **Dynamic Backgrounds** - Scroll-based color transitions
+
 ## 🌐 GitHub Pages
 
-Visit the site: [https://chevp.github.io](https://chevp.github.io)  
+Visit the site: [https://chevp.github.io](https://chevp.github.io)
 Includes an interactive, snowy overview of all key projects.
 
 ---
