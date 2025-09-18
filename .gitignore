@@ -167,6 +167,7 @@ dist
 # Vite build output
 dist/
 dist-ssr/
+.vite/
 *.local
 
 # Rollup build output
