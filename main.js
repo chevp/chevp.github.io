@@ -229,6 +229,25 @@ function handleScroll() {
         rgb(${color2.r}, ${color2.g}, ${color2.b}))`;
 }
 
+// Fixed header functionality
+function handleFixedHeader() {
+    const fixedHeader = document.getElementById('fixedHeader');
+    const scrollPosition = window.pageYOffset;
+    const threshold = 200; // Show fixed header after scrolling 200px
+
+    if (scrollPosition > threshold) {
+        fixedHeader.classList.add('visible');
+    } else {
+        fixedHeader.classList.remove('visible');
+    }
+}
+
+// Combined scroll handler
+function handleScrollEffects() {
+    handleScroll(); // Original background scroll effect
+    handleFixedHeader(); // New fixed header effect
+}
+
 // Run when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
-window.addEventListener('scroll', handleScroll);
+window.addEventListener('scroll', handleScrollEffects);
