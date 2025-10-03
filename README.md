@@ -6,7 +6,7 @@ Welcome to **chevp.dev**, a collection of personal development projects focused 
 - 🖼️ Graphics and Vulkan rendering experiments  
 - 📊 Performance profiling with custom Tracy plugins  
 
-Explore clean code, high-performance C++, and modern game dev utilities — all with an arctic twist.
+Explore clean code, high-performance C++, and modern game dev utilities — all with an antarctic twist.
 
 ## Featured Projects
 
