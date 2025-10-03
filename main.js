@@ -7,7 +7,8 @@ const projectData = {
         { name: "Vulkan Playground", desc: "Experimentation with Vulkan rendering pipelines and custom shaders.", url: "https://github.com/chevp/vulkan-playground", text: "GitHub Repo →" },
         { name: "Programming Tutorials", desc: "Curated code examples and guides on graphics, tools, and performance topics.", url: "https://chevp.github.io/tutorials/", text: "Tutorials →" },
         { name: "Prompt Guide", desc: "A guide for AI prompt engineering in programming and game development.", url: "https://chevp.github.io/prompt-guide/", text: "Prompt Guide →" },
-        { name: "chevp-dev", desc: "List of all tools, configs, and setup steps for a Win11 dev environment.", url: "https://chevp.github.io/chevp-dev/", text: "DevEnv List →" }
+        { name: "chevp-dev", desc: "List of all tools, configs, and setup steps for a Win11 dev environment.", url: "https://chevp.github.io/chevp-dev/", text: "DevEnv List →" },
+        { name: "Kitty on Screen", desc: "Your adorable desktop pet companion.", url: "https://chevp.github.io/kitty-on-screen/", text: "Kitty on Screen →" }
     ],
     "Assets": [
         { name: "blender-assets-library", desc: "Organisation: projects" },
