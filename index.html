@@ -216,6 +216,20 @@
       transform: scale(1.1);
     }
 
+    /* Squircle shape - iOS/macOS style rounded square */
+    .squircle {
+      --squircle-smooth: 4; /* Higher = more rounded, lower = more square */
+      clip-path: url(#squircle-clip);
+      -webkit-clip-path: url(#squircle-clip);
+    }
+
+    /* Fallback for browsers without SVG clip-path support */
+    @supports not (clip-path: url(#squircle-clip)) {
+      .squircle {
+        border-radius: 22%;
+      }
+    }
+
     /* Hero Header Styles */
     .hero-header {
       text-align: center;
@@ -320,6 +334,15 @@
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100">
+  <!-- SVG Squircle Clip Path Definition -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <clipPath id="squircle-clip" clipPathUnits="objectBoundingBox">
+        <path d="M 0.5 0 C 0.9 0, 1 0.1, 1 0.5 C 1 0.9, 0.9 1, 0.5 1 C 0.1 1, 0 0.9, 0 0.5 C 0 0.1, 0.1 0, 0.5 0" />
+      </clipPath>
+    </defs>
+  </svg>
+
   <!-- Fixed Header (Hidden by default, shows on scroll) -->
   <div class="fixed-header diagonal-stripes" id="fixedHeader">
     <div class="fixed-header-content">
@@ -670,7 +693,7 @@
 
       card.innerHTML = `
         <div class="flex items-start justify-between mb-3">
-          <div class="w-12 h-12 rounded-lg bg-gradient-to-br ${colors.gradient} flex items-center justify-center flex-shrink-0">
+          <div class="w-12 h-12 squircle bg-gradient-to-br ${colors.gradient} flex items-center justify-center flex-shrink-0">
             <span class="material-symbols-outlined text-white text-2xl repo-icon">folder</span>
           </div>
           ${hasUrl ? `<span class="material-symbols-outlined ${colors.text}">open_in_new</span>` : ''}
