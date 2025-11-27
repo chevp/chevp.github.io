@@ -216,11 +216,16 @@
       transform: scale(1.1);
     }
 
-    /* Squircle shape - iOS/macOS style rounded square */
+    /* Squircle shape - iOS/macOS style rounded square (small - 48px icons) */
     .squircle {
-      --squircle-smooth: 4; /* Higher = more rounded, lower = more square */
       clip-path: url(#squircle-clip);
       -webkit-clip-path: url(#squircle-clip);
+    }
+
+    /* Squircle large - for bigger card items (64px+ icons) */
+    .squircle-lg {
+      clip-path: url(#squircle-clip-lg);
+      -webkit-clip-path: url(#squircle-clip-lg);
     }
 
     /* Fallback for browsers without SVG clip-path support */
@@ -228,13 +233,16 @@
       .squircle {
         border-radius: 22%;
       }
+      .squircle-lg {
+        border-radius: 24%;
+      }
     }
 
     /* Hero Header Styles */
     .hero-header {
       text-align: center;
       padding: 80px 20px 60px;
-      background: url('/assets/arctic_landscape.png') center/cover no-repeat;
+      background: url('/assets/arctic_landscape.jpg') center/cover no-repeat;
       position: relative;
       color: #fff;
       min-height: 300px;
@@ -334,11 +342,16 @@
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100">
-  <!-- SVG Squircle Clip Path Definition -->
+  <!-- SVG Squircle Clip Path Definitions -->
   <svg width="0" height="0" style="position: absolute;">
     <defs>
+      <!-- Small squircle (48px icons) - more pronounced curves -->
       <clipPath id="squircle-clip" clipPathUnits="objectBoundingBox">
         <path d="M 0.5 0 C 0.9 0, 1 0.1, 1 0.5 C 1 0.9, 0.9 1, 0.5 1 C 0.1 1, 0 0.9, 0 0.5 C 0 0.1, 0.1 0, 0.5 0" />
+      </clipPath>
+      <!-- Large squircle (64px+ icons) - rounder, more circular for bigger elements -->
+      <clipPath id="squircle-clip-lg" clipPathUnits="objectBoundingBox">
+        <path d="M 0.5 0 C 0.78 0, 1 0.22, 1 0.5 C 1 0.78, 0.78 1, 0.5 1 C 0.22 1, 0 0.78, 0 0.5 C 0 0.22, 0.22 0, 0.5 0" />
       </clipPath>
     </defs>
   </svg>
