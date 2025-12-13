@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Development Concepts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            arctic: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-purple {
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-green {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-orange {
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    .icon-box {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .flow-arrow {
+      color: rgba(59, 130, 246, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <div class="max-w-6xl mx-auto px-6 py-12">
+
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl font-extrabold gradient-text mb-4">AI Development Concepts</h1>
+      <p class="text-slate-400 text-lg max-w-3xl">
+        Architektur-Patterns und Tooling-Konzepte für AI-gestützte Softwareentwicklung.
+        MCP-Server, Behavior Trees und Markdown-basierte Governance.
+      </p>
+    </header>
+
+    <!-- Overview Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-blue-400">8</div>
+        <div class="text-slate-400 text-sm">MCP Server</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-purple-400">45+</div>
+        <div class="text-slate-400 text-sm">Slash Commands</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-green-400">11</div>
+        <div class="text-slate-400 text-sm">Behavior Rules</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-3xl font-bold text-orange-400">3.8k</div>
+        <div class="text-slate-400 text-sm">Lines of Tools</div>
+      </div>
+    </div>
+
+    <!-- Section: MCP Server -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="icon-box bg-blue-500/20">
+          <span class="material-icons text-blue-400">hub</span>
+        </div>
+        <h2 class="text-2xl font-bold gradient-text">MCP Server (Model Context Protocol)</h2>
+      </div>
+
+      <div class="glass rounded-xl p-6 mb-6">
+        <p class="text-slate-300 mb-4">
+          MCP-Server erweitern Claude um domänenspezifisches Wissen und Werkzeuge.
+          Sie stellen eine standardisierte Schnittstelle zwischen AI und Projektinfrastruktur her.
+        </p>
+
+        <div class="code-block rounded-lg p-4 mb-4">
+          <div class="text-slate-500 text-xs mb-2">// .mcp.json - Server Registry</div>
+          <pre class="text-sm text-slate-300">{
+  "mcpServers": {
+    "nuna": { "command": "node", "args": ["tools/mcp-suite/nuna-mcp"] },
+    "build-doctor": { "command": "node", "args": ["tools/mcp-suite/build-doctor-mcp"] }
+  }
+}</pre>
+        </div>
+
+        <h3 class="text-lg font-semibold text-slate-200 mb-3">Architektur-Pattern</h3>
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-300">AI Request</span>
+          <span class="material-icons flow-arrow">arrow_forward</span>
+          <span class="px-3 py-1 rounded-full bg-blue-900/50 text-blue-300">MCP Protocol</span>
+          <span class="material-icons flow-arrow">arrow_forward</span>
+          <span class="px-3 py-1 rounded-full bg-purple-900/50 text-purple-300">Tool Handler</span>
+          <span class="material-icons flow-arrow">arrow_forward</span>
+          <span class="px-3 py-1 rounded-full bg-green-900/50 text-green-300">Domain Knowledge</span>
+        </div>
+      </div>
+
+      <!-- MCP Server Grid -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="glass rounded-xl p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-icons text-blue-400">architecture</span>
+            <span class="font-semibold">arctic-mcp</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Workspace-Architektur mit 6-Layer-System</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">list-layers</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">get-dependencies</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">search-projects</span>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-icons text-purple-400">memory</span>
+            <span class="font-semibold">nuna-mcp</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">SDK-Dokumentation und Architecture Governance</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">check-architecture</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">get-module-api</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">migration-candidates</span>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-icons text-red-400">build_circle</span>
+            <span class="font-semibold">build-doctor-mcp</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">Intelligente Build-Fehler-Diagnose mit Lernfunktion</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">analyze-error</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">learn-fix</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">scan-enum-misuse</span>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-icons text-cyan-400">cable</span>
+            <span class="font-semibold">cryo-configurator-mcp</span>
+          </div>
+          <p class="text-slate-400 text-sm mb-3">IPC-Bridge zu C++ Backend via Named Pipes</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">connect</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">send-command</span>
+            <span class="px-2 py-1 rounded bg-slate-800 text-xs text-slate-400">get-status</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Behavior Trees -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="icon-box bg-purple-500/20">
+          <span class="material-icons text-purple-400">account_tree</span>
+        </div>
+        <h2 class="text-2xl font-bold gradient-purple">AI Behavior Trees (Markdown)</h2>
+      </div>
+
+      <div class="glass rounded-xl p-6 mb-6">
+        <p class="text-slate-300 mb-4">
+          Behavior Trees definieren die Verhaltensregeln der AI in Markdown-Dateien.
+          Sie steuern Entscheidungsprozesse, Workflows und Constraints.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-200 mb-3">Hierarchie</h3>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-icons text-blue-400 text-lg">folder</span>
+                <span class="text-slate-300">CLAUDE.md</span>
+                <span class="text-slate-500">- Global Rules</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm pl-6">
+                <span class="material-icons text-purple-400 text-lg">description</span>
+                <span class="text-slate-300">.claude/behavior.md</span>
+                <span class="text-slate-500">- Project Rules</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm pl-12">
+                <span class="material-icons text-green-400 text-lg">code</span>
+                <span class="text-slate-300">.claude/commands/*.md</span>
+                <span class="text-slate-500">- Actions</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold text-slate-200 mb-3">Behavior Workflow</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center text-xs">1</span>
+                <span class="text-slate-300">LESEN - Existierenden Code verstehen</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center text-xs">2</span>
+                <span class="text-slate-300">VERSTEHEN - Architektur analysieren</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center text-xs">3</span>
+                <span class="text-slate-300">PLANEN - Minimale Änderungen definieren</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center text-xs">4</span>
+                <span class="text-slate-300">UMSETZEN - Clean Code implementieren</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-blue-500/30 text-blue-400 flex items-center justify-center text-xs">5</span>
+                <span class="text-slate-300">VERIFIZIEREN - Build prüfen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block rounded-lg p-4">
+        <div class="text-slate-500 text-xs mb-2">// CLAUDE.md - Behavior Definition</div>
+        <pre class="text-sm text-slate-300">## 1. VERSTEHEN VOR SCHREIBEN
+
+### Pflicht vor jeder Code-Änderung:
+- [ ] **Existierenden Code lesen**
+- [ ] **Architektur respektieren**
+- [ ] **Abhängigkeiten prüfen**
+- [ ] **Interfaces studieren**
+
+### Verboten:
+- Code generieren ohne die Umgebung zu kennen
+- Annahmen über nicht gelesene Dateien treffen
+- Duplikate erstellen statt existierende Lösungen zu nutzen</pre>
+      </div>
+    </section>
+
+    <!-- Section: Slash Commands -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="icon-box bg-green-500/20">
+          <span class="material-icons text-green-400">terminal</span>
+        </div>
+        <h2 class="text-2xl font-bold gradient-green">Slash Commands</h2>
+      </div>
+
+      <div class="glass rounded-xl p-6 mb-6">
+        <p class="text-slate-300 mb-4">
+          Slash Commands kodieren Multi-Step-Prozeduren als ausführbare Markdown-Dateien.
+          Sie werden zur Laufzeit expandiert und als AI-Instruktionen interpretiert.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-slate-900/50 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-green-400 font-mono">/sync-repos</span>
+            </div>
+            <p class="text-slate-400 text-sm">Synchronisiert alle Git-Submodules</p>
+          </div>
+          <div class="bg-slate-900/50 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-green-400 font-mono">/get-current-state</span>
+            </div>
+            <p class="text-slate-400 text-sm">Generiert HTML-Statusseite</p>
+          </div>
+          <div class="bg-slate-900/50 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-green-400 font-mono">/clean-workspace</span>
+            </div>
+            <p class="text-slate-400 text-sm">Bereinigt Build-Artefakte</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-block rounded-lg p-4">
+        <div class="text-slate-500 text-xs mb-2">// .claude/commands/sync-repos.md</div>
+        <pre class="text-sm text-slate-300">---
+description: Clone or update all repositories from GitHub
+---
+
+## Instructions
+1. Read .gitmodules to get the list of submodules
+2. For each submodule, check if the directory exists
+3. If not exists: `git submodule add &lt;url&gt; &lt;path&gt;`
+4. If exists: `git submodule update --remote &lt;path&gt;`
+5. Report status for each repository</pre>
+      </div>
+    </section>
+
+    <!-- Section: Architecture Pattern -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="icon-box bg-orange-500/20">
+          <span class="material-icons text-orange-400">schema</span>
+        </div>
+        <h2 class="text-2xl font-bold gradient-orange">Architektur-Pattern</h2>
+      </div>
+
+      <div class="glass rounded-xl p-6">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold text-slate-200 mb-4">Komponenten-Zusammenspiel</h3>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons text-blue-400 text-xl">smart_toy</span>
+                </div>
+                <div>
+                  <div class="font-medium text-slate-200">Claude AI</div>
+                  <div class="text-slate-400 text-sm">Zentrale Verarbeitungseinheit</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-center">
+                <span class="material-icons text-slate-600">swap_vert</span>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons text-purple-400 text-xl">hub</span>
+                </div>
+                <div>
+                  <div class="font-medium text-slate-200">MCP Protocol</div>
+                  <div class="text-slate-400 text-sm">Standardisierte Tool-Schnittstelle</div>
+                </div>
+              </div>
+              <div class="flex items-center justify-center">
+                <span class="material-icons text-slate-600">swap_vert</span>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons text-green-400 text-xl">dns</span>
+                </div>
+                <div>
+                  <div class="font-medium text-slate-200">Domain MCP Server</div>
+                  <div class="text-slate-400 text-sm">Projekt-spezifisches Wissen</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold text-slate-200 mb-4">Governance-Schichten</h3>
+            <div class="space-y-3">
+              <div class="bg-slate-900/50 rounded-lg p-3 border-l-4 border-blue-500">
+                <div class="font-medium text-slate-200">Global (CLAUDE.md)</div>
+                <div class="text-slate-400 text-sm">Workspace-weite Regeln und Standards</div>
+              </div>
+              <div class="bg-slate-900/50 rounded-lg p-3 border-l-4 border-purple-500">
+                <div class="font-medium text-slate-200">Project (behavior.md)</div>
+                <div class="text-slate-400 text-sm">Projekt-spezifische Constraints</div>
+              </div>
+              <div class="bg-slate-900/50 rounded-lg p-3 border-l-4 border-green-500">
+                <div class="font-medium text-slate-200">Actions (commands/*.md)</div>
+                <div class="text-slate-400 text-sm">Ausführbare Prozeduren</div>
+              </div>
+              <div class="bg-slate-900/50 rounded-lg p-3 border-l-4 border-orange-500">
+                <div class="font-medium text-slate-200">Tools (MCP Server)</div>
+                <div class="text-slate-400 text-sm">Domänen-Wissen und APIs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Key Principles -->
+    <section class="mb-12">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="icon-box bg-cyan-500/20">
+          <span class="material-icons text-cyan-400">verified</span>
+        </div>
+        <h2 class="text-2xl font-bold text-cyan-400">Kernprinzipien</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-blue-400 mb-3">visibility</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Verstehen vor Schreiben</h3>
+          <p class="text-slate-400 text-sm">Niemals Code generieren ohne die Umgebung zu kennen.</p>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-purple-400 mb-3">rule</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Minimale Änderungen</h3>
+          <p class="text-slate-400 text-sm">Nur ändern was nötig ist. Keine Over-Engineering Lösungen.</p>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-green-400 mb-3">architecture</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Architektur respektieren</h3>
+          <p class="text-slate-400 text-sm">Bestehende Patterns und Konventionen folgen.</p>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-orange-400 mb-3">check_circle</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Build-Verifizierung</h3>
+          <p class="text-slate-400 text-sm">Nach jeder Änderung kompilieren und Fehler sofort beheben.</p>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-red-400 mb-3">block</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Keine technischen Schulden</h3>
+          <p class="text-slate-400 text-sm">Keine TODOs ohne Issue. Keine auskommentierten Blöcke.</p>
+        </div>
+
+        <div class="glass rounded-xl p-5">
+          <span class="material-icons text-cyan-400 mb-3">question_answer</span>
+          <h3 class="font-semibold text-slate-200 mb-2">Bei Unsicherheit fragen</h3>
+          <p class="text-slate-400 text-sm">Optionen aufzeigen statt Annahmen treffen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-slate-500 text-sm pt-8 border-t border-slate-800">
+      <p>AI Development Concepts - chevp Workspace</p>
+      <p class="mt-1">Generated: <span id="timestamp"></span></p>
+    </footer>
+
+  </div>
+
+  <script>
+    document.getElementById('timestamp').textContent = new Date().toLocaleDateString('de-DE', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  </script>
+</body>
+</html>
