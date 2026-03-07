@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Pflegedokumentation – UX Prototype V2</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius: 10px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-800);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ====== LOGIN SCREEN ====== */
+        .login-screen {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+            align-items: center;
+            justify-content: center;
+        }
+        .login-screen.hidden { display: none; }
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            width: 400px;
+            max-width: 90vw;
+            overflow: hidden;
+        }
+        .login-header {
+            padding: 32px 32px 24px;
+            text-align: center;
+        }
+        .login-logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        .login-tenant {
+            margin: 0 32px 16px;
+            padding: 8px 12px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .login-tenant strong { color: var(--gray-700); }
+        .login-form {
+            padding: 0 32px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+        .form-input {
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: var(--primary); }
+        .login-btn {
+            padding: 11px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login-btn:hover { background: var(--primary-dark); }
+        .login-links {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+        .login-links a { color: var(--primary); text-decoration: none; }
+        .login-role-hint {
+            margin: 0 32px 24px;
+            padding: 10px;
+            background: var(--primary-light);
+            border-radius: 8px;
+            font-size: 11px;
+            color: var(--primary-dark);
+            text-align: center;
+        }
+
+        /* ====== APP SHELL ====== */
+        .app-shell { display: none; height: 100vh; flex-direction: column; }
+        .app-shell.active { display: flex; }
+
+        /* Top Nav */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            height: 52px;
+            gap: 16px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .nav-logo {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .nav-tabs { display: flex; gap: 2px; height: 100%; overflow-x: auto; }
+        .nav-tab {
+            padding: 0 12px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .nav-tab:hover { color: var(--gray-700); }
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--gray-500);
+            white-space: nowrap;
+        }
+        .nav-avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 12px;
+        }
+        .nav-tenant-badge {
+            padding: 3px 8px;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--gray-600);
+        }
+        .nav-logout {
+            padding: 4px 10px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+        .nav-logout:hover { background: var(--gray-50); }
+
+        /* Pages */
+        .page { display: none; flex: 1; overflow: hidden; }
+        .page.active { display: flex; }
+
+        /* ====== DASHBOARD ====== */
+        .dashboard-page { flex-direction: column; overflow-y: auto; }
+        .dashboard-welcome {
+            padding: 24px 28px 0;
+        }
+        .dashboard-welcome h2 { font-size: 20px; font-weight: 700; }
+        .dashboard-welcome p { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            padding: 20px 28px;
+        }
+        .dash-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.15s;
+            border: 1px solid var(--gray-200);
+        }
+        .dash-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+        .dash-card-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .dash-card-icon.blue { background: var(--primary-light); }
+        .dash-card-icon.green { background: var(--success-light); }
+        .dash-card-icon.orange { background: var(--warning-light); }
+        .dash-card-icon.red { background: var(--danger-light); }
+        .dash-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .dash-card p { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
+        .dash-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            padding: 0 28px 20px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        .stat-label { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+        .stat-value.blue { color: var(--primary); }
+        .stat-value.green { color: var(--success); }
+        .stat-value.orange { color: var(--warning); }
+
+        /* ====== KLIENTEN ====== */
+        .klienten-page { flex-direction: column; }
+        .klienten-toolbar {
+            padding: 14px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1; max-width: 360px;
+            padding: 8px 12px 8px 34px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%239ca3af' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 10px center no-repeat;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        .toolbar-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            color: var(--gray-600);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .toolbar-btn:hover { background: var(--gray-50); }
+        .toolbar-btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+        .toolbar-btn.primary:hover { background: var(--primary-dark); }
+        .klienten-content { flex: 1; display: flex; overflow: hidden; }
+        .klienten-list {
+            width: 320px;
+            border-right: 1px solid var(--gray-200);
+            background: white;
+            overflow-y: auto;
+        }
+        .klient-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .klient-item:hover { background: var(--gray-50); }
+        .klient-item.active { background: var(--primary-light); border-left: 3px solid var(--primary); }
+        .klient-item-id { font-size: 12px; font-weight: 700; color: var(--primary); }
+        .klient-item-group { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+        .klient-item-status {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .klient-item-status.active { background: var(--success-light); color: var(--success); }
+        .klient-item-status.inactive { background: var(--gray-200); color: var(--gray-500); }
+
+        /* Klientenkarte */
+        .klientenkarte {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--gray-50);
+        }
+        .karte-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .karte-header h2 { font-size: 18px; }
+        .karte-header-sub { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+        .karte-sections { display: flex; flex-direction: column; gap: 16px; }
+        .karte-section {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+        .karte-section-title {
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .karte-field {
+            padding: 10px 16px;
+            display: flex;
+            border-bottom: 1px solid var(--gray-100);
+            gap: 8px;
+        }
+        .karte-field:last-child { border-bottom: none; }
+        .karte-field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-400);
+            min-width: 160px;
+        }
+        .karte-field-value { font-size: 13px; line-height: 1.5; }
+
+        /* ====== BERICHT ERFASSEN ====== */
+        .bericht-page { flex-direction: row; overflow: hidden; }
+        .bericht-form-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: var(--gray-50);
+        }
+        .bericht-form-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            max-width: 680px;
+        }
+        .bericht-form-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .bericht-form-header h2 { font-size: 16px; }
+        .bericht-form-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .bericht-form-row { display: flex; gap: 12px; }
+        .bericht-form-row .form-group { flex: 1; }
+        .form-select {
+            padding: 9px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            width: 100%;
+            outline: none;
+        }
+        .form-textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+            outline: none;
+            width: 100%;
+        }
+        .form-textarea:focus, .form-select:focus { border-color: var(--primary); }
+        .bericht-form-actions {
+            padding: 16px 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .bericht-form-divider {
+            border: none;
+            border-top: 1px dashed var(--gray-200);
+            margin: 4px 0;
+        }
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-400);
+            margin-bottom: -4px;
+        }
+
+        /* KI Preview Panel */
+        .bericht-preview {
+            width: 380px;
+            background: white;
+            border-left: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .preview-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .preview-content { flex: 1; overflow-y: auto; padding: 16px; }
+        .preview-section { margin-bottom: 16px; }
+        .preview-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .preview-section p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--gray-700);
+        }
+        .preview-meta {
+            padding: 12px 16px;
+            border-top: 1px solid var(--gray-200);
+            font-size: 11px;
+            color: var(--gray-400);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .preview-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .preview-badge.ai { background: #f0e6ff; color: #7c3aed; }
+        .preview-badge.saved { background: var(--success-light); color: var(--success); }
+
+        /* ====== KI-CHAT ====== */
+        .chat-page { flex-direction: row; }
+        .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .chat-header {
+            padding: 12px 20px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-header h2 { font-size: 15px; font-weight: 600; }
+        .chat-mode-toggle {
+            display: flex;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-left: 8px;
+        }
+        .chat-mode-btn {
+            padding: 5px 12px;
+            border: none;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        .chat-mode-btn.active { background: var(--primary); color: white; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .msg { max-width: 700px; display: flex; gap: 10px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+        .msg.ai { align-self: flex-start; }
+        .msg-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; flex-shrink: 0;
+        }
+        .msg.user .msg-avatar { background: var(--primary-light); color: var(--primary); }
+        .msg.ai .msg-avatar { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: white; }
+        .msg-body {
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .msg.user .msg-body { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
+        .msg.ai .msg-body { background: white; border: 1px solid var(--gray-200); border-bottom-left-radius: 4px; }
+
+        /* Structured data blocks in chat */
+        .sd {
+            margin-top: 10px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .sd-header {
+            padding: 7px 10px;
+            background: var(--gray-100);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+        }
+        .sd-row {
+            padding: 7px 10px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 8px;
+        }
+        .sd-label { font-size: 11px; font-weight: 600; color: var(--gray-400); min-width: 120px; }
+        .sd-value { font-size: 12px; color: var(--gray-700); line-height: 1.5; }
+        .tag {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .tag-danger { background: var(--danger-light); color: var(--danger); }
+        .tag-warning { background: var(--warning-light); color: var(--warning); }
+        .tag-success { background: var(--success-light); color: var(--success); }
+        .tag-info { background: var(--primary-light); color: var(--primary); }
+        .anon-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 7px;
+            background: var(--gray-100);
+            border-radius: 4px;
+            font-size: 10px;
+            color: var(--gray-500);
+        }
+        .save-ok {
+            display: flex; align-items: center; gap: 5px;
+            margin-top: 8px;
+            padding: 5px 8px;
+            background: var(--success-light);
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        /* KI-generated table in chat */
+        .ki-table {
+            margin-top: 10px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .ki-table th {
+            padding: 7px 10px;
+            text-align: left;
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            color: var(--gray-500);
+            font-size: 11px;
+        }
+        .ki-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .chat-input-area {
+            padding: 12px 20px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+        }
+        .chat-input-row { display: flex; gap: 8px; align-items: flex-end; max-width: 700px; }
+        .chat-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 13px;
+            resize: none;
+            min-height: 40px;
+            max-height: 100px;
+            font-family: inherit;
+            outline: none;
+        }
+        .chat-input:focus { border-color: var(--primary); }
+        .chat-send {
+            width: 40px; height: 40px;
+            border-radius: var(--radius);
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .chat-send:hover { background: var(--primary-dark); }
+        .quick-btns { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+        .qbtn {
+            padding: 3px 9px;
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            font-size: 11px;
+            background: white;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+        .qbtn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+        /* Chat sidebar */
+        .chat-sidebar {
+            width: 280px;
+            background: white;
+            border-left: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-head {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .sidebar-body { flex: 1; overflow-y: auto; padding: 10px; }
+        .sb-card {
+            padding: 10px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .sb-card-id { font-size: 11px; font-weight: 700; color: var(--primary); }
+        .sb-card-info { font-size: 11px; color: var(--gray-400); display: flex; gap: 10px; margin-top: 2px; }
+        .sb-vital {
+            display: flex; justify-content: space-between;
+            padding: 5px 0; border-bottom: 1px solid var(--gray-100);
+            font-size: 12px;
+        }
+        .sb-vital-label { color: var(--gray-500); }
+        .sb-vital-val { font-weight: 600; }
+        .sb-vital-val.warn { color: var(--danger); }
+        .sb-entries-title {
+            font-size: 11px; font-weight: 600; color: var(--gray-400);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin: 12px 0 6px;
+        }
+        .sb-entry {
+            padding: 6px 8px;
+            border-left: 3px solid var(--gray-200);
+            margin-bottom: 5px;
+            font-size: 11px;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+        .sb-entry.warn { border-color: var(--warning); }
+        .sb-entry.danger { border-color: var(--danger); }
+        .sb-entry-time { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
+
+        /* ====== DATENSAETZE / AUSWERTUNGEN ====== */
+        .records-page { flex-direction: column; }
+        .records-toolbar {
+            padding: 12px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-chip {
+            padding: 5px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 16px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+        .filter-chip:hover { background: var(--gray-50); }
+        .filter-chip.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+        .records-content { flex: 1; overflow-y: auto; padding: 20px 24px; }
+        .rec-table {
+            width: 100%;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-collapse: collapse;
+        }
+        .rec-table thead { background: var(--gray-50); }
+        .rec-table th {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .rec-table td {
+            padding: 10px 14px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: top;
+        }
+        .rec-table tr:hover { background: var(--gray-50); }
+        .rec-table tr.clickable { cursor: pointer; }
+        .rec-id { font-family: monospace; font-size: 11px; color: var(--primary); font-weight: 600; }
+        .rec-cat { display: flex; align-items: center; gap: 5px; }
+        .cat-dot { width: 7px; height: 7px; border-radius: 50%; }
+        .cat-dot.vital { background: var(--danger); }
+        .cat-dot.incident { background: var(--warning); }
+        .cat-dot.nutrition { background: var(--success); }
+        .cat-dot.medication { background: var(--primary); }
+        .cat-dot.activity { background: #8b5cf6; }
+
+        .records-footer {
+            padding: 10px 24px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        .export-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--gray-600);
+            display: flex; align-items: center; gap: 4px;
+        }
+        .export-btn:hover { background: var(--gray-50); }
+
+        /* ====== AUSWERTUNGEN ====== */
+        .auswertungen-page { flex-direction: column; overflow-y: auto; }
+        .ausw-header {
+            padding: 20px 28px 0;
+        }
+        .ausw-header h2 { font-size: 18px; font-weight: 700; }
+        .ausw-header p { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+        .ausw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            padding: 20px 28px;
+        }
+        .ausw-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+        .ausw-card-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ausw-card-body { padding: 16px; }
+        .ausw-list { list-style: none; }
+        .ausw-list li {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        .ausw-list li:last-child { border-bottom: none; }
+        .ausw-card-footer {
+            padding: 10px 16px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ====== DETAIL PANEL (slide-over) ====== */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 50; }
+        .overlay.active { display: block; }
+        .detail-panel {
+            position: fixed;
+            right: -500px;
+            top: 0; bottom: 0;
+            width: 500px;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+            z-index: 60;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .detail-panel.open { right: 0; }
+        .detail-top {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .detail-close {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--gray-500);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .detail-close:hover { background: var(--gray-200); }
+        .detail-body { flex: 1; overflow-y: auto; padding: 18px; }
+        .detail-sect { margin-bottom: 18px; }
+        .detail-sect-title {
+            font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--gray-400);
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .detail-f { margin-bottom: 10px; }
+        .detail-f-label { font-size: 10px; font-weight: 600; color: var(--gray-400); margin-bottom: 1px; }
+        .detail-f-value { font-size: 13px; line-height: 1.5; }
+
+        .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
+        .typing-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--gray-300); animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .chat-sidebar, .bericht-preview { display: none; }
+            .klienten-list { width: 240px; }
+        }
+        @media (max-width: 768px) {
+            .klienten-list { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- LOGIN SCREEN (Req 2.1, 5)                                        -->
+<!-- ================================================================ -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">KI-Dokumentation</div>
+            <div class="login-subtitle">Mandantenfähige Plattform für soziale Institutionen</div>
+        </div>
+        <div class="login-tenant">
+            Mandant: <strong>Wohnheim Sonnenberg</strong>
+        </div>
+        <form class="login-form" onsubmit="doLogin(event)">
+            <div class="form-group">
+                <label>E-Mail</label>
+                <input class="form-input" type="email" value="m.keller@sonnenberg.ch" required>
+            </div>
+            <div class="form-group">
+                <label>Passwort</label>
+                <input class="form-input" type="password" value="********" required>
+            </div>
+            <button type="submit" class="login-btn">Anmelden</button>
+            <div class="login-links">
+                <a href="#">Passwort vergessen?</a> &middot; <a href="#">Kontakt / Demo-Anfrage</a>
+            </div>
+        </form>
+        <div class="login-role-hint">
+            UX-Prototype – Rolle: Mitarbeitende (M. Keller, Wohngruppe B)
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- APP SHELL                                                        -->
+<!-- ================================================================ -->
+<div class="app-shell" id="appShell">
+
+<!-- Top Navigation (Req 3: Mandant sichtbar, Req 4: Rolle sichtbar) -->
+<nav class="top-nav">
+    <div class="nav-logo">KI-Doku</div>
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-page="dashboard">Dashboard</button>
+        <button class="nav-tab" data-page="klienten">Klienten</button>
+        <button class="nav-tab" data-page="bericht">Bericht erfassen</button>
+        <button class="nav-tab" data-page="chat">KI-Chat</button>
+        <button class="nav-tab" data-page="records">Datensätze</button>
+        <button class="nav-tab" data-page="auswertungen">Auswertungen</button>
+    </div>
+    <div class="nav-right">
+        <span class="nav-tenant-badge">Wohnheim Sonnenberg</span>
+        <span>M. Keller · Mitarbeitende</span>
+        <div class="nav-avatar">MK</div>
+        <button class="nav-logout" onclick="doLogout()">Abmelden</button>
+    </div>
+</nav>
+
+<!-- ================================================================ -->
+<!-- DASHBOARD (Req 12.1 Mitarbeitenden-Dashboard)                    -->
+<!-- ================================================================ -->
+<div class="page dashboard-page active" id="page-dashboard">
+    <div class="dashboard-welcome">
+        <h2>Guten Tag, M. Keller</h2>
+        <p>Wohngruppe B · Frühschicht · 07.03.2026</p>
+    </div>
+    <div class="dash-stats">
+        <div class="stat-card">
+            <div class="stat-label">Meine Klienten</div>
+            <div class="stat-value blue">6</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Berichte heute</div>
+            <div class="stat-value green">3</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Offene Krisen</div>
+            <div class="stat-value orange">1</div>
+        </div>
+    </div>
+    <div class="dashboard-grid">
+        <div class="dash-card" onclick="navTo('bericht')">
+            <div class="dash-card-icon blue">+</div>
+            <h3>Neuer Bericht</h3>
+            <p>Bericht aus Stichwörtern erfassen, KI generiert Kurzbericht</p>
+        </div>
+        <div class="dash-card" onclick="navTo('klienten')">
+            <div class="dash-card-icon green">&#9787;</div>
+            <h3>Meine Klienten</h3>
+            <p>Klientenkarten, Stammdaten und Wochenstruktur einsehen</p>
+        </div>
+        <div class="dash-card" onclick="navTo('chat')">
+            <div class="dash-card-icon orange">&#9993;</div>
+            <h3>KI-Chat</h3>
+            <p>Fragen zu Klienten stellen, Tabellen und Zusammenfassungen abrufen</p>
+        </div>
+        <div class="dash-card" onclick="navTo('records')">
+            <div class="dash-card-icon blue">&#9776;</div>
+            <h3>Meine Berichte</h3>
+            <p>Erfasste Berichte, Tagesdaten und Vorfälle durchsuchen</p>
+        </div>
+        <div class="dash-card" onclick="navTo('auswertungen')">
+            <div class="dash-card-icon green">&#9633;</div>
+            <h3>Wochenbericht erstellen</h3>
+            <p>KI-gestützter Wochenbericht aus den Tagesdaten generieren</p>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- KLIENTENVERWALTUNG (Req 6)                                       -->
+<!-- ================================================================ -->
+<div class="page klienten-page" id="page-klienten">
+    <div class="klienten-toolbar">
+        <input type="text" class="search-input" placeholder="Klienten suchen (ID, Initialen, Wohngruppe)...">
+        <button class="toolbar-btn">Wohngruppe B</button>
+        <button class="toolbar-btn">Alle Wohngruppen</button>
+    </div>
+    <div class="klienten-content">
+        <div class="klienten-list">
+            <div class="klient-item active">
+                <div class="klient-item-id">KLI-0312 · G.K.</div>
+                <div class="klient-item-group">Wohngruppe B · Bezugsp.: M. Keller</div>
+                <span class="klient-item-status active">aktiv</span>
+            </div>
+            <div class="klient-item">
+                <div class="klient-item-id">KLI-0308 · H.M.</div>
+                <div class="klient-item-group">Wohngruppe B · Bezugsp.: S. Weber</div>
+                <span class="klient-item-status active">aktiv</span>
+            </div>
+            <div class="klient-item">
+                <div class="klient-item-id">KLI-0315 · R.S.</div>
+                <div class="klient-item-group">Wohngruppe B · Bezugsp.: M. Keller</div>
+                <span class="klient-item-status active">aktiv</span>
+            </div>
+            <div class="klient-item">
+                <div class="klient-item-id">KLI-0303 · A.B.</div>
+                <div class="klient-item-group">Wohngruppe B · Bezugsp.: P. Brunner</div>
+                <span class="klient-item-status active">aktiv</span>
+            </div>
+            <div class="klient-item">
+                <div class="klient-item-id">KLI-0319 · L.F.</div>
+                <div class="klient-item-group">Wohngruppe B · Bezugsp.: M. Keller</div>
+                <span class="klient-item-status inactive">inaktiv</span>
+            </div>
+        </div>
+
+        <!-- Klientenkarte (Req 6: alle Stammdatenfelder) -->
+        <div class="klientenkarte">
+            <div class="karte-header">
+                <div>
+                    <h2>Klientenkarte: G.K.</h2>
+                    <div class="karte-header-sub">KLI-0312 · Wohngruppe B · <span class="tag tag-success">aktiv</span></div>
+                </div>
+            </div>
+            <div class="karte-sections">
+                <div class="karte-section">
+                    <div class="karte-section-title">Stammdaten</div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Klienten-ID</span>
+                        <span class="karte-field-value">KLI-0312</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Initialen / Code</span>
+                        <span class="karte-field-value">G.K.</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Wohngruppe / Bereich</span>
+                        <span class="karte-field-value">Wohngruppe B</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Bezugsperson</span>
+                        <span class="karte-field-value">M. Keller</span>
+                    </div>
+                </div>
+                <div class="karte-section">
+                    <div class="karte-section-title">Persönliche Angaben</div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Schuhgrösse</span>
+                        <span class="karte-field-value">42</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Konfektionsgrösse</span>
+                        <span class="karte-field-value">M</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Lieblingsaktivitäten</span>
+                        <span class="karte-field-value">Malen, Spaziergänge, Musik hören</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Essensvorlieben</span>
+                        <span class="karte-field-value">Spaghetti, Kartoffelgratin, Apfelkuchen</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Allergien / Unverträglichkeiten</span>
+                        <span class="karte-field-value">Laktoseintoleranz (leicht)</span>
+                    </div>
+                </div>
+                <div class="karte-section">
+                    <div class="karte-section-title">Organisation</div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Heimgehregelungen</span>
+                        <span class="karte-field-value">Heimgang Fr–So, Abholung 15:00, Rückkehr So 18:00</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Wochenstruktur / Stundenplan</span>
+                        <span class="karte-field-value">Mo: Atelier · Di: Garten · Mi: Schwimmen · Do: Atelier · Fr: freie Aktivität</span>
+                    </div>
+                    <div class="karte-field">
+                        <span class="karte-field-label">Wichtige Hinweise</span>
+                        <span class="karte-field-value">Braucht klare Tagesstruktur. Bei Reizüberflutung ruhigen Raum anbieten.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- BERICHT ERFASSEN (Req 7: Roh-Eingabe + KI-Generierung, Req 8)   -->
+<!-- ================================================================ -->
+<div class="page bericht-page" id="page-bericht">
+    <div class="bericht-form-area">
+        <div class="bericht-form-card">
+            <div class="bericht-form-header">
+                <h2>Bericht erfassen</h2>
+            </div>
+            <div class="bericht-form-body">
+                <!-- Req 7.1: Roh-Eingabe -->
+                <div class="section-label">Roh-Eingabe</div>
+                <div class="bericht-form-row">
+                    <div class="form-group">
+                        <label>Klient</label>
+                        <select class="form-select">
+                            <option>G.K. – KLI-0312</option>
+                            <option>H.M. – KLI-0308</option>
+                            <option>R.S. – KLI-0315</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Datum / Uhrzeit</label>
+                        <input class="form-input" type="datetime-local" value="2026-03-07T12:45" style="width:100%">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Situation</label>
+                    <textarea class="form-textarea" rows="2">G.K. hat nach dem Mittagessen (Spaghetti) erbrochen. War sehr blass.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Verhalten des Klienten</label>
+                    <textarea class="form-textarea" rows="2">Hat über Übelkeit geklagt, wollte sich hinlegen.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Intervention der Fachperson</label>
+                    <textarea class="form-textarea" rows="2">Nahrungskarenz angeordnet, Wasser angeboten, Vitalzeichen kontrolliert.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ergebnis / Veränderung</label>
+                    <textarea class="form-textarea" rows="2">Nach 30 Min. etwas besser, Übelkeit abnehmend. Temperatur 38.0°C.</textarea>
+                </div>
+
+                <hr class="bericht-form-divider">
+
+                <!-- Req 8: Strukturierte Tagesdaten -->
+                <div class="section-label">Strukturierte Tagesdaten</div>
+                <div class="bericht-form-row">
+                    <div class="form-group">
+                        <label>Mittagessen</label>
+                        <input class="form-input" type="text" value="Spaghetti Bolognese" style="width:100%">
+                    </div>
+                    <div class="form-group">
+                        <label>Aktivität</label>
+                        <input class="form-input" type="text" value="Atelier (Malen)" style="width:100%">
+                    </div>
+                </div>
+                <div class="bericht-form-row">
+                    <div class="form-group">
+                        <label>Heimgegangen</label>
+                        <select class="form-select">
+                            <option>Nein</option>
+                            <option>Ja</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Krise</label>
+                        <select class="form-select">
+                            <option>Nein</option>
+                            <option selected>Ja</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Stimmung / Befinden</label>
+                    <select class="form-select" style="width:100%">
+                        <option>–</option>
+                        <option>Gut</option>
+                        <option selected>Beeinträchtigt</option>
+                        <option>Schlecht</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Besondere Ereignisse</label>
+                    <textarea class="form-textarea" rows="1">Erbrechen nach Mittagessen</textarea>
+                </div>
+            </div>
+            <div class="bericht-form-actions">
+                <button class="toolbar-btn">Verwerfen</button>
+                <button class="toolbar-btn primary">KI-Bericht generieren &amp; speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Req 7.2: KI-generierter Bericht (Vorschau) -->
+    <div class="bericht-preview">
+        <div class="preview-header">
+            <span class="preview-badge ai">KI</span> Generierter Kurzbericht
+        </div>
+        <div class="preview-content">
+            <div class="preview-section">
+                <div class="preview-section-title">Situationsbeschreibung</div>
+                <p>Ich begleitete G.K. beim Mittagessen. Nach dem Verzehr von Spaghetti Bolognese erbrach sich G.K. und klagte über Übelkeit. Das Hautbild war auffallend blass.</p>
+            </div>
+            <div class="preview-section">
+                <div class="preview-section-title">Leistungsbeschreibung</div>
+                <p>Ich ordnete eine Nahrungskarenz von zwei Stunden an und bot G.K. Wasser an. Ich kontrollierte die Vitalzeichen und stellte eine leicht erhöhte Temperatur von 38.0°C fest.</p>
+            </div>
+            <div class="preview-section">
+                <div class="preview-section-title">Wirkung</div>
+                <p>Nach 30 Minuten Ruhezeit berichtete G.K. über eine Abnahme der Übelkeit. Die erhöhte Temperatur wird weiter beobachtet.</p>
+            </div>
+        </div>
+        <div class="preview-meta">
+            <span><span class="preview-badge ai">KI</span> Professionelle agogische Sprache · Ich-Form · Neutral</span>
+            <span><span class="preview-badge saved">Gespeichert</span> Rohdaten + KI-Bericht · 07.03.2026 12:45 · M. Keller · Mandant: Sonnenberg</span>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- KI-CHAT (Req 9, 11)                                              -->
+<!-- ================================================================ -->
+<div class="page chat-page" id="page-chat">
+    <div class="chat-main">
+        <div class="chat-header">
+            <h2>KI-Chat</h2>
+            <select class="form-select" style="width:auto" id="chatKlientSelect">
+                <option value="single">Einzelner Klient: G.K.</option>
+                <option value="multi">Alle Klienten (Wohngruppe B)</option>
+            </select>
+            <!-- Req 11: Single vs Multi-Klient Toggle -->
+            <div class="chat-mode-toggle">
+                <button class="chat-mode-btn active" data-mode="single">Einzeln</button>
+                <button class="chat-mode-btn" data-mode="multi">Mehrere</button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- System -->
+            <div class="msg ai">
+                <div class="msg-avatar">KI</div>
+                <div class="msg-body">
+                    Guten Tag, M. Keller. Ich kann Fragen zu Klientendaten, Berichten und Tagesdaten beantworten.<br><br>
+                    Ich greife auf: <strong>Stammdaten</strong>, <strong>strukturierte Tagesdaten</strong> und <strong>Berichte</strong> zu.<br>
+                    Aktuell: <strong>G.K. (KLI-0312)</strong>
+                </div>
+            </div>
+
+            <!-- Req 9.2: Beispiel – Freitextfrage -->
+            <div class="msg user">
+                <div class="msg-avatar">MK</div>
+                <div class="msg-body">G.K. hat nach dem Mittagessen Spaghetti gegessen und hat danach erbrochen. War sehr blass und hat über Übelkeit geklagt.</div>
+            </div>
+
+            <!-- KI mit Situationsbeschrieb / Wirkung / Nutzen -->
+            <div class="msg ai">
+                <div class="msg-avatar">KI</div>
+                <div class="msg-body">
+                    Ich habe den Vorfall erfasst und strukturiert dokumentiert:
+
+                    <div class="sd">
+                        <div class="sd-header">Dokumentations-Datensatz #DOK-2026-0307-001</div>
+                        <div class="sd-row">
+                            <span class="sd-label">Kennung</span>
+                            <span class="sd-value"><span class="anon-badge">KLI-0312 (G.K.)</span></span>
+                        </div>
+                        <div class="sd-row">
+                            <span class="sd-label">Kategorie</span>
+                            <span class="sd-value"><span class="tag tag-warning">Erbrechen / GI-Trakt</span></span>
+                        </div>
+                        <div class="sd-row">
+                            <span class="sd-label">Situationsbeschreibung</span>
+                            <span class="sd-value">Klient hat nach dem Mittagessen (Spaghetti) erbrochen. Subjektive Beschwerden: Übelkeit. Beobachtung: Blasses Hautbild.</span>
+                        </div>
+                        <div class="sd-row">
+                            <span class="sd-label">Leistungsbeschreibung</span>
+                            <span class="sd-value">Vorfall dokumentiert, Vitalzeichen-Kontrolle empfohlen, Nahrungskarenz eingeleitet.</span>
+                        </div>
+                        <div class="sd-row">
+                            <span class="sd-label">Wirkung</span>
+                            <span class="sd-value">Akute gastrointestinale Reaktion. Überwachung empfohlen. Mögliche Ursachen: Unverträglichkeit, Infekt.</span>
+                        </div>
+                    </div>
+
+                    <div class="save-ok">&#10003; Datensatz gespeichert – einsehbar unter «Datensätze»</div>
+                </div>
+            </div>
+
+            <!-- Req 9.2: Frage nach Stammdaten -->
+            <div class="msg user">
+                <div class="msg-avatar">MK</div>
+                <div class="msg-body">Wie lautet die Schuhgrösse von G.K.?</div>
+            </div>
+
+            <div class="msg ai">
+                <div class="msg-avatar">KI</div>
+                <div class="msg-body">
+                    Die Schuhgrösse von G.K. (KLI-0312) ist <strong>42</strong>.<br>
+                    <span style="font-size:11px;color:var(--gray-400);">Quelle: Stammdaten / Klientenkarte</span>
+                </div>
+            </div>
+
+            <!-- Req 9.2: Tabellen-Ausgabe -->
+            <div class="msg user">
+                <div class="msg-avatar">MK</div>
+                <div class="msg-body">Mach mir eine Tabelle aller Mittagessen von G.K. im März.</div>
+            </div>
+
+            <div class="msg ai">
+                <div class="msg-avatar">KI</div>
+                <div class="msg-body">
+                    Hier die Mittagessen von G.K. im März 2026:
+
+                    <table class="ki-table">
+                        <thead>
+                            <tr><th>Datum</th><th>Mittagessen</th><th>Bemerkung</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>01.03.</td><td>Kartoffelgratin</td><td>–</td></tr>
+                            <tr><td>02.03.</td><td>Reis mit Gemüse</td><td>–</td></tr>
+                            <tr><td>03.03.</td><td>Spaghetti Bolognese</td><td>–</td></tr>
+                            <tr><td>04.03.</td><td>Fischstäbchen</td><td>–</td></tr>
+                            <tr><td>05.03.</td><td>Poulet mit Nudeln</td><td>–</td></tr>
+                            <tr><td>06.03.</td><td>Kartoffelsuppe</td><td>Nicht aufgegessen</td></tr>
+                            <tr><td>07.03.</td><td>Spaghetti Bolognese</td><td><span class="tag tag-danger">Erbrechen</span></td></tr>
+                        </tbody>
+                    </table>
+                    <span style="font-size:11px;color:var(--gray-400);">Quelle: Strukturierte Tagesdaten · 7 Einträge gefunden</span>
+                </div>
+            </div>
+
+            <!-- Req 11: Multi-Klienten-Frage -->
+            <div class="msg user">
+                <div class="msg-avatar">MK</div>
+                <div class="msg-body">Welche Klienten hatten im März Krisen?</div>
+            </div>
+
+            <div class="msg ai">
+                <div class="msg-avatar">KI</div>
+                <div class="msg-body">
+                    Krisenübersicht Wohngruppe B, März 2026:
+
+                    <table class="ki-table">
+                        <thead>
+                            <tr><th>Klient</th><th>Anzahl Krisen</th><th>Letzte Krise</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>G.K. (KLI-0312)</td><td>1</td><td>07.03. – Erbrechen</td></tr>
+                            <tr><td>A.B. (KLI-0303)</td><td>2</td><td>05.03. – Verweigerung Mittagessen</td></tr>
+                            <tr><td>R.S. (KLI-0315)</td><td>0</td><td>–</td></tr>
+                            <tr><td>H.M. (KLI-0308)</td><td>0</td><td>–</td></tr>
+                        </tbody>
+                    </table>
+                    <span style="font-size:11px;color:var(--gray-400);">Quelle: Strukturierte Tagesdaten + Berichte · Wohngruppe B</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="chat-input-row">
+                <textarea class="chat-input" id="chatInput" placeholder="Frage stellen oder Vorfall schildern..." rows="1"></textarea>
+                <button class="chat-send" id="sendBtn">&#10148;</button>
+            </div>
+            <div class="quick-btns">
+                <button class="qbtn" data-text="Was hat G.K. heute gegessen?">Ernährung abfragen</button>
+                <button class="qbtn" data-text="Zeig mir den Stundenplan von G.K.">Stundenplan</button>
+                <button class="qbtn" data-text="Welche Krisen hatte G.K. letzten Monat?">Krisen</button>
+                <button class="qbtn" data-text="Wochenbericht für G.K. erstellen">Wochenbericht</button>
+                <button class="qbtn" data-text="Vergleiche alle Klienten bezüglich Mittagessenverweigerung">Vergleich</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar: Klienten-Kontext -->
+    <aside class="chat-sidebar">
+        <div class="sidebar-head">Klienten-Kontext</div>
+        <div class="sidebar-body">
+            <div class="sb-card">
+                <div class="sb-card-id">KLI-0312 (G.K.)</div>
+                <div class="sb-card-info">
+                    <span>WG B</span>
+                    <span>Bezugsp.: M. Keller</span>
+                </div>
+            </div>
+            <div style="margin-top:8px">
+                <div class="sb-vital">
+                    <span class="sb-vital-label">Temperatur</span>
+                    <span class="sb-vital-val warn">38.0°C</span>
+                </div>
+                <div class="sb-vital">
+                    <span class="sb-vital-label">Stimmung</span>
+                    <span class="sb-vital-val">Beeinträchtigt</span>
+                </div>
+                <div class="sb-vital">
+                    <span class="sb-vital-label">Krise heute</span>
+                    <span class="sb-vital-val warn">Ja</span>
+                </div>
+                <div class="sb-vital">
+                    <span class="sb-vital-label">Heimgegangen</span>
+                    <span class="sb-vital-val">Nein</span>
+                </div>
+            </div>
+
+            <div class="sb-entries-title">Letzte Einträge</div>
+            <div class="sb-entry danger">
+                <strong>Erbrechen nach Mittagessen</strong><br>Spaghetti, Blässe, Übelkeit
+                <div class="sb-entry-time">Heute, 12:45</div>
+            </div>
+            <div class="sb-entry warn">
+                <strong>Temperatur 38.0°C</strong><br>Im Kontext Erbrechen
+                <div class="sb-entry-time">Heute, 14:20</div>
+            </div>
+            <div class="sb-entry">
+                <strong>Atelier (Malen)</strong><br>Teilnahme, ruhig gearbeitet
+                <div class="sb-entry-time">Heute, 09:00</div>
+            </div>
+
+            <div class="sb-entries-title">Stammdaten (Schnellzugriff)</div>
+            <div class="sb-entry">
+                <strong>Allergien:</strong> Laktoseintoleranz (leicht)<br>
+                <strong>Essensvorlieben:</strong> Spaghetti, Kartoffelgratin<br>
+                <strong>Heimgehen:</strong> Fr–So
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- ================================================================ -->
+<!-- DATENSÄTZE (Req 10, 15, 16)                                      -->
+<!-- ================================================================ -->
+<div class="page records-page" id="page-records">
+    <div class="records-toolbar">
+        <input type="text" class="search-input" placeholder="Datensätze durchsuchen (ID, Klient, Stichwort)...">
+        <button class="filter-chip active">Alle</button>
+        <button class="filter-chip"><span class="cat-dot incident"></span> Vorfälle</button>
+        <button class="filter-chip"><span class="cat-dot vital"></span> Vitalwerte</button>
+        <button class="filter-chip"><span class="cat-dot nutrition"></span> Ernährung</button>
+        <button class="filter-chip"><span class="cat-dot medication"></span> Medikamente</button>
+        <button class="filter-chip"><span class="cat-dot activity"></span> Aktivitäten</button>
+    </div>
+    <div class="records-content">
+        <table class="rec-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Datum / Zeit</th>
+                    <th>Klient</th>
+                    <th>Kategorie</th>
+                    <th>Situationsbeschreibung</th>
+                    <th>Erfasst durch</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="clickable" onclick="openDetail('dok001')">
+                    <td><span class="rec-id">DOK-2026-0307-001</span></td>
+                    <td>07.03.2026 12:45</td>
+                    <td><span class="anon-badge">KLI-0312</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot incident"></span>Erbrechen / GI-Trakt</div></td>
+                    <td>Erbrechen nach Mittagessen (Spaghetti). Blässe, Übelkeit.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('vit004')">
+                    <td><span class="rec-id">VIT-2026-0307-004</span></td>
+                    <td>07.03.2026 14:20</td>
+                    <td><span class="anon-badge">KLI-0312</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot vital"></span>Vitalwerte</div></td>
+                    <td>Temperatur 38.0°C. Korrelation mit Erbrechen-Vorfall.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('ern002')">
+                    <td><span class="rec-id">TAG-2026-0307-002</span></td>
+                    <td>07.03.2026 12:00</td>
+                    <td><span class="anon-badge">KLI-0312</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot nutrition"></span>Tagesdaten</div></td>
+                    <td>Mittagessen: Spaghetti Bolognese. Aktivität: Atelier. Krise: Ja.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('akt003')">
+                    <td><span class="rec-id">TAG-2026-0307-003</span></td>
+                    <td>07.03.2026 09:00</td>
+                    <td><span class="anon-badge">KLI-0312</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot activity"></span>Aktivität</div></td>
+                    <td>Atelier (Malen), ruhig teilgenommen.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable">
+                    <td><span class="rec-id">DOK-2026-0306-012</span></td>
+                    <td>06.03.2026 15:00</td>
+                    <td><span class="anon-badge">KLI-0312</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot activity"></span>Mobilisation</div></td>
+                    <td>Spaziergang im Garten, stabil. Dauer: 15 Min.</td>
+                    <td>P. Brunner</td>
+                </tr>
+                <tr class="clickable">
+                    <td><span class="rec-id">TAG-2026-0306-008</span></td>
+                    <td>06.03.2026 12:00</td>
+                    <td><span class="anon-badge">KLI-0308</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot nutrition"></span>Tagesdaten</div></td>
+                    <td>Mittagessen: Kartoffelsuppe. Heimgegangen: Nein. Stimmung: Gut.</td>
+                    <td>S. Weber</td>
+                </tr>
+                <tr class="clickable">
+                    <td><span class="rec-id">DOK-2026-0305-005</span></td>
+                    <td>05.03.2026 11:30</td>
+                    <td><span class="anon-badge">KLI-0303</span></td>
+                    <td><div class="rec-cat"><span class="cat-dot incident"></span>Krise</div></td>
+                    <td>Verweigerung Mittagessen. Auslöser: Lärm in der Gruppe.</td>
+                    <td>P. Brunner</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Req 16: Export -->
+    <div class="records-footer">
+        <span>7 Datensätze · Mandant: Wohnheim Sonnenberg</span>
+        <div style="display:flex;gap:6px">
+            <button class="export-btn">PDF</button>
+            <button class="export-btn">CSV</button>
+            <button class="export-btn">DOCX</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- AUSWERTUNGEN (Req 10)                                            -->
+<!-- ================================================================ -->
+<div class="page auswertungen-page" id="page-auswertungen">
+    <div class="ausw-header">
+        <h2>Auswertungen</h2>
+        <p>Automatische Berichte und Analysen für freigegebene Klienten</p>
+    </div>
+    <div class="ausw-grid">
+        <!-- Req 10.1: Wochenbericht -->
+        <div class="ausw-card">
+            <div class="ausw-card-header">Wochenbericht · G.K. · KW 10</div>
+            <div class="ausw-card-body">
+                <ul class="ausw-list">
+                    <li><span>Berichte erfasst</span><strong>5</strong></li>
+                    <li><span>Krisen</span><strong style="color:var(--warning)">1</strong></li>
+                    <li><span>Heimgänge</span><strong>1 (Fr–So)</strong></li>
+                    <li><span>Aktivitäten</span><strong>4</strong></li>
+                    <li><span>Stimmung (Durchschnitt)</span><strong>Beeinträchtigt</strong></li>
+                </ul>
+            </div>
+            <div class="ausw-card-footer">
+                <button class="toolbar-btn" style="font-size:12px;padding:5px 10px">KI-Zusammenfassung</button>
+                <button class="export-btn">PDF</button>
+            </div>
+        </div>
+
+        <!-- Req 10.2: Tabelle Mahlzeiten -->
+        <div class="ausw-card">
+            <div class="ausw-card-header">Mahlzeiten · G.K. · März 2026</div>
+            <div class="ausw-card-body">
+                <ul class="ausw-list">
+                    <li><span>Spaghetti</span><strong>2x</strong></li>
+                    <li><span>Kartoffelgratin</span><strong>1x</strong></li>
+                    <li><span>Reis mit Gemüse</span><strong>1x</strong></li>
+                    <li><span>Fischstäbchen</span><strong>1x</strong></li>
+                    <li><span>Poulet mit Nudeln</span><strong>1x</strong></li>
+                    <li><span>Kartoffelsuppe</span><strong>1x</strong></li>
+                </ul>
+            </div>
+            <div class="ausw-card-footer">
+                <button class="export-btn">CSV</button>
+            </div>
+        </div>
+
+        <!-- Req 10.3: Krisenanalyse -->
+        <div class="ausw-card">
+            <div class="ausw-card-header">Krisenübersicht · Wohngruppe B · März</div>
+            <div class="ausw-card-body">
+                <ul class="ausw-list">
+                    <li><span>G.K. (KLI-0312)</span><strong style="color:var(--warning)">1 Krise</strong></li>
+                    <li><span>A.B. (KLI-0303)</span><strong style="color:var(--danger)">2 Krisen</strong></li>
+                    <li><span>R.S. (KLI-0315)</span><strong style="color:var(--success)">0</strong></li>
+                    <li><span>H.M. (KLI-0308)</span><strong style="color:var(--success)">0</strong></li>
+                </ul>
+            </div>
+            <div class="ausw-card-footer">
+                <button class="toolbar-btn" style="font-size:12px;padding:5px 10px">KI-Analyse</button>
+                <button class="export-btn">PDF</button>
+            </div>
+        </div>
+
+        <!-- Req 10.3: Heimgehzeiten -->
+        <div class="ausw-card">
+            <div class="ausw-card-header">Heimgehzeiten · G.K. · März 2026</div>
+            <div class="ausw-card-body">
+                <ul class="ausw-list">
+                    <li><span>Fr 28.02. – So 02.03.</span><strong>15:00 / 18:00</strong></li>
+                    <li><span>Fr 07.03. – So 09.03.</span><strong>geplant</strong></li>
+                </ul>
+            </div>
+            <div class="ausw-card-footer">
+                <button class="export-btn">CSV</button>
+            </div>
+        </div>
+
+        <!-- Kurzbericht -->
+        <div class="ausw-card">
+            <div class="ausw-card-header">Tagesbericht · 07.03.2026</div>
+            <div class="ausw-card-body">
+                <ul class="ausw-list">
+                    <li><span>Berichte gesamt</span><strong>4</strong></li>
+                    <li><span>Klienten betroffen</span><strong>2</strong></li>
+                    <li><span>Vorfälle</span><strong style="color:var(--warning)">1</strong></li>
+                    <li><span>Erfasser</span><strong>M. Keller, S. Weber</strong></li>
+                </ul>
+            </div>
+            <div class="ausw-card-footer">
+                <button class="toolbar-btn" style="font-size:12px;padding:5px 10px">KI-Zusammenfassung</button>
+                <button class="export-btn">PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- DETAIL PANEL (slide-over for records)                            -->
+<!-- ================================================================ -->
+<div class="overlay" id="overlay"></div>
+<div class="detail-panel" id="detailPanel">
+    <div class="detail-top">
+        <div>
+            <span class="rec-id" id="detailId">DOK-2026-0307-001</span>
+            <span class="anon-badge" style="margin-left:6px">Anonymisiert</span>
+        </div>
+        <button class="detail-close" onclick="closeDetail()">&#10005;</button>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+</div>
+
+</div><!-- /app-shell -->
+
+<script>
+    // Login
+    function doLogin(e) {
+        e.preventDefault();
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('appShell').classList.add('active');
+    }
+    function doLogout() {
+        document.getElementById('appShell').classList.remove('active');
+        document.getElementById('loginScreen').classList.remove('hidden');
+    }
+
+    // Navigation
+    function navTo(page) {
+        document.querySelectorAll('.nav-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.page === page);
+        });
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+    }
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => navTo(tab.dataset.page));
+    });
+
+    // Chat mode toggle
+    document.querySelectorAll('.chat-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.chat-mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Chat input
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+    });
+
+    document.querySelectorAll('.qbtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            chatInput.value = btn.dataset.text;
+            chatInput.focus();
+            chatInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    const chatMessages = document.getElementById('chatMessages');
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        const userMsg = document.createElement('div');
+        userMsg.className = 'msg user';
+        userMsg.innerHTML = `<div class="msg-avatar">MK</div><div class="msg-body">${escapeHtml(text)}</div>`;
+        chatMessages.appendChild(userMsg);
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        const typing = document.createElement('div');
+        typing.className = 'msg ai';
+        typing.innerHTML = `<div class="msg-avatar">KI</div><div class="msg-body"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+        chatMessages.appendChild(typing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            typing.remove();
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'msg ai';
+            aiMsg.innerHTML = `<div class="msg-avatar">KI</div><div class="msg-body">
+                Ich habe Ihre Eingabe verarbeitet.
+                <div class="sd">
+                    <div class="sd-header">Verarbeitung</div>
+                    <div class="sd-row"><span class="sd-label">Eingabe</span><span class="sd-value">${escapeHtml(text)}</span></div>
+                    <div class="sd-row"><span class="sd-label">Status</span><span class="sd-value"><span class="tag tag-info">KI-Analyse</span></span></div>
+                </div>
+                <div class="save-ok">&#10003; Datensatz angelegt</div>
+                <em style="font-size:11px;color:var(--gray-400);display:block;margin-top:6px;">(UX-Prototype – in Produktion erscheint hier die vollständige KI-Antwort)</em>
+            </div>`;
+            chatMessages.appendChild(aiMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1500);
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+
+    function escapeHtml(text) {
+        const d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
+    }
+
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Detail panel
+    const detailRecords = {
+        dok001: {
+            id: 'DOK-2026-0307-001',
+            sections: [
+                { title: 'Identifikation', fields: [
+                    { label: 'Klienten-ID', value: 'KLI-0312 (G.K.)' },
+                    { label: 'Wohngruppe', value: 'B' },
+                    { label: 'Mandant', value: 'Wohnheim Sonnenberg' },
+                ]},
+                { title: 'Rohdaten (Eingabe)', fields: [
+                    { label: 'Situation', value: 'G.K. hat nach dem Mittagessen (Spaghetti) erbrochen. War sehr blass.' },
+                    { label: 'Verhalten', value: 'Hat über Übelkeit geklagt, wollte sich hinlegen.' },
+                    { label: 'Intervention', value: 'Nahrungskarenz angeordnet, Wasser angeboten, Vitalzeichen kontrolliert.' },
+                    { label: 'Ergebnis', value: 'Nach 30 Min. etwas besser, Übelkeit abnehmend. Temperatur 38.0°C.' },
+                ]},
+                { title: 'KI-generierter Bericht', fields: [
+                    { label: 'Situationsbeschreibung', value: 'Ich begleitete G.K. beim Mittagessen. Nach dem Verzehr von Spaghetti Bolognese erbrach sich G.K. und klagte über Übelkeit. Das Hautbild war auffallend blass.' },
+                    { label: 'Leistungsbeschreibung', value: 'Ich ordnete eine Nahrungskarenz von zwei Stunden an und bot G.K. Wasser an. Ich kontrollierte die Vitalzeichen und stellte eine leicht erhöhte Temperatur von 38.0°C fest.' },
+                    { label: 'Wirkung', value: 'Nach 30 Minuten Ruhezeit berichtete G.K. über eine Abnahme der Übelkeit. Die erhöhte Temperatur wird weiter beobachtet.' },
+                ]},
+                { title: 'Strukturierte Tagesdaten', fields: [
+                    { label: 'Mittagessen', value: 'Spaghetti Bolognese' },
+                    { label: 'Aktivität', value: 'Atelier (Malen)' },
+                    { label: 'Krise', value: '<span class="tag tag-warning">Ja</span>' },
+                    { label: 'Stimmung', value: 'Beeinträchtigt' },
+                    { label: 'Heimgegangen', value: 'Nein' },
+                ]},
+                { title: 'Metadaten', fields: [
+                    { label: 'Erfasst durch', value: 'M. Keller' },
+                    { label: 'Datum / Uhrzeit', value: '07.03.2026, 12:45' },
+                    { label: 'Mandant', value: 'Wohnheim Sonnenberg' },
+                ]},
+            ]
+        },
+        vit004: {
+            id: 'VIT-2026-0307-004',
+            sections: [
+                { title: 'Identifikation', fields: [
+                    { label: 'Klienten-ID', value: 'KLI-0312 (G.K.)' },
+                ]},
+                { title: 'Vitalwerte', fields: [
+                    { label: 'Temperatur', value: '<span class="tag tag-warning">38.0°C – leicht erhöht</span>' },
+                ]},
+                { title: 'KI-generierter Bericht', fields: [
+                    { label: 'Situationsbeschreibung', value: 'Erhöhte Temperatur im Kontext des Erbrechens-Vorfalls (DOK-2026-0307-001).' },
+                    { label: 'Leistungsbeschreibung', value: 'Temperaturmessung durchgeführt und dokumentiert.' },
+                    { label: 'Wirkung', value: 'Subfebrile Temperatur + Erbrechen deuten auf möglichen gastrointestinalen Infekt hin.' },
+                ]},
+                { title: 'Metadaten', fields: [
+                    { label: 'Erfasst durch', value: 'M. Keller' },
+                    { label: 'Datum / Uhrzeit', value: '07.03.2026, 14:20' },
+                ]},
+            ]
+        }
+    };
+
+    function openDetail(key) {
+        const record = detailRecords[key];
+        const body = document.getElementById('detailBody');
+        if (!record) {
+            document.getElementById('detailId').textContent = '–';
+            body.innerHTML = '<p style="color:var(--gray-400);padding:16px;">Detail nicht im Prototyp hinterlegt.</p>';
+        } else {
+            document.getElementById('detailId').textContent = record.id;
+            let html = '';
+            for (const s of record.sections) {
+                html += `<div class="detail-sect"><div class="detail-sect-title">${s.title}</div>`;
+                for (const f of s.fields) {
+                    html += `<div class="detail-f"><div class="detail-f-label">${f.label}</div><div class="detail-f-value">${f.value}</div></div>`;
+                }
+                html += '</div>';
+            }
+            body.innerHTML = html;
+        }
+        document.getElementById('detailPanel').classList.add('open');
+        document.getElementById('overlay').classList.add('active');
+    }
+    function closeDetail() {
+        document.getElementById('detailPanel').classList.remove('open');
+        document.getElementById('overlay').classList.remove('active');
+    }
+    document.getElementById('overlay').addEventListener('click', closeDetail);
+</script>
+</body>
+</html>
