@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Pflegedokumentation – UX Prototype</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --warning: #d97706;
+            --warning-light: #fef3c7;
+            --danger: #dc2626;
+            --danger-light: #fee2e2;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-800);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+            gap: 24px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo svg { width: 24px; height: 24px; }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            height: 100%;
+        }
+
+        .nav-tab {
+            padding: 0 16px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--gray-500);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover { color: var(--gray-700); }
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-tab svg { width: 18px; height: 18px; }
+
+        .nav-user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .nav-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Pages */
+        .page { display: none; flex: 1; overflow: hidden; }
+        .page.active { display: flex; }
+
+        /* ==================== CHAT PAGE ==================== */
+        .chat-page {
+            flex-direction: row;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .patient-select {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 720px;
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message.ai { align-self: flex-start; }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai .message-content {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-bottom-left-radius: 4px;
+        }
+
+        .structured-data {
+            margin-top: 12px;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .structured-data-header {
+            padding: 8px 12px;
+            background: var(--gray-100);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .structured-field {
+            padding: 8px 12px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 8px;
+        }
+
+        .structured-field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            min-width: 130px;
+            padding-top: 2px;
+        }
+
+        .structured-field-value {
+            font-size: 13px;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .tag-danger { background: var(--danger-light); color: var(--danger); }
+        .tag-warning { background: var(--warning-light); color: var(--warning); }
+        .tag-success { background: var(--success-light); color: var(--success); }
+        .tag-info { background: var(--primary-light); color: var(--primary); }
+
+        .save-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: var(--success-light);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            max-width: 720px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus { border-color: var(--primary); }
+
+        .chat-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius);
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover { background: var(--primary-dark); }
+        .chat-send-btn svg { width: 20px; height: 20px; }
+
+        .quick-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .quick-action {
+            padding: 4px 10px;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+            width: 320px;
+            background: white;
+            border-left: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .patient-card {
+            padding: 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .patient-card-id {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .patient-card-info {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            gap: 12px;
+        }
+
+        .patient-vitals {
+            margin-top: 12px;
+        }
+
+        .vital-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 13px;
+        }
+
+        .vital-label { color: var(--gray-500); }
+        .vital-value { font-weight: 600; }
+        .vital-value.elevated { color: var(--danger); }
+
+        .recent-entries-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+
+        .recent-entry {
+            padding: 8px;
+            border-left: 3px solid var(--gray-200);
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
+        .recent-entry.warning { border-color: var(--warning); }
+        .recent-entry.danger { border-color: var(--danger); }
+
+        .recent-entry-time {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+
+        /* ==================== RECORDS PAGE ==================== */
+        .records-page {
+            flex-direction: column;
+        }
+
+        .records-toolbar {
+            padding: 16px 24px;
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .records-search {
+            flex: 1;
+            max-width: 400px;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239ca3af' viewBox='0 0 24 24'%3E%3Cpath d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' stroke='%239ca3af' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") 10px center no-repeat;
+        }
+
+        .records-search:focus { border-color: var(--primary); }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray-600);
+        }
+
+        .filter-btn:hover { background: var(--gray-50); }
+        .filter-btn.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .records-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .records-table {
+            width: 100%;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border-collapse: collapse;
+        }
+
+        .records-table thead {
+            background: var(--gray-50);
+        }
+
+        .records-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .records-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: top;
+        }
+
+        .records-table tr:hover { background: var(--gray-50); }
+
+        .records-table tr.clickable { cursor: pointer; }
+
+        .record-id {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .record-category {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .category-dot.vital { background: var(--danger); }
+        .category-dot.incident { background: var(--warning); }
+        .category-dot.nutrition { background: var(--success); }
+        .category-dot.medication { background: var(--primary); }
+
+        .record-detail-panel {
+            position: fixed;
+            right: -480px;
+            top: 56px;
+            bottom: 0;
+            width: 480px;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+            z-index: 20;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .record-detail-panel.open { right: 0; }
+
+        .detail-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray-500);
+        }
+
+        .detail-close:hover { background: var(--gray-200); }
+
+        .detail-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .detail-field {
+            margin-bottom: 12px;
+        }
+
+        .detail-field-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-400);
+            margin-bottom: 2px;
+        }
+
+        .detail-field-value {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .anonymization-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: var(--gray-100);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gray-300);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 15;
+        }
+
+        .overlay.active { display: block; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .chat-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+        </svg>
+        PflegeDoku KI
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-page="chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            Dokumentation
+        </button>
+        <button class="nav-tab" data-page="records">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                <rect x="9" y="1" width="10" height="22" rx="2"/>
+                <line x1="13" y1="7" x2="15" y2="7"/>
+                <line x1="13" y1="11" x2="15" y2="11"/>
+                <line x1="13" y1="15" x2="15" y2="15"/>
+            </svg>
+            Datensätze
+        </button>
+    </div>
+
+    <div class="nav-user">
+        <span>Station 3B · Schicht: Früh</span>
+        <div class="nav-user-avatar">MK</div>
+    </div>
+</nav>
+
+<!-- ==================== CHAT PAGE ==================== -->
+<div class="page chat-page active" id="page-chat">
+    <div class="chat-main">
+        <div class="chat-header">
+            <h2>KI-Dokumentation</h2>
+            <select class="patient-select" id="patientSelect">
+                <option value="GK">G.K. – Zi. 312</option>
+                <option value="HM">H.M. – Zi. 308</option>
+                <option value="RS">R.S. – Zi. 315</option>
+            </select>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- System Welcome -->
+            <div class="message ai">
+                <div class="message-avatar">KI</div>
+                <div class="message-content">
+                    Guten Morgen! Ich bin bereit für die Pflegedokumentation.<br><br>
+                    Sie können mir in natürlicher Sprache schildern, was passiert ist – ich erfasse automatisch:
+                    <strong>Situationsbeschrieb</strong>, <strong>Wirkung</strong> und <strong>Nutzen</strong>
+                    und lege einen anonymisierten Datensatz an.<br><br>
+                    Aktuell ausgewählt: <strong>G.K. – Zimmer 312</strong>
+                </div>
+            </div>
+
+            <!-- Example: User reports incident -->
+            <div class="message user">
+                <div class="message-avatar">MK</div>
+                <div class="message-content">
+                    G.K. hat nach dem Mittagessen Spaghetti gegessen und hat danach erbrochen. War sehr blass und hat über Übelkeit geklagt.
+                </div>
+            </div>
+
+            <!-- AI Response with structured data -->
+            <div class="message ai">
+                <div class="message-avatar">KI</div>
+                <div class="message-content">
+                    Ich habe den Vorfall erfasst und folgenden strukturierten Datensatz erstellt:
+
+                    <div class="structured-data">
+                        <div class="structured-data-header">
+                            📋 Dokumentations-Datensatz #DOK-2026-0307-001
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Kennung</span>
+                            <span class="structured-field-value">
+                                <span class="anonymization-badge">🔒 G.K. → BEW-0312</span>
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Kategorie</span>
+                            <span class="structured-field-value">
+                                <span class="tag tag-warning">Erbrechen / GI-Trakt</span>
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Situationsbeschrieb</span>
+                            <span class="structured-field-value">
+                                Bewohner*in hat nach dem Mittagessen (Spaghetti) erbrochen.
+                                Subjektive Beschwerden: Übelkeit. Beobachtung: Blasses Hautbild.
+                                Zeitpunkt: Mittagessen, ca. 12:30 Uhr.
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Wirkung</span>
+                            <span class="structured-field-value">
+                                Akute gastrointestinale Reaktion nach Nahrungsaufnahme.
+                                Mögliche Ursachen: Unverträglichkeit, Überessen, Infekt.
+                                Vitalzeichen sollten überwacht werden.
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Nutzen / Massnahmen</span>
+                            <span class="structured-field-value">
+                                • Arzt informieren bei Wiederholung<br>
+                                • Nahrungskarenz 2h, dann Schonkost<br>
+                                • Flüssigkeitszufuhr sicherstellen<br>
+                                • Vitalzeichen in 30 Min. kontrollieren
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="save-indicator">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Datensatz anonymisiert gespeichert – einsehbar unter «Datensätze»
+                    </div>
+                </div>
+            </div>
+
+            <!-- User follow-up question -->
+            <div class="message user">
+                <div class="message-avatar">MK</div>
+                <div class="message-content">
+                    G.K. hat Fieber, 38 Grad. Was hat G.K. heute gegessen?
+                </div>
+            </div>
+
+            <!-- AI cross-references data -->
+            <div class="message ai">
+                <div class="message-avatar">KI</div>
+                <div class="message-content">
+                    <strong>Fieber dokumentiert:</strong> 38.0°C – ich habe einen neuen Vitalwert-Eintrag angelegt.
+
+                    <div class="structured-data">
+                        <div class="structured-data-header">
+                            🌡️ Vitalwert-Eintrag #VIT-2026-0307-004
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Kennung</span>
+                            <span class="structured-field-value">
+                                <span class="anonymization-badge">🔒 BEW-0312</span>
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Temperatur</span>
+                            <span class="structured-field-value">
+                                <span class="tag tag-warning">38.0°C – leicht erhöht</span>
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Situationsbeschrieb</span>
+                            <span class="structured-field-value">
+                                Bewohner*in zeigt erhöhte Temperatur (38.0°C).
+                                Im Kontext des vorangegangenen Erbrechens könnte dies auf einen gastrointestinalen Infekt hindeuten.
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Wirkung</span>
+                            <span class="structured-field-value">
+                                Subfebrile Temperatur in Kombination mit Erbrechen (12:30 Uhr) erhöht den Verdacht auf einen infektiösen Auslöser.
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Nutzen / Massnahmen</span>
+                            <span class="structured-field-value">
+                                • Arzt informieren (Fieber + Erbrechen)<br>
+                                • Temperaturkontrolle alle 2h<br>
+                                • Flüssigkeitsbilanz führen<br>
+                                • Isolation prüfen (Infektionsgefahr)
+                            </span>
+                        </div>
+                    </div>
+
+                    <br>
+                    <strong>Zur Frage – Ernährung heute (BEW-0312):</strong>
+                    <div class="structured-data">
+                        <div class="structured-data-header">
+                            🍽️ Ernährungshistorie heute
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Frühstück (07:30)</span>
+                            <span class="structured-field-value">
+                                Brot, Butter, Marmelade, Kaffee – keine Auffälligkeiten
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Mittagessen (12:00)</span>
+                            <span class="structured-field-value">
+                                Spaghetti Bolognese – <span class="tag tag-danger">Erbrechen danach</span>
+                            </span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Sonstiges</span>
+                            <span class="structured-field-value">
+                                Wasser: ca. 400ml seit Erbrechen
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="save-indicator">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Vitalwerte aktualisiert · Korrelation mit Vorfall erkannt
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <textarea class="chat-input" id="chatInput" placeholder="Beschreiben Sie den Vorfall oder stellen Sie eine Frage..." rows="1"></textarea>
+                <button class="chat-send-btn" id="sendBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-action" data-text="Vitalzeichen erfassen">🩺 Vitalzeichen</button>
+                <button class="quick-action" data-text="Was hat der Bewohner heute gegessen?">🍽️ Ernährung abfragen</button>
+                <button class="quick-action" data-text="Medikamentengabe dokumentieren">💊 Medikamente</button>
+                <button class="quick-action" data-text="Sturzprotokoll anlegen">⚠️ Sturz melden</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar: Patient Context -->
+    <aside class="chat-sidebar">
+        <div class="sidebar-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Bewohner-Kontext
+        </div>
+        <div class="sidebar-content">
+            <div class="patient-card">
+                <div class="patient-card-id">BEW-0312 (G.K.)</div>
+                <div class="patient-card-info">
+                    <span>Zi. 312</span>
+                    <span>Alter: 78</span>
+                    <span>Station 3B</span>
+                </div>
+            </div>
+
+            <div class="patient-vitals">
+                <div class="vital-row">
+                    <span class="vital-label">Temperatur</span>
+                    <span class="vital-value elevated">38.0°C ↑</span>
+                </div>
+                <div class="vital-row">
+                    <span class="vital-label">Blutdruck</span>
+                    <span class="vital-value">128/82 mmHg</span>
+                </div>
+                <div class="vital-row">
+                    <span class="vital-label">Puls</span>
+                    <span class="vital-value">88 bpm</span>
+                </div>
+                <div class="vital-row">
+                    <span class="vital-label">SpO2</span>
+                    <span class="vital-value">96%</span>
+                </div>
+                <div class="vital-row">
+                    <span class="vital-label">Gewicht</span>
+                    <span class="vital-value">68.5 kg</span>
+                </div>
+            </div>
+
+            <div class="recent-entries-title">Letzte Einträge</div>
+
+            <div class="recent-entry danger">
+                <strong>Erbrechen nach Mittagessen</strong><br>
+                Spaghetti, Blässe, Übelkeit
+                <div class="recent-entry-time">Heute, 12:45</div>
+            </div>
+
+            <div class="recent-entry warning">
+                <strong>Fieber 38.0°C</strong><br>
+                Subfebrile Temperatur, Infektverdacht
+                <div class="recent-entry-time">Heute, 14:20</div>
+            </div>
+
+            <div class="recent-entry">
+                <strong>Mobilisation</strong><br>
+                Kurzer Spaziergang im Flur, stabil
+                <div class="recent-entry-time">Gestern, 15:00</div>
+            </div>
+
+            <div class="recent-entry">
+                <strong>Nachtruhe</strong><br>
+                Gut geschlafen, keine Auffälligkeiten
+                <div class="recent-entry-time">Gestern, 22:30</div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- ==================== RECORDS PAGE ==================== -->
+<div class="page records-page" id="page-records">
+    <div class="records-toolbar">
+        <input type="text" class="records-search" placeholder="Datensätze durchsuchen (ID, Kategorie, Stichwort)...">
+        <button class="filter-btn active">Alle</button>
+        <button class="filter-btn">
+            <span class="category-dot incident"></span> Vorfälle
+        </button>
+        <button class="filter-btn">
+            <span class="category-dot vital"></span> Vitalwerte
+        </button>
+        <button class="filter-btn">
+            <span class="category-dot nutrition"></span> Ernährung
+        </button>
+        <button class="filter-btn">
+            <span class="category-dot medication"></span> Medikamente
+        </button>
+    </div>
+
+    <div class="records-content">
+        <table class="records-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Datum / Zeit</th>
+                    <th>Kennung</th>
+                    <th>Kategorie</th>
+                    <th>Situationsbeschrieb</th>
+                    <th>Erfasst durch</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="clickable" onclick="openDetail('dok001')">
+                    <td><span class="record-id">DOK-2026-0307-001</span></td>
+                    <td>07.03.2026 12:45</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0312</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot incident"></span>
+                            Erbrechen / GI-Trakt
+                        </div>
+                    </td>
+                    <td>Erbrechen nach Mittagessen (Spaghetti). Blässe, Übelkeit.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('vit004')">
+                    <td><span class="record-id">VIT-2026-0307-004</span></td>
+                    <td>07.03.2026 14:20</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0312</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot vital"></span>
+                            Vitalwerte
+                        </div>
+                    </td>
+                    <td>Temperatur 38.0°C. Korrelation mit Erbrechen-Vorfall.</td>
+                    <td>M. Keller</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('ern002')">
+                    <td><span class="record-id">ERN-2026-0307-002</span></td>
+                    <td>07.03.2026 12:00</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0312</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot nutrition"></span>
+                            Ernährung
+                        </div>
+                    </td>
+                    <td>Mittagessen: Spaghetti Bolognese. Nicht vollständig aufgegessen.</td>
+                    <td>KI (auto)</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('med003')">
+                    <td><span class="record-id">MED-2026-0307-003</span></td>
+                    <td>07.03.2026 08:00</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0308</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot medication"></span>
+                            Medikamente
+                        </div>
+                    </td>
+                    <td>Morgenmedikation verabreicht (Metformin 500mg, Ramipril 5mg).</td>
+                    <td>S. Weber</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('dok005')">
+                    <td><span class="record-id">DOK-2026-0306-012</span></td>
+                    <td>06.03.2026 15:00</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0312</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot incident"></span>
+                            Mobilisation
+                        </div>
+                    </td>
+                    <td>Spaziergang im Flur, stabil mit Rollator. Dauer: 10 Min.</td>
+                    <td>P. Brunner</td>
+                </tr>
+                <tr class="clickable" onclick="openDetail('vit006')">
+                    <td><span class="record-id">VIT-2026-0306-008</span></td>
+                    <td>06.03.2026 07:30</td>
+                    <td><span class="anonymization-badge">🔒 BEW-0315</span></td>
+                    <td>
+                        <div class="record-category">
+                            <span class="category-dot vital"></span>
+                            Vitalwerte
+                        </div>
+                    </td>
+                    <td>Blutdruck 145/92 mmHg. Leicht erhöht, Kontrolle nachmittags.</td>
+                    <td>M. Keller</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Detail Slide-Over Panel -->
+<div class="overlay" id="overlay"></div>
+<div class="record-detail-panel" id="detailPanel">
+    <div class="detail-header">
+        <div>
+            <span class="record-id" id="detailId">DOK-2026-0307-001</span>
+            <span class="anonymization-badge" style="margin-left: 8px;">🔒 Anonymisiert</span>
+        </div>
+        <button class="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-body" id="detailBody">
+        <!-- Filled dynamically -->
+    </div>
+</div>
+
+<script>
+    // Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('page-' + tab.dataset.page).classList.add('active');
+        });
+    });
+
+    // Chat input auto-resize
+    const chatInput = document.getElementById('chatInput');
+    chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+    });
+
+    // Quick actions
+    document.querySelectorAll('.quick-action').forEach(btn => {
+        btn.addEventListener('click', () => {
+            chatInput.value = btn.dataset.text;
+            chatInput.focus();
+            chatInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    // Send message simulation
+    const chatMessages = document.getElementById('chatMessages');
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        // Add user message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message user';
+        userMsg.innerHTML = `
+            <div class="message-avatar">MK</div>
+            <div class="message-content">${escapeHtml(text)}</div>
+        `;
+        chatMessages.appendChild(userMsg);
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        // Typing indicator
+        const typing = document.createElement('div');
+        typing.className = 'message ai';
+        typing.innerHTML = `
+            <div class="message-avatar">KI</div>
+            <div class="message-content">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(typing);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Simulated AI response
+        setTimeout(() => {
+            typing.remove();
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'message ai';
+            aiMsg.innerHTML = `
+                <div class="message-avatar">KI</div>
+                <div class="message-content">
+                    Ich habe Ihre Eingabe erfasst und verarbeite die Dokumentation.
+
+                    <div class="structured-data">
+                        <div class="structured-data-header">📋 Neuer Datensatz wird erstellt...</div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Eingabe</span>
+                            <span class="structured-field-value">${escapeHtml(text)}</span>
+                        </div>
+                        <div class="structured-field">
+                            <span class="structured-field-label">Status</span>
+                            <span class="structured-field-value">
+                                <span class="tag tag-info">KI-Analyse läuft</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="save-indicator">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                        Datensatz wird anonymisiert angelegt
+                    </div>
+
+                    <em style="font-size:12px;color:var(--gray-400);display:block;margin-top:8px;">
+                        (UX-Prototype – in der echten Anwendung würde hier die vollständige KI-Analyse erscheinen)
+                    </em>
+                </div>
+            `;
+            chatMessages.appendChild(aiMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1500);
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Detail Panel
+    const detailRecords = {
+        dok001: {
+            id: 'DOK-2026-0307-001',
+            sections: [
+                { title: 'Identifikation', fields: [
+                    { label: 'Anonyme Kennung', value: 'BEW-0312' },
+                    { label: 'Zuordnung', value: 'Intern zuordbar via Bewohnerdatenbank (verschlüsselt)' },
+                    { label: 'Zimmer', value: '312' },
+                    { label: 'Station', value: '3B' },
+                ]},
+                { title: 'Vorfall', fields: [
+                    { label: 'Kategorie', value: '<span class="tag tag-warning">Erbrechen / GI-Trakt</span>' },
+                    { label: 'Zeitpunkt', value: '07.03.2026, ca. 12:30–12:45 Uhr' },
+                    { label: 'Auslöser', value: 'Nach Nahrungsaufnahme (Spaghetti Bolognese)' },
+                ]},
+                { title: 'Situationsbeschrieb', fields: [
+                    { label: 'Beschreibung', value: 'Bewohner*in hat nach dem Mittagessen (Spaghetti Bolognese) erbrochen. Subjektive Beschwerden: Übelkeit seit dem Essen. Objektive Beobachtung: Blasses Hautbild, leichtes Schwitzen.' },
+                ]},
+                { title: 'Wirkung', fields: [
+                    { label: 'Auswirkung', value: 'Akute gastrointestinale Reaktion. Bewohner*in fühlt sich unwohl und müde. Nahrungsaufnahme für die nächsten Stunden nicht möglich.' },
+                    { label: 'Risikobewertung', value: '<span class="tag tag-warning">Mittel</span> – Einzelvorfall, Überwachung empfohlen' },
+                ]},
+                { title: 'Nutzen / Massnahmen', fields: [
+                    { label: 'Sofortmassnahmen', value: '• Nahrungskarenz 2h<br>• Flüssigkeitszufuhr (Wasser, Tee)<br>• Vitalzeichen-Kontrolle in 30 Min.' },
+                    { label: 'Eskalation', value: 'Arzt informieren bei Wiederholung oder Verschlechterung' },
+                    { label: 'Follow-up', value: 'Temperaturkontrolle alle 2h, Ernährungsprotokoll fortführen' },
+                ]},
+                { title: 'Metadaten', fields: [
+                    { label: 'Erfasst durch', value: 'M. Keller (Pflegefachperson)' },
+                    { label: 'Erfassungsmethode', value: 'KI-gestützte Spracheingabe' },
+                    { label: 'KI-Konfidenz', value: '94% – alle Felder automatisch extrahiert' },
+                    { label: 'Gegengelesen', value: '<span class="tag tag-success">Ja, durch M. Keller</span>' },
+                ]},
+            ]
+        },
+        vit004: {
+            id: 'VIT-2026-0307-004',
+            sections: [
+                { title: 'Identifikation', fields: [
+                    { label: 'Anonyme Kennung', value: 'BEW-0312' },
+                    { label: 'Zimmer', value: '312' },
+                ]},
+                { title: 'Vitalwerte', fields: [
+                    { label: 'Temperatur', value: '<span class="tag tag-warning">38.0°C – leicht erhöht</span>' },
+                    { label: 'Messmethode', value: 'Ohr-Thermometer' },
+                ]},
+                { title: 'Situationsbeschrieb', fields: [
+                    { label: 'Beschreibung', value: 'Erhöhte Temperatur gemessen im Kontext des Erbrechens-Vorfalls (DOK-2026-0307-001). KI hat automatisch Korrelation erkannt.' },
+                ]},
+                { title: 'Wirkung', fields: [
+                    { label: 'Einschätzung', value: 'Subfebrile Temperatur + Erbrechen deuten auf möglichen gastrointestinalen Infekt hin.' },
+                ]},
+                { title: 'Nutzen / Massnahmen', fields: [
+                    { label: 'Massnahmen', value: '• Arzt informiert<br>• Temperaturkontrolle alle 2h<br>• Flüssigkeitsbilanz<br>• Isolation prüfen' },
+                ]},
+            ]
+        }
+    };
+
+    function openDetail(recordKey) {
+        const record = detailRecords[recordKey];
+        if (!record) {
+            // Generic fallback
+            document.getElementById('detailId').textContent = 'Datensatz';
+            document.getElementById('detailBody').innerHTML = '<p style="color:var(--gray-500);padding:20px;">Detail-Ansicht für diesen Datensatz ist im Prototyp nicht hinterlegt.</p>';
+        } else {
+            document.getElementById('detailId').textContent = record.id;
+            let html = '';
+            for (const section of record.sections) {
+                html += `<div class="detail-section"><div class="detail-section-title">${section.title}</div>`;
+                for (const field of section.fields) {
+                    html += `<div class="detail-field"><div class="detail-field-label">${field.label}</div><div class="detail-field-value">${field.value}</div></div>`;
+                }
+                html += '</div>';
+            }
+            document.getElementById('detailBody').innerHTML = html;
+        }
+        document.getElementById('detailPanel').classList.add('open');
+        document.getElementById('overlay').classList.add('active');
+    }
+
+    function closeDetail() {
+        document.getElementById('detailPanel').classList.remove('open');
+        document.getElementById('overlay').classList.remove('active');
+    }
+
+    document.getElementById('overlay').addEventListener('click', closeDetail);
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+</script>
+
+</body>
+</html>
