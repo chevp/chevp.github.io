@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Dokumentation – Feed Platform – UX Prototype V4</title>
+    <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #0a0d10;
+            --bg-elevated: rgba(255, 255, 255, 0.02);
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.03);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --blue: #60a5fa;
+            --blue-bg: rgba(59, 130, 246, 0.15);
+            --blue-border: rgba(59, 130, 246, 0.3);
+            --purple: #a78bfa;
+            --purple-bg: rgba(139, 92, 246, 0.15);
+            --green: #4ade80;
+            --green-bg: rgba(34, 197, 94, 0.15);
+            --orange: #fb923c;
+            --orange-bg: rgba(251, 146, 60, 0.15);
+            --red: #f87171;
+            --red-bg: rgba(248, 113, 113, 0.15);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-xs: 6px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+        }
+
+        /* ====== LOGIN ====== */
+        .login-screen {
+            display: flex; height: 100vh; width: 100%;
+            background: linear-gradient(135deg, #0a0d10 0%, #1e1b4b 50%, #0a0d10 100%);
+            align-items: center; justify-content: center;
+        }
+        .login-screen.hidden { display: none; }
+        .login-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: 16px; width: 400px; max-width: 92vw; overflow: hidden;
+        }
+        .login-header { padding: 32px 32px 20px; text-align: center; }
+        .login-logo { font-size: 20px; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+        .login-subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        .login-tenant {
+            margin: 0 32px 16px; padding: 8px 12px;
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); font-size: 12px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .login-tenant strong { color: var(--text-primary); }
+        .login-form { padding: 0 32px 32px; display: flex; flex-direction: column; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+        .form-input {
+            padding: 10px 12px; border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: var(--radius-sm); font-size: 13px; outline: none;
+            background: rgba(30, 41, 59, 0.5); color: var(--text-primary);
+        }
+        .form-input:focus { border-color: var(--blue); }
+        .login-btn {
+            padding: 11px; background: var(--purple); color: white;
+            border: none; border-radius: var(--radius-sm); font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+        }
+        .login-btn:hover { opacity: 0.9; }
+        .login-links { text-align: center; font-size: 11px; color: var(--text-muted); }
+        .login-links a { color: var(--purple); text-decoration: none; }
+        .login-role-hint {
+            margin: 0 32px 24px; padding: 10px;
+            background: var(--purple-bg); border-radius: var(--radius-sm);
+            font-size: 11px; color: var(--purple); text-align: center;
+        }
+
+        /* ====== APP SHELL ====== */
+        .app-shell { display: none; height: 100vh; width: 100%; }
+        .app-shell.active { display: flex; }
+
+        /* ====== SIDEBAR ====== */
+        .sidebar {
+            width: 280px; background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; flex-shrink: 0;
+        }
+        .sidebar-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px; border-bottom: 1px solid var(--border);
+        }
+        .sidebar-header h2 { font-size: 14px; font-weight: 600; }
+        .sidebar-logo { font-size: 14px; font-weight: 700; color: var(--purple); }
+        .new-btn {
+            width: 32px; height: 32px; border-radius: var(--radius-sm);
+            background: var(--purple-bg); border: none; color: var(--purple);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; transition: all 0.15s;
+        }
+        .new-btn:hover { background: rgba(139, 92, 246, 0.25); }
+
+        .sessions-list { flex: 1; overflow-y: auto; padding: 8px; }
+        .session-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer;
+            transition: all 0.15s; margin-bottom: 2px;
+        }
+        .session-item:hover { background: var(--bg-hover); }
+        .session-item.active { background: rgba(139, 92, 246, 0.1); }
+        .session-icon {
+            width: 34px; height: 34px; border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04); display: flex;
+            align-items: center; justify-content: center; font-size: 16px;
+            color: var(--text-muted); flex-shrink: 0;
+        }
+        .session-content { flex: 1; min-width: 0; }
+        .session-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+        .session-preview {
+            font-size: 11px; color: var(--text-muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .session-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .session-time { font-size: 10px; color: var(--text-muted); }
+        .agent-badge {
+            display: flex; align-items: center; gap: 3px;
+            padding: 2px 6px; border-radius: 10px;
+            background: var(--purple-bg); color: var(--purple); font-size: 10px;
+        }
+
+        /* Agents Section */
+        .agents-section { padding: 14px; border-top: 1px solid var(--border); }
+        .agents-header {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; font-weight: 500; color: var(--text-secondary);
+            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .agents-list { display: flex; flex-direction: column; gap: 6px; }
+        .agent-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 8px; border-radius: var(--radius-xs);
+            background: var(--bg-elevated);
+        }
+        .agent-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .agent-name { flex: 1; font-size: 12px; }
+        .agent-status { font-size: 10px; color: var(--text-muted); text-transform: capitalize; }
+        .agent-item.thinking .agent-dot { animation: pulse 1s ease-in-out infinite; }
+        .agent-item.responding .agent-status { color: var(--green); }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* Klienten-Kontext Sidebar Section */
+        .context-section { padding: 14px; border-top: 1px solid var(--border); }
+        .context-title {
+            font-size: 11px; font-weight: 500; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ctx-card {
+            padding: 8px 10px; background: var(--bg-elevated);
+            border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px;
+        }
+        .ctx-card-id { font-size: 12px; font-weight: 600; color: var(--purple); }
+        .ctx-card-info { font-size: 10px; color: var(--text-muted); margin-top: 2px; display: flex; gap: 8px; }
+        .ctx-vital {
+            display: flex; justify-content: space-between;
+            padding: 4px 0; border-bottom: 1px solid var(--border-light); font-size: 11px;
+        }
+        .ctx-vital-label { color: var(--text-muted); }
+        .ctx-vital-val { font-weight: 600; }
+        .ctx-vital-val.warn { color: var(--red); }
+        .ctx-vital-val.ok { color: var(--green); }
+
+        .user-section {
+            padding: 12px 14px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .user-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--purple-bg); color: var(--purple);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600; flex-shrink: 0;
+        }
+        .user-info { flex: 1; min-width: 0; }
+        .user-name { font-size: 12px; font-weight: 500; }
+        .user-role { font-size: 10px; color: var(--text-muted); }
+        .logout-btn {
+            padding: 4px 8px; border: 1px solid var(--border);
+            border-radius: var(--radius-xs); background: none; font-size: 10px;
+            cursor: pointer; color: var(--text-muted); transition: all 0.15s;
+        }
+        .logout-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+        /* ====== MAIN FEED ====== */
+        .feed-main {
+            flex: 1; display: flex; flex-direction: column;
+            overflow: hidden; min-width: 0;
+        }
+
+        .messages-container {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 2px;
+        }
+
+        /* Messages */
+        .message { display: flex; gap: 12px; margin-bottom: 16px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .message-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; flex-shrink: 0;
+        }
+        .message.user .message-avatar { background: var(--blue-bg); color: var(--blue); }
+        .message.assistant .message-avatar { background: var(--purple-bg); color: var(--purple); }
+        .message-body { flex: 1; min-width: 0; }
+        .message-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .message-author { font-size: 13px; font-weight: 500; }
+        .message-time { font-size: 10px; color: var(--text-muted); }
+        .message-text { font-size: 14px; line-height: 1.6; color: var(--text-primary); }
+        .message-text em { font-size: 11px; color: var(--text-muted); }
+
+        /* Tool Cards */
+        .tool-card {
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            border-radius: var(--radius); margin-top: 10px;
+            max-width: 560px; overflow: hidden;
+        }
+        .tool-card-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border);
+        }
+        .tool-icon {
+            width: 28px; height: 28px; border-radius: var(--radius-xs);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .tool-icon.green { background: var(--green-bg); color: var(--green); }
+        .tool-icon.blue { background: var(--blue-bg); color: var(--blue); }
+        .tool-icon.orange { background: var(--orange-bg); color: var(--orange); }
+        .tool-icon.red { background: var(--red-bg); color: var(--red); }
+        .tool-icon.purple { background: var(--purple-bg); color: var(--purple); }
+        .tool-title { font-size: 13px; font-weight: 500; }
+        .tool-badge {
+            margin-left: auto; padding: 3px 8px; border-radius: 10px;
+            font-size: 10px; font-weight: 600;
+        }
+        .tool-badge.completed { background: var(--green-bg); color: var(--green); }
+        .tool-badge.saved { background: var(--green-bg); color: var(--green); }
+        .tool-badge.draft { background: var(--orange-bg); color: var(--orange); }
+        .tool-badge.crisis { background: var(--red-bg); color: var(--red); }
+        .tool-badge.info { background: var(--blue-bg); color: var(--blue); }
+
+        .tool-card-body { padding: 12px 14px; }
+
+        /* SD Rows (structured data within tool cards) */
+        .sd-row {
+            display: flex; gap: 8px; padding: 6px 0;
+            border-bottom: 1px solid var(--border-light); font-size: 12px;
+        }
+        .sd-row:last-child { border-bottom: none; }
+        .sd-label { font-weight: 500; color: var(--text-muted); min-width: 130px; flex-shrink: 0; font-size: 11px; }
+        .sd-value { color: var(--text-primary); line-height: 1.5; }
+
+        /* Entity fields / tags */
+        .entity-fields { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .field-tag {
+            padding: 4px 10px; border-radius: var(--radius-xs);
+            font-size: 11px; background: rgba(30, 41, 59, 0.5); color: var(--text-secondary);
+            font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+        }
+        .field-type { color: var(--blue); margin-left: 4px; }
+
+        /* Tags */
+        .tag {
+            display: inline-block; padding: 2px 8px; border-radius: 4px;
+            font-size: 10px; font-weight: 600;
+        }
+        .tag-green { background: var(--green-bg); color: var(--green); }
+        .tag-red { background: var(--red-bg); color: var(--red); }
+        .tag-orange { background: var(--orange-bg); color: var(--orange); }
+        .tag-blue { background: var(--blue-bg); color: var(--blue); }
+        .tag-purple { background: var(--purple-bg); color: var(--purple); }
+
+        .anon-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 7px; background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px; font-size: 10px; color: var(--text-secondary);
+        }
+
+        /* Tool Card Actions */
+        .tool-card-actions {
+            display: flex; gap: 8px; padding: 10px 14px;
+            border-top: 1px solid var(--border); background: rgba(0, 0, 0, 0.1);
+        }
+        .action-btn {
+            padding: 6px 12px; border-radius: var(--radius-xs); font-size: 11px;
+            font-weight: 500; cursor: pointer; transition: all 0.15s;
+            border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-primary);
+        }
+        .action-btn:hover { background: var(--bg-hover); }
+        .action-btn.primary { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue); }
+        .action-btn.primary:hover { background: rgba(59, 130, 246, 0.25); }
+
+        /* KI-Tables inside tool cards */
+        .ki-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+        .ki-table th {
+            padding: 6px 8px; text-align: left; background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border); font-weight: 600;
+            color: var(--text-secondary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .ki-table td {
+            padding: 5px 8px; border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary); font-size: 11px;
+        }
+        .ki-table tr:hover td { background: var(--bg-hover); }
+
+        /* Charts placeholder */
+        .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 60px; margin-top: 8px; }
+        .chart-bar {
+            flex: 1; border-radius: 4px 4px 0 0; position: relative; min-width: 20px;
+            transition: height 0.3s ease;
+        }
+        .chart-bar-label {
+            position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
+            font-size: 9px; color: var(--text-muted); white-space: nowrap;
+        }
+        .chart-bar-val {
+            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            font-size: 9px; font-weight: 600; color: var(--text-secondary);
+        }
+
+        /* Typing animation */
+        .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
+        .typing-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--text-muted); animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+
+        /* ====== INPUT AREA ====== */
+        .input-area {
+            padding: 14px 20px; background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+        .input-wrapper { position: relative; }
+        .message-input {
+            width: 100%; padding: 12px 48px 12px 16px;
+            border-radius: var(--radius); background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(71, 85, 105, 0.4); font-size: 14px;
+            color: var(--text-primary); resize: none; outline: none;
+            min-height: 48px; max-height: 120px; font-family: inherit;
+        }
+        .message-input::placeholder { color: var(--text-muted); }
+        .message-input:focus { border-color: rgba(139, 92, 246, 0.5); }
+        .attach-btn {
+            position: absolute; right: 8px; top: 10px; padding: 8px;
+            border-radius: var(--radius-sm); background: transparent;
+            border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;
+            transition: all 0.15s;
+        }
+        .attach-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+        /* Suggestions dropdown */
+        .suggestions-dropdown {
+            position: absolute; bottom: 100%; left: 0; right: 0;
+            margin-bottom: 8px; background: var(--bg-primary);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius);
+            overflow: hidden; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); z-index: 100;
+            display: none;
+        }
+        .suggestions-dropdown.active { display: block; }
+        .suggestion-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; cursor: pointer; transition: all 0.15s;
+            border-bottom: 1px solid var(--border);
+        }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover, .suggestion-item.selected { background: rgba(139, 92, 246, 0.1); }
+        .suggestion-icon {
+            width: 28px; height: 28px; border-radius: var(--radius-xs);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .suggestion-label { font-size: 12px; font-weight: 500; }
+        .suggestion-desc { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+        /* Quick actions */
+        .quick-actions { display: flex; align-items: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+        .quick-btn {
+            display: flex; align-items: center; gap: 5px;
+            padding: 5px 10px; border-radius: var(--radius-sm);
+            background: rgba(30, 41, 59, 0.3); border: 1px solid var(--border);
+            font-size: 11px; color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+        }
+        .quick-btn:hover { background: rgba(30, 41, 59, 0.5); color: var(--text-primary); }
+        .quick-btn .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .send-btn {
+            margin-left: auto; height: 36px; padding: 0 18px;
+            border-radius: var(--radius-sm); background: var(--purple);
+            border: none; color: white; cursor: pointer; font-size: 14px;
+            transition: all 0.15s; display: flex; align-items: center; gap: 6px;
+        }
+        .send-btn:hover { opacity: 0.9; }
+
+        /* ====== RIGHT SIDEBAR ====== */
+        .right-sidebar {
+            width: 300px; background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+        }
+        .right-sidebar-header {
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+            font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .right-sidebar-body { flex: 1; overflow-y: auto; padding: 12px; }
+
+        .rs-card {
+            padding: 10px; background: var(--bg-elevated);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+        .rs-card-title {
+            font-size: 11px; font-weight: 600; color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .rs-entry {
+            padding: 6px 8px; border-left: 3px solid var(--border);
+            margin-bottom: 4px; font-size: 11px; color: var(--text-secondary); line-height: 1.4;
+        }
+        .rs-entry.green { border-color: var(--green); }
+        .rs-entry.orange { border-color: var(--orange); }
+        .rs-entry.blue { border-color: var(--blue); }
+        .rs-entry.red { border-color: var(--red); }
+        .rs-entry-time { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+
+        .rs-stat { display: flex; justify-content: space-between; padding: 4px 0; font-size: 11px; }
+        .rs-stat-label { color: var(--text-muted); }
+        .rs-stat-val { font-weight: 600; }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 1200px) { .right-sidebar { display: none; } }
+        @media (max-width: 768px) { .sidebar { display: none; } }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-logo">&#9670; KI-Dokumentation</div>
+            <div class="login-subtitle">Feed-basierte Dokumentationsplattform<br>für soziale Institutionen</div>
+        </div>
+        <div class="login-tenant">Mandant: <strong>Wohnheim Sonnenberg</strong></div>
+        <form class="login-form" onsubmit="doLogin(event)">
+            <div class="form-group">
+                <label>E-Mail</label>
+                <input class="form-input" type="email" value="m.keller@sonnenberg.ch" required>
+            </div>
+            <div class="form-group">
+                <label>Passwort</label>
+                <input class="form-input" type="password" value="********" required>
+            </div>
+            <button type="submit" class="login-btn">Anmelden</button>
+            <div class="login-links"><a href="#">Passwort vergessen?</a> &middot; <a href="#">Kontakt / Demo</a></div>
+        </form>
+        <div class="login-role-hint">UX-Prototype V4 – Feed Platform – Rolle: Mitarbeitende (M. Keller, Wohngruppe B)</div>
+    </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell" id="appShell">
+
+<!-- LEFT SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <span class="sidebar-logo">&#9670; KI-Doku</span>
+        <button class="new-btn" onclick="createNewSession()" title="Neue Konversation">+</button>
+    </div>
+
+    <div class="sessions-list">
+        <div class="session-item active" data-session="1">
+            <div class="session-icon">&#9993;</div>
+            <div class="session-content">
+                <div class="session-name">Schichtdokumentation</div>
+                <div class="session-preview">Tagesgestaltung + Vorfall G.K.</div>
+            </div>
+            <div class="session-meta">
+                <span class="session-time">jetzt</span>
+                <span class="agent-badge">&#9673; 3</span>
+            </div>
+        </div>
+        <div class="session-item" data-session="2">
+            <div class="session-icon">&#9878;</div>
+            <div class="session-content">
+                <div class="session-name">Wochenbericht KW 10</div>
+                <div class="session-preview">Wochenbericht für G.K. erstellt</div>
+            </div>
+            <div class="session-meta">
+                <span class="session-time">2h</span>
+                <span class="agent-badge">&#9673; 1</span>
+            </div>
+        </div>
+        <div class="session-item" data-session="3">
+            <div class="session-icon">&#9776;</div>
+            <div class="session-content">
+                <div class="session-name">Kantonsbericht</div>
+                <div class="session-preview">Halbjahresbericht 1/2026</div>
+            </div>
+            <div class="session-meta">
+                <span class="session-time">1d</span>
+            </div>
+        </div>
+        <div class="session-item" data-session="4">
+            <div class="session-icon">&#9787;</div>
+            <div class="session-content">
+                <div class="session-name">Klientendaten</div>
+                <div class="session-preview">Stammdaten-Abfragen H.M., R.S.</div>
+            </div>
+            <div class="session-meta">
+                <span class="session-time">2d</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Agents -->
+    <div class="agents-section">
+        <div class="agents-header">&#9673; Aktive Agenten</div>
+        <div class="agents-list">
+            <div class="agent-item" id="agent-doku">
+                <div class="agent-dot" style="background: var(--purple)"></div>
+                <span class="agent-name">Doku-Agent</span>
+                <span class="agent-status">idle</span>
+            </div>
+            <div class="agent-item" id="agent-data">
+                <div class="agent-dot" style="background: var(--blue)"></div>
+                <span class="agent-name">Daten-Agent</span>
+                <span class="agent-status">idle</span>
+            </div>
+            <div class="agent-item" id="agent-report">
+                <div class="agent-dot" style="background: var(--green)"></div>
+                <span class="agent-name">Berichts-Agent</span>
+                <span class="agent-status">idle</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- User -->
+    <div class="user-section">
+        <div class="user-avatar">MK</div>
+        <div class="user-info">
+            <div class="user-name">M. Keller</div>
+            <div class="user-role">Mitarbeitende · Sonnenberg</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">&#10005;</button>
+    </div>
+</aside>
+
+<!-- MAIN FEED -->
+<main class="feed-main">
+    <div class="messages-container" id="messagesContainer">
+
+        <!-- System welcome -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--purple-bg); color: var(--purple);">KI</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Doku-Agent</span>
+                    <span class="message-time">08:00</span>
+                </div>
+                <div class="message-text">
+                    Guten Morgen, M. Keller. Willkommen zur Frühschicht.<br>
+                    Aktueller Kontext: <strong>Wohngruppe B</strong> · 6 Klienten · Schicht: 07:00–15:00
+                </div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon purple">&#9776;</div>
+                        <span class="tool-title">Schichtübersicht</span>
+                        <span class="tool-badge info">Heute</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="entity-fields">
+                            <span class="field-tag">Klienten <span class="field-type">6</span></span>
+                            <span class="field-tag">Berichte heute <span class="field-type">0</span></span>
+                            <span class="field-tag">Offene Krisen <span class="field-type">0</span></span>
+                            <span class="field-tag">Heimgänge <span class="field-type">0</span></span>
+                        </div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn" onclick="insertQuickText('Zeig mir alle Klienten der Wohngruppe B')">Klienten anzeigen</button>
+                        <button class="action-btn primary" onclick="insertQuickText('Ich möchte einen Bericht erfassen')">Bericht erfassen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Bericht erfassen via Feed -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">08:15</span>
+                </div>
+                <div class="message-text">habe G.K. in der Tagesgestaltung willkommen geheissen, kam ruhig an und konnte gut starten</div>
+            </div>
+        </div>
+
+        <!-- Agent: Bericht generiert -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--purple-bg); color: var(--purple);">KI</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Doku-Agent</span>
+                    <span class="message-time">08:15</span>
+                </div>
+                <div class="message-text">Bericht erfasst und kantonskonform dokumentiert.</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon green">&#10003;</div>
+                        <span class="tool-title">Bericht #DOK-2026-0308-001</span>
+                        <span class="tool-badge saved">Gespeichert</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Klient</span><span class="sd-value"><span class="anon-badge">KLI-0312 (G.K.)</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Bereich</span><span class="sd-value"><span class="tag tag-green">Tagesgestaltung</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Situation</span><span class="sd-value">Der Klient kam zur Tagesgestaltung und wurde von mir begrüsst.</span></div>
+                        <div class="sd-row"><span class="sd-label">Leistung</span><span class="sd-value">Ich habe den Klienten willkommen geheissen und ihm den Einstieg in die Tagesgestaltung ermöglicht.</span></div>
+                        <div class="sd-row"><span class="sd-label">Wirkung</span><span class="sd-value">Der Klient konnte ruhig in die Tagesgestaltung starten und nahm am weiteren Tagesablauf teil.</span></div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn">Bearbeiten</button>
+                        <button class="action-btn">Rohdaten anzeigen</button>
+                        <button class="action-btn primary">PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Strukturierte Tagesdaten ergänzen -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">08:16</span>
+                </div>
+                <div class="message-text">Tagesdaten für G.K.: Mittagessen Kartoffelgratin, Aktivität Atelier Malen, Stimmung gut, kein Heimgang</div>
+            </div>
+        </div>
+
+        <!-- Agent: Tagesdaten gespeichert -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--blue-bg); color: var(--blue);">DA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Daten-Agent</span>
+                    <span class="message-time">08:16</span>
+                </div>
+                <div class="message-text">Strukturierte Tagesdaten für G.K. erfasst.</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon blue">&#9998;</div>
+                        <span class="tool-title">Tagesdaten G.K. · 08.03.2026</span>
+                        <span class="tool-badge saved">Gespeichert</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Mittagessen</span><span class="sd-value">Kartoffelgratin</span></div>
+                        <div class="sd-row"><span class="sd-label">Aktivität</span><span class="sd-value">Atelier (Malen)</span></div>
+                        <div class="sd-row"><span class="sd-label">Stimmung</span><span class="sd-value"><span class="tag tag-green">Gut</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Heimgegangen</span><span class="sd-value">Nein</span></div>
+                        <div class="sd-row"><span class="sd-label">Krise</span><span class="sd-value">Nein</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Krise -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">12:45</span>
+                </div>
+                <div class="message-text">G.K. hat nach dem Mittagessen (Spaghetti) erbrochen, war blass und klagte über Übelkeit</div>
+            </div>
+        </div>
+
+        <!-- Agent: Krise dokumentiert -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--red-bg); color: var(--red);">!</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Doku-Agent</span>
+                    <span class="message-time">12:45</span>
+                </div>
+                <div class="message-text">Vorfall dokumentiert. Krisenstatus für G.K. aktualisiert.</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon red">&#9888;</div>
+                        <span class="tool-title">Bericht #DOK-2026-0308-002 · Vorfall</span>
+                        <span class="tool-badge crisis">Krise</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Klient</span><span class="sd-value"><span class="anon-badge">KLI-0312 (G.K.)</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Bereich</span><span class="sd-value"><span class="tag tag-red">Krise / Vorfall</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Situation</span><span class="sd-value">Der Klient erbrach nach dem Mittagessen (Spaghetti Bolognese). Er war blass und klagte über Übelkeit.</span></div>
+                        <div class="sd-row"><span class="sd-label">Leistung</span><span class="sd-value">Ich habe den Vorfall erfasst, Nahrungskarenz eingeleitet und die Vitalzeichen kontrolliert.</span></div>
+                        <div class="sd-row"><span class="sd-label">Wirkung</span><span class="sd-value">Der Klient konnte sich nach einer Ruhephase stabilisieren. Weitere Beobachtung empfohlen.</span></div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn">Bearbeiten</button>
+                        <button class="action-btn" onclick="insertQuickText('Eskalation an Teamleitung melden')">Eskalation</button>
+                        <button class="action-btn primary">PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Stammdaten abfragen -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">13:00</span>
+                </div>
+                <div class="message-text">Zeig mir die Klientenkarte von G.K.</div>
+            </div>
+        </div>
+
+        <!-- Agent: Klientenkarte -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--blue-bg); color: var(--blue);">DA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Daten-Agent</span>
+                    <span class="message-time">13:00</span>
+                </div>
+                <div class="message-text">Klientenkarte G.K. (KLI-0312):</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon purple">&#9787;</div>
+                        <span class="tool-title">Klientenkarte · G.K.</span>
+                        <span class="tool-badge info">KLI-0312</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Wohngruppe</span><span class="sd-value">Wohngruppe B</span></div>
+                        <div class="sd-row"><span class="sd-label">Bezugsperson</span><span class="sd-value">M. Keller</span></div>
+                        <div class="sd-row"><span class="sd-label">Schuhgrösse</span><span class="sd-value">42</span></div>
+                        <div class="sd-row"><span class="sd-label">Konfektionsgrösse</span><span class="sd-value">M</span></div>
+                        <div class="sd-row"><span class="sd-label">Aktivitäten</span><span class="sd-value">Malen, Spaziergänge, Musik hören</span></div>
+                        <div class="sd-row"><span class="sd-label">Essensvorlieben</span><span class="sd-value">Spaghetti, Kartoffelgratin, Apfelkuchen</span></div>
+                        <div class="sd-row"><span class="sd-label">Allergien</span><span class="sd-value">Laktoseintoleranz (leicht)</span></div>
+                        <div class="sd-row"><span class="sd-label">Heimgehregelung</span><span class="sd-value">Fr–So, Abholung 15:00, Rückkehr So 18:00</span></div>
+                        <div class="sd-row"><span class="sd-label">Wochenstruktur</span><span class="sd-value">Mo: Atelier · Di: Garten · Mi: Schwimmen · Do: Atelier · Fr: freie Aktivität</span></div>
+                        <div class="sd-row"><span class="sd-label">Hinweise</span><span class="sd-value">Braucht klare Tagesstruktur. Bei Reizüberflutung ruhigen Raum anbieten.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Wochenbericht -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:00</span>
+                </div>
+                <div class="message-text">Wochenbericht für G.K. erstellen</div>
+            </div>
+        </div>
+
+        <!-- Agent: Wochenbericht -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--green-bg); color: var(--green);">BA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Berichts-Agent</span>
+                    <span class="message-time">14:00</span>
+                </div>
+                <div class="message-text">Wochenbericht G.K. für KW 10 generiert:</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon green">&#9633;</div>
+                        <span class="tool-title">Wochenbericht · G.K. · KW 10</span>
+                        <span class="tool-badge completed">Fertig</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Berichte gesamt</span><span class="sd-value" style="font-weight:600">5</span></div>
+                        <div class="sd-row"><span class="sd-label">Tagesgestaltung</span><span class="sd-value">2</span></div>
+                        <div class="sd-row"><span class="sd-label">Aktivitäten</span><span class="sd-value">2</span></div>
+                        <div class="sd-row"><span class="sd-label">Krisen / Vorfälle</span><span class="sd-value"><span class="tag tag-orange">1</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Heimgänge</span><span class="sd-value">1 (Fr–So)</span></div>
+                        <div class="sd-row"><span class="sd-label">Stimmung (Trend)</span><span class="sd-value">Gut → Beeinträchtigt</span></div>
+                        <div style="margin-top: 8px;">
+                            <div class="chart-bars">
+                                <div class="chart-bar" style="height: 70%; background: var(--green);"><div class="chart-bar-val">2</div><div class="chart-bar-label">TG</div></div>
+                                <div class="chart-bar" style="height: 35%; background: var(--blue);"><div class="chart-bar-val">1</div><div class="chart-bar-label">Begl.</div></div>
+                                <div class="chart-bar" style="height: 70%; background: #06b6d4;"><div class="chart-bar-val">2</div><div class="chart-bar-label">Akt.</div></div>
+                                <div class="chart-bar" style="height: 0%; background: #8b5cf6;"><div class="chart-bar-val">0</div><div class="chart-bar-label">Pflege</div></div>
+                                <div class="chart-bar" style="height: 35%; background: var(--red);"><div class="chart-bar-val">1</div><div class="chart-bar-label">Krise</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn" onclick="insertQuickText('KI-Zusammenfassung für den Wochenbericht G.K.')">KI-Zusammenfassung</button>
+                        <button class="action-btn primary">PDF exportieren</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Tabelle -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:05</span>
+                </div>
+                <div class="message-text">Zeig mir alle Berichte von G.K. diese Woche</div>
+            </div>
+        </div>
+
+        <!-- Agent: Berichte-Tabelle -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--blue-bg); color: var(--blue);">DA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Daten-Agent</span>
+                    <span class="message-time">14:05</span>
+                </div>
+                <div class="message-text">5 Berichte für G.K. in KW 10:</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon blue">&#9776;</div>
+                        <span class="tool-title">Datensätze · G.K. · KW 10</span>
+                        <span class="tool-badge info">5 Einträge</span>
+                    </div>
+                    <div class="tool-card-body" style="padding: 0;">
+                        <table class="ki-table">
+                            <thead><tr><th>Datum</th><th>Bereich</th><th>Situationsbeschreibung</th></tr></thead>
+                            <tbody>
+                                <tr><td>03.03. 08:10</td><td><span class="tag tag-green">TG</span></td><td>Begrüssung, ruhiger Einstieg</td></tr>
+                                <tr><td>03.03. 14:00</td><td><span class="tag tag-blue">Aktivität</span></td><td>Malen im Atelier, konzentriert</td></tr>
+                                <tr><td>05.03. 10:30</td><td><span class="tag tag-purple">Begleitung</span></td><td>Spaziergang im Garten</td></tr>
+                                <tr><td>08.03. 08:15</td><td><span class="tag tag-green">TG</span></td><td>Willkommen geheissen, ruhig</td></tr>
+                                <tr><td>08.03. 12:45</td><td><span class="tag tag-red">Vorfall</span></td><td>Erbrechen nach Mittagessen</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn">CSV</button>
+                        <button class="action-btn">DOCX</button>
+                        <button class="action-btn primary">PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Multi-Klienten-Vergleich -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:10</span>
+                </div>
+                <div class="message-text">Welche Klienten hatten im März Krisen?</div>
+            </div>
+        </div>
+
+        <!-- Agent: Krisenübersicht -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--orange-bg); color: var(--orange);">BA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Berichts-Agent</span>
+                    <span class="message-time">14:10</span>
+                </div>
+                <div class="message-text">Krisenübersicht Wohngruppe B, März 2026:</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon orange">&#9888;</div>
+                        <span class="tool-title">Krisenübersicht · WG B · März 2026</span>
+                        <span class="tool-badge draft">3 Krisen</span>
+                    </div>
+                    <div class="tool-card-body" style="padding: 0;">
+                        <table class="ki-table">
+                            <thead><tr><th>Klient</th><th>Krisen</th><th>Letzte Krise</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="anon-badge">A.B. (KLI-0303)</span></td><td style="font-weight:600; color:var(--red);">2</td><td>05.03. – Verweigerung Mittagessen</td></tr>
+                                <tr><td><span class="anon-badge">G.K. (KLI-0312)</span></td><td style="font-weight:600; color:var(--orange);">1</td><td>08.03. – Erbrechen</td></tr>
+                                <tr><td><span class="anon-badge">H.M. (KLI-0308)</span></td><td style="color:var(--green);">0</td><td>–</td></tr>
+                                <tr><td><span class="anon-badge">R.S. (KLI-0315)</span></td><td style="color:var(--green);">0</td><td>–</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn" onclick="insertQuickText('KI-Analyse: Was sind die häufigsten Krisenauslöser?')">Auslöser analysieren</button>
+                        <button class="action-btn primary">PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Kantonsbericht -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:20</span>
+                </div>
+                <div class="message-text">Kantonsbericht für 1. Halbjahr 2026 erstellen</div>
+            </div>
+        </div>
+
+        <!-- Agent: Kantonsbericht -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--green-bg); color: var(--green);">BA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Berichts-Agent</span>
+                    <span class="message-time">14:20</span>
+                </div>
+                <div class="message-text">Halbjahresbericht generiert. Zusammenfassung:</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon green">&#9878;</div>
+                        <span class="tool-title">Kantonsbericht · 1. HJ 2026</span>
+                        <span class="tool-badge completed">Fertig</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Aktive Klienten</span><span class="sd-value" style="font-weight:600;">12</span></div>
+                        <div class="sd-row"><span class="sd-label">Berichte gesamt</span><span class="sd-value" style="font-weight:600;">847</span></div>
+                        <div class="sd-row"><span class="sd-label">Dokumentationsqualität</span><span class="sd-value"><span class="tag tag-green">98.2%</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Krisenrate</span><span class="sd-value">4.0% (rückläufig)</span></div>
+                        <div class="sd-row"><span class="sd-label">Berichte/Klient/Woche</span><span class="sd-value">4.2</span></div>
+                        <div style="margin-top: 10px;">
+                            <table class="ki-table">
+                                <thead><tr><th>Kategorie</th><th>Anzahl</th><th>Anteil</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Tagesgestaltung</td><td>312</td><td>36.8%</td></tr>
+                                    <tr><td>Begleitung</td><td>198</td><td>23.4%</td></tr>
+                                    <tr><td>Aktivitäten</td><td>156</td><td>18.4%</td></tr>
+                                    <tr><td>Pflege</td><td>87</td><td>10.3%</td></tr>
+                                    <tr><td>Mahlzeiten</td><td>60</td><td>7.1%</td></tr>
+                                    <tr><td>Krisen / Vorfälle</td><td>34</td><td>4.0%</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn">Vorschau (3 Seiten)</button>
+                        <button class="action-btn primary">Als PDF exportieren</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Pflege dokumentieren -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:30</span>
+                </div>
+                <div class="message-text">habe H.M. beim Duschen und Anziehen unterstützt, konnte Oberkörper selbstständig waschen, brauchte Hilfe bei Socken und Schuhen</div>
+            </div>
+        </div>
+
+        <!-- Agent: Pflegebericht -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--purple-bg); color: var(--purple);">KI</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Doku-Agent</span>
+                    <span class="message-time">14:30</span>
+                </div>
+                <div class="message-text">Pflegebericht für H.M. erfasst.</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon purple">&#10003;</div>
+                        <span class="tool-title">Bericht #DOK-2026-0308-003 · Pflege</span>
+                        <span class="tool-badge saved">Gespeichert</span>
+                    </div>
+                    <div class="tool-card-body">
+                        <div class="sd-row"><span class="sd-label">Klient</span><span class="sd-value"><span class="anon-badge">KLI-0308 (H.M.)</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Bereich</span><span class="sd-value"><span class="tag tag-purple">Pflege</span></span></div>
+                        <div class="sd-row"><span class="sd-label">Situation</span><span class="sd-value">Der Klient benötigte Unterstützung bei der Körperpflege und beim Anziehen.</span></div>
+                        <div class="sd-row"><span class="sd-label">Leistung</span><span class="sd-value">Ich habe den Klienten beim Duschen und Anziehen unterstützt. Der Oberkörper konnte selbstständig gewaschen werden, bei den Socken und Schuhen wurde Hilfe benötigt.</span></div>
+                        <div class="sd-row"><span class="sd-label">Wirkung</span><span class="sd-value">Der Klient war nach der Körperpflege zufrieden und konnte den Tag gut beginnen.</span></div>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn">Bearbeiten</button>
+                        <button class="action-btn primary">PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User: Vergleich Mahlzeiten -->
+        <div class="message user">
+            <div class="message-avatar">MK</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">M. Keller</span>
+                    <span class="message-time">14:35</span>
+                </div>
+                <div class="message-text">Was hat G.K. diese Woche gegessen?</div>
+            </div>
+        </div>
+
+        <!-- Agent: Mahlzeitenübersicht -->
+        <div class="message assistant">
+            <div class="message-avatar" style="background: var(--blue-bg); color: var(--blue);">DA</div>
+            <div class="message-body">
+                <div class="message-header">
+                    <span class="message-author">Daten-Agent</span>
+                    <span class="message-time">14:35</span>
+                </div>
+                <div class="message-text">Mahlzeiten G.K., KW 10:</div>
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <div class="tool-icon orange">&#9749;</div>
+                        <span class="tool-title">Mahlzeiten · G.K. · KW 10</span>
+                        <span class="tool-badge info">5 Tage</span>
+                    </div>
+                    <div class="tool-card-body" style="padding: 0;">
+                        <table class="ki-table">
+                            <thead><tr><th>Tag</th><th>Mittagessen</th><th>Besonderheiten</th></tr></thead>
+                            <tbody>
+                                <tr><td>Mo 03.03.</td><td>Reis mit Gemüse</td><td>–</td></tr>
+                                <tr><td>Di 04.03.</td><td>Fischstäbchen</td><td>–</td></tr>
+                                <tr><td>Mi 05.03.</td><td>Kartoffelsuppe</td><td>–</td></tr>
+                                <tr><td>Do 06.03.</td><td>Spaghetti Bolognese</td><td>–</td></tr>
+                                <tr><td>Fr 07.03.</td><td>Kartoffelgratin</td><td><span class="tag tag-red">Erbrechen 12:45</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tool-card-actions">
+                        <button class="action-btn" onclick="insertQuickText('Hat G.K. eine Lebensmittelunverträglichkeit?')">Allergien prüfen</button>
+                        <button class="action-btn">CSV</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-area">
+        <div class="input-wrapper">
+            <textarea class="message-input" id="chatInput" placeholder="Bericht diktieren, Frage stellen oder Daten abrufen..." rows="1"></textarea>
+            <button class="attach-btn" title="Datei anhängen">&#128206;</button>
+            <div class="suggestions-dropdown" id="suggestionsDropdown">
+                <div class="suggestion-item" data-text="Bericht erfassen für " onclick="applySuggestion(this)">
+                    <div class="suggestion-icon" style="background:var(--green-bg);color:var(--green);">+</div>
+                    <div><div class="suggestion-label">Bericht erfassen</div><div class="suggestion-desc">Dokumentation via Chat erstellen</div></div>
+                </div>
+                <div class="suggestion-item" data-text="Zeig mir die Klientenkarte von " onclick="applySuggestion(this)">
+                    <div class="suggestion-icon" style="background:var(--purple-bg);color:var(--purple);">&#9787;</div>
+                    <div><div class="suggestion-label">Klientenkarte anzeigen</div><div class="suggestion-desc">Stammdaten und Angaben abrufen</div></div>
+                </div>
+                <div class="suggestion-item" data-text="Wochenbericht erstellen für " onclick="applySuggestion(this)">
+                    <div class="suggestion-icon" style="background:var(--blue-bg);color:var(--blue);">&#9633;</div>
+                    <div><div class="suggestion-label">Wochenbericht</div><div class="suggestion-desc">Wöchentliche Zusammenfassung generieren</div></div>
+                </div>
+                <div class="suggestion-item" data-text="Krisenübersicht " onclick="applySuggestion(this)">
+                    <div class="suggestion-icon" style="background:var(--red-bg);color:var(--red);">&#9888;</div>
+                    <div><div class="suggestion-label">Krisenübersicht</div><div class="suggestion-desc">Vorfälle und Krisen anzeigen</div></div>
+                </div>
+                <div class="suggestion-item" data-text="Kantonsbericht erstellen " onclick="applySuggestion(this)">
+                    <div class="suggestion-icon" style="background:var(--orange-bg);color:var(--orange);">&#9878;</div>
+                    <div><div class="suggestion-label">Kantonsbericht</div><div class="suggestion-desc">Halbjahresbericht generieren</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="insertQuickText('habe den Klienten in der TG begrüsst und begleitet')">
+                <span class="dot" style="background:var(--green)"></span> Begrüssung TG
+            </button>
+            <button class="quick-btn" onclick="insertQuickText('Zeig mir die Berichte von G.K. diese Woche')">
+                <span class="dot" style="background:var(--blue)"></span> Berichte
+            </button>
+            <button class="quick-btn" onclick="insertQuickText('Welche Krisen gab es diesen Monat?')">
+                <span class="dot" style="background:var(--red)"></span> Krisen
+            </button>
+            <button class="quick-btn" onclick="insertQuickText('Wochenbericht für G.K. erstellen')">
+                <span class="dot" style="background:var(--orange)"></span> Wochenbericht
+            </button>
+            <button class="quick-btn" onclick="insertQuickText('Tagesdaten: Mittagessen ..., Aktivität ..., Stimmung ...')">
+                <span class="dot" style="background:var(--purple)"></span> Tagesdaten
+            </button>
+            <button class="quick-btn" onclick="insertQuickText('Vergleiche alle Klienten bezüglich Krisenhäufigkeit')">
+                <span class="dot" style="background:#06b6d4"></span> Vergleich
+            </button>
+            <button class="send-btn" id="sendBtn">&#10148;</button>
+        </div>
+    </div>
+</main>
+
+<!-- RIGHT SIDEBAR: Kontext -->
+<aside class="right-sidebar">
+    <div class="right-sidebar-header">
+        <span style="color:var(--purple);">&#9670;</span> Klienten-Kontext
+    </div>
+    <div class="right-sidebar-body">
+        <!-- Aktiver Klient -->
+        <div class="rs-card">
+            <div class="ctx-card-id">KLI-0312 (G.K.)</div>
+            <div class="ctx-card-info"><span>Wohngruppe B</span><span>Bezugsp.: M. Keller</span></div>
+        </div>
+
+        <!-- Tages-Vitals -->
+        <div class="rs-card">
+            <div class="rs-card-title">Status heute</div>
+            <div class="rs-stat"><span class="rs-stat-label">Stimmung</span><span class="rs-stat-val">Gut → Beeinträchtigt</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Krisen</span><span class="rs-stat-val" style="color:var(--red);">1</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Berichte</span><span class="rs-stat-val">3</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Heimgegangen</span><span class="rs-stat-val">Nein</span></div>
+        </div>
+
+        <!-- Heutige Berichte -->
+        <div class="rs-card">
+            <div class="rs-card-title">Heutige Berichte</div>
+            <div class="rs-entry green">
+                <strong>Tagesgestaltung</strong><br>Willkommen geheissen, ruhiger Start
+                <div class="rs-entry-time">08:15 · G.K.</div>
+            </div>
+            <div class="rs-entry red">
+                <strong>Vorfall – Erbrechen</strong><br>Nach Mittagessen (Spaghetti)
+                <div class="rs-entry-time">12:45 · G.K.</div>
+            </div>
+            <div class="rs-entry blue">
+                <strong>Pflege</strong><br>Unterstützung beim Duschen und Anziehen
+                <div class="rs-entry-time">14:30 · H.M.</div>
+            </div>
+        </div>
+
+        <!-- Stammdaten-Schnellzugriff -->
+        <div class="rs-card">
+            <div class="rs-card-title">Stammdaten G.K.</div>
+            <div class="rs-stat"><span class="rs-stat-label">Aktivitäten</span><span class="rs-stat-val" style="font-size:10px;">Malen, Spaziergänge</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Essen</span><span class="rs-stat-val" style="font-size:10px;">Spaghetti, Gratin</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Allergien</span><span class="rs-stat-val" style="font-size:10px;">Laktose (leicht)</span></div>
+            <div class="rs-stat"><span class="rs-stat-label">Heimgang</span><span class="rs-stat-val" style="font-size:10px;">Fr–So</span></div>
+        </div>
+
+        <!-- Alle Klienten WG B -->
+        <div class="rs-card">
+            <div class="rs-card-title">Wohngruppe B</div>
+            <div class="rs-entry green" style="cursor:pointer" onclick="insertQuickText('Zeig mir die Klientenkarte von G.K.')">
+                <strong>G.K.</strong> · KLI-0312 · <span style="color:var(--red);">1 Krise</span>
+            </div>
+            <div class="rs-entry green" style="cursor:pointer" onclick="insertQuickText('Zeig mir die Klientenkarte von H.M.')">
+                <strong>H.M.</strong> · KLI-0308
+            </div>
+            <div class="rs-entry green" style="cursor:pointer" onclick="insertQuickText('Zeig mir die Klientenkarte von R.S.')">
+                <strong>R.S.</strong> · KLI-0315
+            </div>
+            <div class="rs-entry green" style="cursor:pointer" onclick="insertQuickText('Zeig mir die Klientenkarte von A.B.')">
+                <strong>A.B.</strong> · KLI-0303 · <span style="color:var(--red);">2 Krisen</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+</div><!-- /app-shell -->
+
+<script>
+    /* ====== LOGIN / LOGOUT ====== */
+    function doLogin(e) { e.preventDefault(); document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('appShell').classList.add('active'); scrollToBottom(); }
+    function doLogout() { document.getElementById('appShell').classList.remove('active'); document.getElementById('loginScreen').classList.remove('hidden'); }
+
+    /* ====== CHAT ====== */
+    const chatInput = document.getElementById('chatInput');
+    const messagesContainer = document.getElementById('messagesContainer');
+    const suggestionsDropdown = document.getElementById('suggestionsDropdown');
+
+    function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+
+    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+    function insertQuickText(text) {
+        chatInput.value = text;
+        chatInput.focus();
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+        suggestionsDropdown.classList.remove('active');
+    }
+
+    function applySuggestion(el) {
+        chatInput.value = el.dataset.text;
+        chatInput.focus();
+        suggestionsDropdown.classList.remove('active');
+    }
+
+    chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+        const val = chatInput.value.trim().toLowerCase();
+        if (val.length >= 2) {
+            suggestionsDropdown.classList.add('active');
+        } else {
+            suggestionsDropdown.classList.remove('active');
+        }
+    });
+
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        // User message
+        const u = document.createElement('div');
+        u.className = 'message user';
+        u.innerHTML = `<div class="message-avatar">MK</div><div class="message-body"><div class="message-header"><span class="message-author">M. Keller</span><span class="message-time">${new Date().toLocaleTimeString('de-CH', {hour:'2-digit',minute:'2-digit'})}</span></div><div class="message-text">${escapeHtml(text)}</div></div>`;
+        messagesContainer.appendChild(u);
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        suggestionsDropdown.classList.remove('active');
+        scrollToBottom();
+
+        // Agent thinking
+        const agentEl = document.getElementById('agent-doku');
+        agentEl.classList.add('thinking');
+        agentEl.querySelector('.agent-status').textContent = 'thinking';
+
+        // Typing indicator
+        const t = document.createElement('div');
+        t.className = 'message assistant';
+        t.innerHTML = `<div class="message-avatar" style="background:var(--purple-bg);color:var(--purple);">KI</div><div class="message-body"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+        messagesContainer.appendChild(t);
+        scrollToBottom();
+
+        setTimeout(() => {
+            t.remove();
+            agentEl.classList.remove('thinking');
+            agentEl.querySelector('.agent-status').textContent = 'idle';
+
+            const a = document.createElement('div');
+            a.className = 'message assistant';
+            a.innerHTML = `<div class="message-avatar" style="background:var(--purple-bg);color:var(--purple);">KI</div>
+                <div class="message-body">
+                    <div class="message-header"><span class="message-author">Doku-Agent</span><span class="message-time">${new Date().toLocaleTimeString('de-CH', {hour:'2-digit',minute:'2-digit'})}</span></div>
+                    <div class="message-text">Eingabe verarbeitet.</div>
+                    <div class="tool-card">
+                        <div class="tool-card-header">
+                            <div class="tool-icon green">&#10003;</div>
+                            <span class="tool-title">Bericht wird erstellt</span>
+                            <span class="tool-badge saved">Gespeichert</span>
+                        </div>
+                        <div class="tool-card-body">
+                            <div class="sd-row"><span class="sd-label">Eingabe</span><span class="sd-value">${escapeHtml(text)}</span></div>
+                            <div class="sd-row"><span class="sd-label">Status</span><span class="sd-value"><span class="tag tag-green">KI generiert Sit./Leist./Wirk.</span></span></div>
+                        </div>
+                        <div class="tool-card-actions">
+                            <button class="action-btn">Bearbeiten</button>
+                            <button class="action-btn primary">PDF</button>
+                        </div>
+                    </div>
+                    <em style="font-size:10px;color:var(--text-muted);display:block;margin-top:6px;">(UX-Prototype V4)</em>
+                </div>`;
+            messagesContainer.appendChild(a);
+            scrollToBottom();
+        }, 1500);
+    }
+
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+
+    /* ====== SESSIONS ====== */
+    document.querySelectorAll('.session-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        });
+    });
+
+    function createNewSession() {
+        const list = document.querySelector('.sessions-list');
+        const item = document.createElement('div');
+        item.className = 'session-item active';
+        item.innerHTML = `<div class="session-icon">&#9993;</div><div class="session-content"><div class="session-name">Neue Konversation</div><div class="session-preview">Konversation starten...</div></div><div class="session-meta"><span class="session-time">jetzt</span></div>`;
+        document.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
+        list.prepend(item);
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.session-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        });
+    }
+
+    /* Close suggestions on outside click */
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.input-wrapper')) {
+            suggestionsDropdown.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>
