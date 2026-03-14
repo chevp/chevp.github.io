@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – Personal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .staff-avatar {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--blue), #5b9bd5);
+    }
+    .detail-avatar { background: linear-gradient(135deg, var(--blue), #5b9bd5); }
+    .list-header-icon { background: linear-gradient(135deg, var(--blue), #5b9bd5); }
+    .overtime-bar {
+      height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; margin-top: 4px;
+    }
+    .overtime-fill {
+      height: 100%; border-radius: 3px; transition: width 0.3s;
+    }
+    .qual-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .qual-tag {
+      font-size: 11px; padding: 4px 10px; border-radius: 16px;
+      background: var(--blue-bg); color: var(--blue); font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<div class="domain-page with-ai" id="domainPage">
+
+  <!-- LIST PANE -->
+  <div class="list-pane">
+    <div class="list-header">
+      <div class="list-header-top">
+        <div class="list-header-icon">
+          <span class="material-symbols-outlined">badge</span>
+        </div>
+        <span class="list-title">Personal</span>
+        <span class="list-count" id="listCount">5</span>
+      </div>
+      <div class="list-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Mitarbeiter suchen..." id="searchInput">
+      </div>
+    </div>
+    <div class="list-body" id="listBody"></div>
+    <button class="new-record-btn">
+      <span class="material-symbols-outlined">person_add</span>
+      Neuer Mitarbeiter
+    </button>
+  </div>
+
+  <!-- WORKSPACE PANE -->
+  <div class="workspace-pane" id="workspacePane">
+    <div class="workspace-header">
+      <div class="workspace-header-info">
+        <div class="workspace-header-title" id="wsTitle">Personal</div>
+        <div class="workspace-header-sub" id="wsSub">Mitarbeiter auswählen</div>
+      </div>
+      <div class="workspace-actions">
+        <button class="btn" onclick="showToast('Dienstplan exportiert')">
+          <span class="material-symbols-outlined">calendar_month</span> Dienstplan
+        </button>
+        <button class="btn" onclick="showToast('Daten gespeichert')">
+          <span class="material-symbols-outlined">save</span> Speichern
+        </button>
+        <button class="btn ai" id="aiToggleBtn" onclick="toggleAI()">
+          <span class="material-symbols-outlined">auto_awesome</span> AI
+        </button>
+      </div>
+    </div>
+    <div class="workspace-body" id="workspaceBody">
+      <div class="empty-state">
+        <span class="material-symbols-outlined">badge</span>
+        <p>Mitarbeiter aus der Liste auswählen</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-icon">
+        <span class="material-symbols-outlined">auto_awesome</span>
+      </div>
+      <div>
+        <div class="ai-panel-title">Cura AI</div>
+        <div class="ai-panel-subtitle">Personalassistenz</div>
+      </div>
+    </div>
+    <div class="ai-panel-body" id="aiBody">
+      <div class="ai-suggestion">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ai-icon-info">info</span>
+          <span class="ai-suggestion-title">Willkommen</span>
+        </div>
+        <div class="ai-suggestion-desc">Wählen Sie einen Mitarbeiter aus, um personalisierte Vorschläge zu erhalten.</div>
+      </div>
+    </div>
+    <div class="ai-panel-input">
+      <div class="ai-input-wrap">
+        <span class="material-symbols-outlined" style="font-size:16px;color:var(--text-dim)">chat</span>
+        <input type="text" placeholder="Frage zum Personal stellen..." id="aiInput">
+        <button class="ai-send" onclick="showToast('AI-Antwort wird generiert...')">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" style="font-size:16px">check_circle</span>
+  <span id="toastMsg">Gespeichert</span>
+</div>
+
+<script>
+  // ===== STAFF DATA =====
+  const staffData = {
+    s1: {
+      id: 's1', name: 'Sandra Müller', role: 'Pflegefachfrau HF',
+      dept: 'WG A (Leitung)', pensum: '80%', status: 'Anwesend', statusColor: 'green',
+      eintritt: '01.03.2018', telefon: '+41 79 345 67 89', email: 's.mueller@cura-heim.ch',
+      overtime: 8, maxOvertime: 20,
+      qualifications: ['Pflegefachfrau HF', 'CAS Gerontologie', 'Wundmanagement'],
+      aiSuggestions: [
+        { icon: 'schedule', iconClass: 'ai-icon-warning', title: 'Überstunden beachten',
+          desc: '8 Überstunden akkumuliert. Empfehlung: Kompensation innerhalb der nächsten 2 Wochen einplanen.',
+          action: 'Kompensation planen' },
+        { icon: 'school', iconClass: 'ai-icon-info', title: 'Weiterbildung CAS Palliative Care',
+          desc: 'Basierend auf der Abteilungsleitung und bestehenden Qualifikationen wäre CAS Palliative Care eine sinnvolle Ergänzung.',
+          action: 'Kursangebot anzeigen' },
+        { icon: 'description', iconClass: 'ai-icon-action', title: 'Weiterbildungsnachweis prüfen',
+          desc: 'Der Nachweis für CAS Gerontologie läuft in 3 Monaten ab. Erneuerung einleiten.',
+          action: 'Dokumentation öffnen' }
+      ]
+    },
+    s2: {
+      id: 's2', name: 'Marco Bianchi', role: 'FaGe EFZ',
+      dept: 'WG A', pensum: '100%', status: 'Anwesend', statusColor: 'green',
+      eintritt: '15.08.2020', telefon: '+41 78 234 56 78', email: 'm.bianchi@cura-heim.ch',
+      overtime: 12, maxOvertime: 20,
+      qualifications: ['FaGe EFZ', 'BLS-AED Instruktor'],
+      aiSuggestions: [
+        { icon: 'warning', iconClass: 'ai-icon-warning', title: 'Hohe Überstunden',
+          desc: '12 Überstunden – über dem Teamdurchschnitt. Dringende Kompensation empfohlen, um Burnout-Risiko zu minimieren.',
+          action: 'Dienstplan anpassen' },
+        { icon: 'school', iconClass: 'ai-icon-info', title: 'BLS-AED Rezertifizierung',
+          desc: 'Die BLS-AED Instruktor-Zertifizierung muss jährlich erneuert werden. Nächster Termin in 2 Monaten.',
+          action: 'Termin planen' },
+        { icon: 'trending_up', iconClass: 'ai-icon-action', title: 'Karriereentwicklung',
+          desc: 'Marco arbeitet seit 5 Jahren als FaGe. Eine Weiterbildung zur Pflegefachperson HF könnte in Betracht gezogen werden.',
+          action: 'Entwicklungsplan öffnen' }
+      ]
+    },
+    s3: {
+      id: 's3', name: 'Julia Keller', role: 'Pflegefachfrau HF',
+      dept: 'Nachtdienst', pensum: '60%', status: 'Frei', statusColor: 'gray',
+      eintritt: '01.06.2019', telefon: '+41 76 456 78 90', email: 'j.keller@cura-heim.ch',
+      overtime: 4, maxOvertime: 20,
+      qualifications: ['Pflegefachfrau HF', 'Notfallpflege'],
+      aiSuggestions: [
+        { icon: 'check_circle', iconClass: 'ai-icon-action', title: 'Überstunden im Rahmen',
+          desc: 'Nur 4 Überstunden – gutes Gleichgewicht zwischen Arbeitszeit und Erholung im Nachtdienst.',
+          action: 'Details anzeigen' },
+        { icon: 'school', iconClass: 'ai-icon-info', title: 'Fortbildung Schmerzmanagement',
+          desc: 'Für den Nachtdienst wäre eine Vertiefung im Schmerzmanagement besonders wertvoll.',
+          action: 'Kursangebot anzeigen' }
+      ]
+    },
+    s4: {
+      id: 's4', name: 'Thomas Gerber', role: 'FaGe EFZ',
+      dept: 'WG B', pensum: '90%', status: 'Anwesend', statusColor: 'green',
+      eintritt: '01.01.2021', telefon: '+41 79 567 89 01', email: 't.gerber@cura-heim.ch',
+      overtime: 6, maxOvertime: 20,
+      qualifications: ['FaGe EFZ', 'Palliative Care Grundkurs'],
+      aiSuggestions: [
+        { icon: 'schedule', iconClass: 'ai-icon-info', title: 'Überstunden moderat',
+          desc: '6 Überstunden. Empfehlung: Bei nächster Dienstplanperiode einen halben Kompensationstag einplanen.',
+          action: 'Kompensation planen' },
+        { icon: 'school', iconClass: 'ai-icon-action', title: 'Palliative Care Aufbaukurs',
+          desc: 'Nach dem Grundkurs wäre der Aufbaukurs B1 eine logische Weiterentwicklung. Nächster Kurs startet im Mai.',
+          action: 'Kursangebot anzeigen' },
+        { icon: 'description', iconClass: 'ai-icon-info', title: 'Ausbildungsnachweis aktualisieren',
+          desc: 'Empfehlung: Palliative Care Grundkurs-Zertifikat in der Dokumentation hinterlegen.',
+          action: 'Dokumentation öffnen' }
+      ]
+    },
+    s5: {
+      id: 's5', name: 'Lena Widmer', role: 'Lernende FaGe 3. Lehrjahr',
+      dept: 'WG C', pensum: '100%', status: 'Anwesend', statusColor: 'green',
+      eintritt: '01.08.2023', telefon: '+41 78 678 90 12', email: 'l.widmer@cura-heim.ch',
+      overtime: 0, maxOvertime: 20,
+      qualifications: ['FaGe in Ausbildung (3. Lehrjahr)'],
+      aiSuggestions: [
+        { icon: 'check_circle', iconClass: 'ai-icon-action', title: 'Keine Überstunden',
+          desc: 'Lena hat keine Überstunden – gesetzeskonform für Lernende. Weiter so beibehalten.',
+          action: 'Details anzeigen' },
+        { icon: 'school', iconClass: 'ai-icon-info', title: 'Lehrabschlussprüfung vorbereiten',
+          desc: 'Als Lernende im 3. Lehrjahr steht die LAP bevor. Prüfungsvorbereitung und Praxisbegleitung sicherstellen.',
+          action: 'Ausbildungsplan öffnen' },
+        { icon: 'trending_up', iconClass: 'ai-icon-info', title: 'Übernahme nach Lehre',
+          desc: 'Frühzeitig klären, ob eine Festanstellung nach dem Lehrabschluss möglich und gewünscht ist.',
+          action: 'Gespräch planen' }
+      ]
+    }
+  };
+
+  let selectedStaffId = null;
+  let aiVisible = true;
+
+  // ===== INIT =====
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const entityParam = params.get('entity');
+
+    renderList();
+
+    if (entityParam && staffData[entityParam]) {
+      selectStaff(entityParam);
+    }
+  }
+
+  // ===== RENDER LIST =====
+  function renderList(filter) {
+    const body = document.getElementById('listBody');
+    const filterLower = (filter || '').toLowerCase();
+    let entries = Object.values(staffData);
+
+    if (filterLower) {
+      entries = entries.filter(s =>
+        s.name.toLowerCase().includes(filterLower) ||
+        s.role.toLowerCase().includes(filterLower) ||
+        s.dept.toLowerCase().includes(filterLower)
+      );
+    }
+
+    document.getElementById('listCount').textContent = entries.length;
+
+    body.innerHTML = entries.map(s => `
+      <div class="record-card ${s.id === selectedStaffId ? 'active' : ''}" onclick="selectStaff('${s.id}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="staff-avatar">${getInitials(s.name)}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="record-card-name">${s.name}</div>
+            <div class="record-card-sub">${s.role}</div>
+          </div>
+        </div>
+        <div class="record-card-footer" style="margin-top:8px;">
+          <span class="record-card-time">${s.dept} · ${s.pensum}</span>
+          <span class="badge ${s.statusColor}">${s.status}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2);
+  }
+
+  // ===== SELECT STAFF =====
+  function selectStaff(id) {
+    selectedStaffId = id;
+    const s = staffData[id];
+    if (!s) return;
+
+    renderList(document.getElementById('searchInput').value);
+    renderDetail(s);
+    renderAI(s);
+
+    // Notify parent shell about selected staff member
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'update-tab-label', label: s.name }, '*');
+    }
+  }
+
+  // ===== RENDER DETAIL =====
+  function renderDetail(s) {
+    document.getElementById('wsTitle').textContent = s.name;
+    document.getElementById('wsSub').textContent = `${s.role} · ${s.dept}`;
+
+    const overtimePercent = Math.min((s.overtime / s.maxOvertime) * 100, 100);
+    const overtimeColor = s.overtime > 10 ? 'var(--orange)' : s.overtime > 0 ? 'var(--blue)' : 'var(--green)';
+
+    document.getElementById('workspaceBody').innerHTML = `
+      <div class="fade-in">
+        <!-- Header -->
+        <div class="detail-header">
+          <div class="detail-avatar">
+            <span class="material-symbols-outlined">person</span>
+          </div>
+          <div class="detail-header-info">
+            <h2>${s.name}</h2>
+            <p>${s.role} · ${s.dept}</p>
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <span class="badge ${s.statusColor}">${s.status}</span>
+              <span class="badge blue">${s.pensum}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="detail-tabs">
+          <button class="detail-tab active">Übersicht</button>
+          <button class="detail-tab" onclick="showToast('Dienstplan-Ansicht in Entwicklung')">Dienstplan</button>
+          <button class="detail-tab" onclick="showToast('Abwesenheiten-Ansicht in Entwicklung')">Abwesenheiten</button>
+          <button class="detail-tab" onclick="showToast('Dokumente-Ansicht in Entwicklung')">Dokumente</button>
+        </div>
+
+        <!-- Stammdaten -->
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">person</span>
+            Stammdaten
+          </div>
+          <div class="info-grid">
+            <div class="info-field">
+              <span class="info-label">Funktion</span>
+              <span class="info-value">${s.role}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Abteilung</span>
+              <span class="info-value">${s.dept}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Pensum</span>
+              <span class="info-value">${s.pensum}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Eintritt</span>
+              <span class="info-value">${s.eintritt}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Telefon</span>
+              <span class="info-value">${s.telefon}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">E-Mail</span>
+              <span class="info-value">${s.email}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Überstunden -->
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">schedule</span>
+            Überstunden
+          </div>
+          <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 16px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+              <span style="font-size:24px;font-weight:700;color:${overtimeColor}">${s.overtime}h</span>
+              <span style="font-size:11px;color:var(--text-dim)">von max. ${s.maxOvertime}h empfohlen</span>
+            </div>
+            <div class="overtime-bar">
+              <div class="overtime-fill" style="width:${overtimePercent}%;background:${overtimeColor};"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Qualifikationen -->
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">school</span>
+            Qualifikationen
+          </div>
+          <div class="qual-tags">
+            ${s.qualifications.map(q => `<span class="qual-tag">${q}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- Letzte Aktivitäten -->
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">history</span>
+            Letzte Aktivitäten
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-icon">
+                <span class="material-symbols-outlined">login</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Dienstbeginn</div>
+                <div class="timeline-desc">Schicht ${s.statusColor === 'green' ? 'gestartet' : 'beendet'}</div>
+              </div>
+              <div class="timeline-time">Heute, 07:00</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon">
+                <span class="material-symbols-outlined">edit_note</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Dokumentation erstellt</div>
+                <div class="timeline-desc">Pflegebericht für Bewohner aktualisiert</div>
+              </div>
+              <div class="timeline-time">Gestern, 14:30</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon">
+                <span class="material-symbols-outlined">event_available</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">Dienstplan bestätigt</div>
+                <div class="timeline-desc">Nächste Woche bestätigt</div>
+              </div>
+              <div class="timeline-time">10.03.2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== RENDER AI SUGGESTIONS =====
+  function renderAI(s) {
+    const body = document.getElementById('aiBody');
+    body.innerHTML = s.aiSuggestions.map(sg => `
+      <div class="ai-suggestion fade-in">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ${sg.iconClass}">${sg.icon}</span>
+          <span class="ai-suggestion-title">${sg.title}</span>
+        </div>
+        <div class="ai-suggestion-desc">${sg.desc}</div>
+        <button class="ai-suggestion-action" onclick="handleAIAction('${sg.action}')">
+          ${sg.action}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ===== AI ACTION HANDLER =====
+  function handleAIAction(action) {
+    if (action === 'Dokumentation öffnen') {
+      showToast('Dokumentation wird in neuem Tab geöffnet...');
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'open-tab', domain: 'documentation', label: 'Weiterbildungsnachweise' }, '*');
+      }
+    } else {
+      showToast(action + '...');
+    }
+  }
+
+  // ===== AI TOGGLE =====
+  function toggleAI() {
+    aiVisible = !aiVisible;
+    const page = document.getElementById('domainPage');
+    const panel = document.getElementById('aiPanel');
+    const btn = document.getElementById('aiToggleBtn');
+
+    if (aiVisible) {
+      page.classList.add('with-ai');
+      panel.classList.remove('hidden');
+      btn.classList.add('active');
+    } else {
+      page.classList.remove('with-ai');
+      panel.classList.add('hidden');
+      btn.classList.remove('active');
+    }
+  }
+
+  // ===== SEARCH =====
+  document.getElementById('searchInput').addEventListener('input', function() {
+    renderList(this.value);
+  });
+
+  // ===== AI INPUT =====
+  document.getElementById('aiInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      showToast('AI-Antwort wird generiert...');
+      this.value = '';
+    }
+  });
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  }
+
+  // ===== INIT =====
+  init();
+</script>
+
+</body>
+</html>

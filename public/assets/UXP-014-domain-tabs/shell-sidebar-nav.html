@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – UXP-014b Sidebar Navigation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+
+    :root {
+      color-scheme: dark;
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface-2: #232733;
+      --surface-3: #2a2e3b;
+      --surface-4: #353a4a;
+      --border: #2e3344;
+      --border-light: #3a3f52;
+      --text: #e4e6ed;
+      --text-muted: #8b8fa3;
+      --text-dim: #5c6078;
+      --accent: #6c5ce7;
+      --accent-light: #a29bfe;
+      --accent-bg: rgba(108, 92, 231, 0.1);
+      --green: #00b894;
+      --green-bg: rgba(0, 184, 148, 0.12);
+      --orange: #fdcb6e;
+      --orange-bg: rgba(253, 203, 110, 0.12);
+      --red: #ff7675;
+      --red-bg: rgba(255, 118, 117, 0.12);
+      --blue: #74b9ff;
+      --blue-bg: rgba(116, 185, 255, 0.12);
+      --sidebar-width: 240px;
+    }
+
+    html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+    /* ===== WINDOW FRAME ===== */
+    .window {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ===== TITLEBAR + TABS ===== */
+    .titlebar {
+      display: flex;
+      align-items: center;
+      height: 38px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      -webkit-app-region: drag;
+      flex-shrink: 0;
+      padding-left: 12px;
+    }
+
+    .titlebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    .titlebar-logo-icon {
+      width: 22px; height: 22px; border-radius: 6px;
+      background: linear-gradient(135deg, var(--accent), #a29bfe);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .titlebar-logo-icon .material-symbols-outlined { font-size: 14px; color: #fff; }
+    .titlebar-logo-text { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+
+    /* Tab Bar in titlebar */
+    .tabbar {
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+      overflow-x: auto;
+      gap: 1px;
+      padding-top: 4px;
+    }
+    .tabbar::-webkit-scrollbar { height: 0; }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 8px 8px 0 0;
+      white-space: nowrap;
+      position: relative;
+      -webkit-app-region: no-drag;
+      min-width: 0;
+      max-width: 200px;
+    }
+    .tab:hover { background: var(--surface); color: var(--text); }
+    .tab.active { background: var(--surface); color: var(--text); }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+    .tab .material-symbols-outlined { font-size: 16px; flex-shrink: 0; }
+    .tab-label { overflow: hidden; text-overflow: ellipsis; }
+
+    .tab-close {
+      width: 18px; height: 18px; border-radius: 4px;
+      background: none; border: none;
+      color: var(--text-dim); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; opacity: 0; transition: all 0.15s;
+    }
+    .tab:hover .tab-close { opacity: 1; }
+    .tab-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+    .tab-close .material-symbols-outlined { font-size: 14px; }
+
+    .tab-new {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: none; border: none;
+      color: var(--text-dim); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin: 0 8px;
+      transition: all 0.15s;
+      -webkit-app-region: no-drag;
+    }
+    .tab-new:hover { background: var(--surface); color: var(--text); }
+    .tab-new .material-symbols-outlined { font-size: 18px; }
+
+    /* Window controls */
+    .window-controls {
+      display: flex; align-items: center; gap: 0;
+      margin-left: auto; flex-shrink: 0;
+      -webkit-app-region: no-drag;
+    }
+    .wc-btn {
+      width: 46px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      transition: background 0.1s;
+    }
+    .wc-btn:hover { background: rgba(255,255,255,0.07); }
+    .wc-btn.close:hover { background: #e81123; color: #fff; }
+    .wc-btn .material-symbols-outlined { font-size: 18px; }
+
+    /* Domain dot */
+    .domain-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .domain-dot.clients { background: var(--accent); }
+    .domain-dot.documentation { background: var(--green); }
+    .domain-dot.staff { background: var(--blue); }
+    .domain-dot.medication { background: var(--orange); }
+    .domain-dot.ai { background: linear-gradient(135deg, var(--accent), #8b5cf6); }
+
+    /* ===== MAIN AREA: SIDEBAR + WORKSPACE ===== */
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    /* App Icons (top of sidebar) */
+    .sidebar-apps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 10px 10px 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 6px 6px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      flex: 1;
+      min-width: 48px;
+      max-width: 64px;
+    }
+    .app-icon:hover {
+      background: var(--surface-2);
+      color: var(--text-muted);
+    }
+    .app-icon.active {
+      background: var(--accent-bg);
+      color: var(--accent-light);
+    }
+    .app-icon .material-symbols-outlined { font-size: 22px; }
+    .app-icon-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Domain Navigation (below app icons) */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      padding: 10px 8px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.12s;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+    .nav-item.active {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+    .nav-item .material-symbols-outlined { font-size: 18px; }
+    .nav-item-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-dim);
+      background: var(--surface-3);
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 6px 8px;
+    }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      padding: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-footer-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .sidebar-footer-info { flex: 1; min-width: 0; }
+    .sidebar-footer-name { font-size: 12px; font-weight: 600; }
+    .sidebar-footer-role { font-size: 10px; color: var(--text-dim); }
+    .sidebar-footer-btn {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: none; border: none;
+      color: var(--text-dim); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .sidebar-footer-btn:hover { background: var(--surface-2); color: var(--text-muted); }
+    .sidebar-footer-btn .material-symbols-outlined { font-size: 18px; }
+
+    /* ===== WORKSPACE / CONTENT ===== */
+    .content {
+      flex: 1;
+      background: var(--surface);
+      overflow: hidden;
+      position: relative;
+    }
+    .content iframe {
+      width: 100%; height: 100%; border: none; display: none;
+    }
+    .content iframe.active { display: block; }
+
+    /* ===== NEW TAB MENU ===== */
+    .new-tab-menu {
+      display: none;
+      position: absolute;
+      top: 38px;
+      right: 60px;
+      z-index: 100;
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      min-width: 240px;
+      padding: 8px 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+    .new-tab-menu.visible { display: block; }
+    .new-tab-menu-title {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-dim); padding: 8px 16px 4px;
+    }
+    .new-tab-menu-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; cursor: pointer; transition: background 0.12s;
+      font-size: 13px; color: var(--text);
+    }
+    .new-tab-menu-item:hover { background: rgba(255,255,255,0.05); }
+    .new-tab-menu-item .material-symbols-outlined { font-size: 20px; }
+    .new-tab-menu-item .ntm-label { flex: 1; }
+
+    /* ===== EMPTY WORKSPACE STATE ===== */
+    .workspace-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      padding: 40px;
+    }
+    .workspace-empty .material-symbols-outlined { font-size: 48px; opacity: 0.3; }
+    .workspace-empty p { font-size: 13px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div class="window">
+  <!-- TITLEBAR with Tabs -->
+  <div class="titlebar">
+    <div class="titlebar-logo">
+      <div class="titlebar-logo-icon">
+        <span class="material-symbols-outlined">health_and_safety</span>
+      </div>
+      <span class="titlebar-logo-text">Cura</span>
+    </div>
+
+    <div class="tabbar" id="tabbar"></div>
+
+    <button class="tab-new" id="newTabBtn" title="Neuer Tab (Ctrl+T)">
+      <span class="material-symbols-outlined">add</span>
+    </button>
+
+    <div class="window-controls">
+      <button class="wc-btn"><span class="material-symbols-outlined">remove</span></button>
+      <button class="wc-btn"><span class="material-symbols-outlined">crop_square</span></button>
+      <button class="wc-btn close"><span class="material-symbols-outlined">close</span></button>
+    </div>
+  </div>
+
+  <!-- MAIN: Sidebar + Content -->
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <!-- App Icons (Domain Switcher) -->
+      <div class="sidebar-apps" id="sidebarApps">
+        <button class="app-icon active" data-app="clients" title="Klienten (CRM)">
+          <span class="material-symbols-outlined" style="color:var(--accent)">person</span>
+          <span class="app-icon-label">Klienten</span>
+        </button>
+        <button class="app-icon" data-app="documentation" title="Dokumentation">
+          <span class="material-symbols-outlined" style="color:var(--green)">description</span>
+          <span class="app-icon-label">Doku</span>
+        </button>
+        <button class="app-icon" data-app="staff" title="Personal">
+          <span class="material-symbols-outlined" style="color:var(--blue)">badge</span>
+          <span class="app-icon-label">Personal</span>
+        </button>
+        <button class="app-icon" data-app="medication" title="Medikation">
+          <span class="material-symbols-outlined" style="color:var(--orange)">medication</span>
+          <span class="app-icon-label">Medikation</span>
+        </button>
+        <button class="app-icon" data-app="ai" title="AI Workspace">
+          <span class="material-symbols-outlined" style="color:var(--accent-light)">auto_awesome</span>
+          <span class="app-icon-label">AI</span>
+        </button>
+      </div>
+
+      <!-- Domain-specific Navigation -->
+      <div class="sidebar-nav" id="sidebarNav">
+        <!-- Rendered dynamically based on active app -->
+      </div>
+
+      <!-- User Footer -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-avatar">MK</div>
+        <div class="sidebar-footer-info">
+          <div class="sidebar-footer-name">M. Keller</div>
+          <div class="sidebar-footer-role">Pflegefachperson</div>
+        </div>
+        <button class="sidebar-footer-btn" title="Einstellungen">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div class="content" id="content">
+      <div class="workspace-empty" id="emptyState">
+        <span class="material-symbols-outlined">dashboard</span>
+        <p>Wählen Sie eine Domain und einen Eintrag<br>aus der Sidebar, um loszulegen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Tab Menu -->
+<div class="new-tab-menu" id="newTabMenu">
+  <div class="new-tab-menu-title">Domain öffnen</div>
+  <div class="new-tab-menu-item" data-domain="clients">
+    <span class="domain-dot clients"></span>
+    <span class="material-symbols-outlined" style="color:var(--accent)">person</span>
+    <span class="ntm-label">Klienten</span>
+  </div>
+  <div class="new-tab-menu-item" data-domain="documentation">
+    <span class="domain-dot documentation"></span>
+    <span class="material-symbols-outlined" style="color:var(--green)">description</span>
+    <span class="ntm-label">Dokumentation</span>
+  </div>
+  <div class="new-tab-menu-item" data-domain="staff">
+    <span class="domain-dot staff"></span>
+    <span class="material-symbols-outlined" style="color:var(--blue)">badge</span>
+    <span class="ntm-label">Personal</span>
+  </div>
+  <div class="new-tab-menu-item" data-domain="medication">
+    <span class="domain-dot medication"></span>
+    <span class="material-symbols-outlined" style="color:var(--orange)">medication</span>
+    <span class="ntm-label">Medikation</span>
+  </div>
+  <div class="new-tab-menu-item" data-domain="ai">
+    <span class="domain-dot ai"></span>
+    <span class="material-symbols-outlined" style="color:var(--accent-light)">auto_awesome</span>
+    <span class="ntm-label">AI Workspace</span>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// DOMAIN CONFIG
+// =====================================================
+const domainConfig = {
+  clients: {
+    label: 'Klienten',
+    icon: 'person',
+    color: 'var(--accent)',
+    src: 'domain-clients.html',
+    nav: [
+      { section: 'Ansichten' },
+      { id: 'all', icon: 'group', label: 'Alle Klienten', count: 48 },
+      { id: 'active', icon: 'check_circle', label: 'Aktive', count: 42 },
+      { id: 'palliativ', icon: 'favorite', label: 'Palliativ', count: 3 },
+      { id: 'urlaub', icon: 'flight', label: 'Im Urlaub', count: 2 },
+      { id: 'neu', icon: 'person_add', label: 'Neuaufnahmen', count: 1 },
+      { divider: true },
+      { section: 'Wohngruppen' },
+      { id: 'wg-a', icon: 'home', label: 'Wohngruppe A', count: 16 },
+      { id: 'wg-b', icon: 'home', label: 'Wohngruppe B', count: 18 },
+      { id: 'wg-c', icon: 'home', label: 'Wohngruppe C', count: 14 },
+      { divider: true },
+      { section: 'Schnellzugriff' },
+      { id: 'favoriten', icon: 'star', label: 'Favoriten', count: 5 },
+      { id: 'zuletzt', icon: 'history', label: 'Zuletzt besucht' }
+    ]
+  },
+  documentation: {
+    label: 'Dokumentation',
+    icon: 'description',
+    color: 'var(--green)',
+    src: 'domain-documentation.html',
+    nav: [
+      { section: 'Typen' },
+      { id: 'all', icon: 'folder_open', label: 'Alle Dokumente', count: 156 },
+      { id: 'pflegeplan', icon: 'assignment', label: 'Pflegepläne', count: 48 },
+      { id: 'bericht', icon: 'summarize', label: 'Berichte', count: 67 },
+      { id: 'protokoll', icon: 'fact_check', label: 'Protokolle', count: 23 },
+      { id: 'therapie', icon: 'physical_therapy', label: 'Therapie', count: 18 },
+      { divider: true },
+      { section: 'Status' },
+      { id: 'entwurf', icon: 'edit_note', label: 'Entwürfe', count: 4 },
+      { id: 'pruefung', icon: 'pending', label: 'Zur Prüfung', count: 7 },
+      { id: 'abgeschlossen', icon: 'task_alt', label: 'Abgeschlossen', count: 145 },
+      { divider: true },
+      { section: 'Schnellzugriff' },
+      { id: 'vorlagen', icon: 'content_copy', label: 'Vorlagen' },
+      { id: 'zuletzt', icon: 'history', label: 'Zuletzt bearbeitet' }
+    ]
+  },
+  staff: {
+    label: 'Personal',
+    icon: 'badge',
+    color: 'var(--blue)',
+    src: 'domain-staff.html',
+    nav: [
+      { section: 'Mitarbeiter' },
+      { id: 'all', icon: 'groups', label: 'Alle Mitarbeiter', count: 34 },
+      { id: 'pflege', icon: 'medical_services', label: 'Pflegepersonal', count: 22 },
+      { id: 'therapie', icon: 'physical_therapy', label: 'Therapeuten', count: 6 },
+      { id: 'verwaltung', icon: 'business_center', label: 'Verwaltung', count: 6 },
+      { divider: true },
+      { section: 'Planung' },
+      { id: 'dienstplan', icon: 'calendar_month', label: 'Dienstplan' },
+      { id: 'abwesenheit', icon: 'event_busy', label: 'Abwesenheiten', count: 3 },
+      { id: 'fortbildung', icon: 'school', label: 'Fortbildungen' }
+    ]
+  },
+  medication: {
+    label: 'Medikation',
+    icon: 'medication',
+    color: 'var(--orange)',
+    src: 'domain-medication.html',
+    nav: [
+      { section: 'Übersicht' },
+      { id: 'all', icon: 'inventory_2', label: 'Alle Medikamente', count: 87 },
+      { id: 'aktiv', icon: 'check_circle', label: 'Aktive Verordnungen', count: 62 },
+      { id: 'interaktionen', icon: 'warning', label: 'Interaktionen', count: 3 },
+      { divider: true },
+      { section: 'Verwaltung' },
+      { id: 'bestellung', icon: 'local_shipping', label: 'Bestellungen', count: 2 },
+      { id: 'bestand', icon: 'warehouse', label: 'Lagerbestand' },
+      { id: 'verfallen', icon: 'event_busy', label: 'Bald ablaufend', count: 5 }
+    ]
+  },
+  ai: {
+    label: 'AI Workspace',
+    icon: 'auto_awesome',
+    color: 'var(--accent-light)',
+    src: 'domain-ai.html',
+    nav: [
+      { section: 'AI-Funktionen' },
+      { id: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
+      { id: 'vorschlaege', icon: 'lightbulb', label: 'Vorschläge', count: 12 },
+      { id: 'zusammenfassungen', icon: 'summarize', label: 'Zusammenfassungen' },
+      { id: 'interaktionen', icon: 'warning', label: 'Risiko-Analyse', count: 3 },
+      { divider: true },
+      { section: 'Automatisierung' },
+      { id: 'workflows', icon: 'account_tree', label: 'Workflows', count: 4 },
+      { id: 'berichte', icon: 'analytics', label: 'Auto-Berichte' },
+      { id: 'chat', icon: 'chat', label: 'AI-Chat' }
+    ]
+  }
+};
+
+// =====================================================
+// STATE
+// =====================================================
+let activeApp = 'clients';
+let activeNavItem = 'all';
+let tabs = [];
+let activeTabId = null;
+let tabIdCounter = 0;
+
+// BroadcastChannel for cross-tab communication
+const channel = new BroadcastChannel('cura-tabs');
+channel.onmessage = (e) => {
+  const msg = e.data;
+  if (msg.type === 'open-tab') {
+    openTab(msg.domain, msg.label || null, msg.entity || null);
+  }
+};
+
+// =====================================================
+// APP SWITCHING (Domain context)
+// =====================================================
+function switchApp(appKey) {
+  activeApp = appKey;
+  activeNavItem = 'all';
+
+  // Update app icon active states
+  document.querySelectorAll('.app-icon').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.app === appKey);
+  });
+
+  renderSidebarNav();
+
+  // Open or activate tab for this domain
+  const existingTab = tabs.find(t => t.domain === appKey && !t.entity);
+  if (existingTab) {
+    activateTab(existingTab.id);
+  } else {
+    openTab(appKey);
+  }
+}
+
+// =====================================================
+// SIDEBAR NAVIGATION RENDERING
+// =====================================================
+function renderSidebarNav() {
+  const config = domainConfig[activeApp];
+  if (!config || !config.nav) return;
+
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = config.nav.map(item => {
+    if (item.section) {
+      return `<div class="nav-section-title">${item.section}</div>`;
+    }
+    if (item.divider) {
+      return `<div class="nav-divider"></div>`;
+    }
+    const isActive = item.id === activeNavItem;
+    const countHTML = item.count != null
+      ? `<span class="nav-item-count">${item.count}</span>`
+      : '';
+    return `
+      <button class="nav-item ${isActive ? 'active' : ''}" data-nav-id="${item.id}" onclick="selectNavItem('${item.id}')">
+        <span class="material-symbols-outlined">${item.icon}</span>
+        ${item.label}
+        ${countHTML}
+      </button>
+    `;
+  }).join('');
+}
+
+function selectNavItem(id) {
+  activeNavItem = id;
+  renderSidebarNav();
+  // In a real app this would filter the content in the active tab
+}
+
+// =====================================================
+// TAB MANAGEMENT
+// =====================================================
+function openTab(domain, customLabel, entity) {
+  const config = domainConfig[domain];
+  if (!config) return;
+
+  tabIdCounter++;
+  const id = 'tab-' + tabIdCounter;
+  const label = customLabel || config.label;
+
+  // Create iframe
+  const iframe = document.createElement('iframe');
+  let src = config.src;
+  if (entity) {
+    src += '?entity=' + encodeURIComponent(entity);
+  }
+  iframe.src = src;
+  iframe.id = 'iframe-' + id;
+  iframe.dataset.tabId = id;
+  document.getElementById('content').appendChild(iframe);
+
+  // Hide empty state
+  const emptyState = document.getElementById('emptyState');
+  if (emptyState) emptyState.style.display = 'none';
+
+  tabs.push({ id, domain, label, entity, iframeId: 'iframe-' + id });
+  activateTab(id);
+  renderTabbar();
+}
+
+function closeTab(id) {
+  const idx = tabs.findIndex(t => t.id === id);
+  if (idx === -1) return;
+
+  const iframe = document.getElementById(tabs[idx].iframeId);
+  if (iframe) iframe.remove();
+
+  tabs.splice(idx, 1);
+
+  if (activeTabId === id) {
+    if (tabs.length > 0) {
+      const newIdx = Math.min(idx, tabs.length - 1);
+      activateTab(tabs[newIdx].id);
+    } else {
+      activeTabId = null;
+      const emptyState = document.getElementById('emptyState');
+      if (emptyState) emptyState.style.display = '';
+    }
+  }
+
+  renderTabbar();
+}
+
+function activateTab(id) {
+  activeTabId = id;
+
+  document.querySelectorAll('#content iframe').forEach(f => {
+    f.classList.toggle('active', f.dataset.tabId === id);
+  });
+
+  renderTabbar();
+
+  // Sync sidebar app with active tab's domain
+  const tab = tabs.find(t => t.id === id);
+  if (tab && tab.domain !== activeApp) {
+    activeApp = tab.domain;
+    activeNavItem = 'all';
+    document.querySelectorAll('.app-icon').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.app === activeApp);
+    });
+    renderSidebarNav();
+  }
+
+  if (tab) {
+    document.title = `${tab.label} – Cura`;
+  }
+}
+
+function renderTabbar() {
+  const bar = document.getElementById('tabbar');
+  bar.innerHTML = tabs.map(t => {
+    const config = domainConfig[t.domain] || {};
+    return `
+      <button class="tab ${t.id === activeTabId ? 'active' : ''}" data-id="${t.id}" title="${t.label}">
+        <span class="domain-dot ${t.domain}"></span>
+        <span class="material-symbols-outlined" style="color:${config.color};font-size:15px;">${config.icon}</span>
+        <span class="tab-label">${t.label}</span>
+        <button class="tab-close" data-close="${t.id}" title="Tab schliessen">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </button>
+    `;
+  }).join('');
+
+  bar.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (e.target.closest('.tab-close')) return;
+      activateTab(btn.dataset.id);
+    });
+    btn.addEventListener('auxclick', (e) => {
+      if (e.button === 1) { e.preventDefault(); closeTab(btn.dataset.id); }
+    });
+  });
+
+  bar.querySelectorAll('.tab-close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeTab(btn.dataset.close);
+    });
+  });
+}
+
+// =====================================================
+// APP ICON CLICK HANDLERS
+// =====================================================
+document.querySelectorAll('.app-icon').forEach(btn => {
+  btn.addEventListener('click', () => switchApp(btn.dataset.app));
+});
+
+// =====================================================
+// NEW TAB MENU
+// =====================================================
+const newTabBtn = document.getElementById('newTabBtn');
+const newTabMenu = document.getElementById('newTabMenu');
+
+newTabBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  newTabMenu.classList.toggle('visible');
+});
+
+document.addEventListener('click', () => {
+  newTabMenu.classList.remove('visible');
+});
+
+newTabMenu.querySelectorAll('.new-tab-menu-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const domain = item.dataset.domain;
+    openTab(domain);
+    newTabMenu.classList.remove('visible');
+  });
+  item.addEventListener('auxclick', (e) => {
+    if (e.button === 1) {
+      e.preventDefault();
+      window.open(domainConfig[item.dataset.domain].src, '_blank');
+      newTabMenu.classList.remove('visible');
+    }
+  });
+});
+
+// =====================================================
+// KEYBOARD SHORTCUTS
+// =====================================================
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+    e.preventDefault();
+    newTabMenu.classList.toggle('visible');
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
+    e.preventDefault();
+    if (activeTabId) closeTab(activeTabId);
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '9') {
+    e.preventDefault();
+    const idx = parseInt(e.key) - 1;
+    if (tabs[idx]) activateTab(tabs[idx].id);
+  }
+});
+
+// =====================================================
+// IFRAME MESSAGES
+// =====================================================
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'open-tab') {
+    openTab(e.data.domain, e.data.label || null, e.data.entity || null);
+  }
+  if (e.data && e.data.type === 'update-tab-label') {
+    const tab = tabs.find(t => {
+      const iframe = document.getElementById(t.iframeId);
+      return iframe && iframe.contentWindow === e.source;
+    });
+    if (tab) {
+      tab.label = e.data.label;
+      renderTabbar();
+      if (tab.id === activeTabId) {
+        document.title = `${tab.label} – Cura`;
+      }
+    }
+  }
+});
+
+// =====================================================
+// INIT
+// =====================================================
+renderSidebarNav();
+openTab('clients');
+</script>
+
+</body>
+</html>

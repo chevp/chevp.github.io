@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – Medikation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<div class="domain-page with-ai" id="domainPage">
+
+  <!-- LIST PANE -->
+  <div class="list-pane">
+    <div class="list-header">
+      <div class="list-header-top">
+        <div class="list-header-icon" style="background: var(--orange);">
+          <span class="material-symbols-outlined">medication</span>
+        </div>
+        <div class="list-title">Medikation</div>
+        <div class="list-count" id="listCount">6 Einträge</div>
+      </div>
+      <div class="list-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" id="searchInput" placeholder="Medikament suchen…">
+      </div>
+    </div>
+    <div class="list-body" id="listBody"></div>
+    <button class="new-record-btn" onclick="showToast('Neues Medikament wird angelegt…')">
+      <span class="material-symbols-outlined">add</span>
+      Neues Medikament
+    </button>
+  </div>
+
+  <!-- WORKSPACE PANE -->
+  <div class="workspace-pane">
+    <div class="workspace-header">
+      <div class="workspace-header-info">
+        <div class="workspace-header-title" id="wsTitle">Medikament wählen</div>
+        <div class="workspace-header-sub" id="wsSub">Wählen Sie ein Medikament aus der Liste</div>
+      </div>
+      <div class="workspace-actions">
+        <button class="btn" onclick="showToast('Änderungen gespeichert')">
+          <span class="material-symbols-outlined">save</span> Speichern
+        </button>
+        <button class="btn" onclick="showToast('Medikamentenplan gedruckt')">
+          <span class="material-symbols-outlined">print</span> Drucken
+        </button>
+        <button class="btn ai" id="aiToggleBtn" onclick="toggleAI()">
+          <span class="material-symbols-outlined">auto_awesome</span> AI
+        </button>
+      </div>
+    </div>
+    <div class="workspace-body" id="wsBody">
+      <div class="empty-state">
+        <span class="material-symbols-outlined">medication</span>
+        <p>Wählen Sie ein Medikament aus der Liste,<br>um Details anzuzeigen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-icon">
+        <span class="material-symbols-outlined">auto_awesome</span>
+      </div>
+      <div>
+        <div class="ai-panel-title">Cura AI</div>
+        <div class="ai-panel-subtitle">Medikations-Assistent</div>
+      </div>
+    </div>
+    <div class="ai-panel-body" id="aiBody">
+      <div class="ai-suggestion">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ai-icon-info">info</span>
+          <span class="ai-suggestion-title">Willkommen</span>
+        </div>
+        <div class="ai-suggestion-desc">Wählen Sie ein Medikament, um AI-gestützte Hinweise zu Interaktionen, Monitoring und Kontrollen zu erhalten.</div>
+      </div>
+    </div>
+    <div class="ai-panel-input">
+      <div class="ai-input-wrap">
+        <input type="text" placeholder="Frage zur Medikation…" onkeydown="if(event.key==='Enter')showToast('AI verarbeitet Anfrage…')">
+        <button class="ai-send" onclick="showToast('AI verarbeitet Anfrage…')">
+          <span class="material-symbols-outlined">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>
+  <span id="toastMsg">Gespeichert</span>
+</div>
+
+<script>
+  // ===== DATA =====
+  const medications = {
+    m1: {
+      name: 'Metformin 500mg',
+      wirkstoff: 'Metforminhydrochlorid',
+      dosierung: '2x täglich (morgens, abends)',
+      dosierungKurz: '2x täglich',
+      klient: 'G. Kaufmann',
+      klientId: 'c1',
+      verordnet: 'Dr. A. Weber, Hausarzt',
+      seit: '15.03.2024',
+      naechsteKontrolle: '15.03.2026',
+      hinweise: 'Einnahme zu den Mahlzeiten. Bei gastrointestinalen Beschwerden Dosis anpassen. Nierenfunktion regelmässig kontrollieren.',
+      interaktionen: 'Vorsicht bei gleichzeitiger Gabe von Kontrastmitteln. ACE-Hemmer können Hypoglykämie verstärken.',
+      status: 'Aktiv',
+      statusColor: 'green',
+      icon: 'pill',
+      aiSuggestions: [
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'HbA1c-Kontrolle empfohlen', desc: 'Letzte HbA1c-Messung liegt 4 Monate zurück. Empfehlung: Vierteljährliche Kontrolle bei Diabetes Typ 2.', action: 'Kontrolle planen' },
+        { icon: 'ai-icon-info', iconName: 'info', title: 'Nierenfunktion prüfen', desc: 'GFR-Wert sollte halbjährlich überprüft werden. Metformin ist bei GFR < 30 kontraindiziert.', action: 'Labor anfordern' },
+        { icon: 'ai-icon-action', iconName: 'check_circle', title: 'Compliance gut', desc: 'Medikament wird seit 2 Jahren regelmässig eingenommen. Keine Nebenwirkungen dokumentiert.', action: 'Notiz anzeigen' }
+      ]
+    },
+    m2: {
+      name: 'Donepezil 5mg',
+      wirkstoff: 'Donepezilhydrochlorid',
+      dosierung: '1x abends vor dem Schlafengehen',
+      dosierungKurz: '1x abends',
+      klient: 'G. Kaufmann',
+      klientId: 'c1',
+      verordnet: 'Dr. M. Richter, Neurologie',
+      seit: '08.09.2024',
+      naechsteKontrolle: '08.06.2026',
+      hinweise: 'Langsame Aufdosierung. Bei Bradykardie oder Synkopen sofort absetzen. Puls regelmässig kontrollieren.',
+      interaktionen: 'Anticholinerge Medikamente vermeiden. NSAID erhöhen GI-Blutungsrisiko. Betablocker verstärken Bradykardie-Risiko.',
+      status: 'Aktiv',
+      statusColor: 'green',
+      icon: 'pill',
+      aiSuggestions: [
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'Interaktion mit Metformin', desc: 'Kein direktes Interaktionsrisiko, aber kombinierte Kontrolle der Nierenwerte empfohlen bei Polypharmazie.', action: 'Details anzeigen' },
+        { icon: 'ai-icon-info', iconName: 'info', title: 'MMSE-Test fällig', desc: 'Kognitive Leistungsfähigkeit sollte alle 6 Monate überprüft werden. Letzter Test: vor 5 Monaten.', action: 'Test planen' }
+      ]
+    },
+    m3: {
+      name: 'Levodopa/Carbidopa 100/25mg',
+      wirkstoff: 'Levodopa 100mg / Carbidopa 25mg',
+      dosierung: '3x täglich (morgens, mittags, abends)',
+      dosierungKurz: '3x täglich',
+      klient: 'H.-P. Brunner',
+      klientId: 'c2',
+      verordnet: 'Dr. M. Richter, Neurologie',
+      seit: '22.01.2024',
+      naechsteKontrolle: '22.04.2026',
+      hinweise: 'Einnahme 30 Min. vor Mahlzeiten. Proteinreiche Nahrung kann Aufnahme reduzieren. Auf Dyskinesien achten.',
+      interaktionen: 'MAO-Hemmer kontraindiziert. Domperidon bei Übelkeit bevorzugen (nicht Metoclopramid). Eisenpräparate reduzieren Aufnahme.',
+      status: 'Aktiv',
+      statusColor: 'green',
+      icon: 'pill',
+      aiSuggestions: [
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'On-Off-Phänomene beobachten', desc: 'Bei längerer Anwendung können Wirkungsschwankungen auftreten. Bewegungstagebuch empfohlen.', action: 'Protokoll starten' },
+        { icon: 'ai-icon-info', iconName: 'info', title: 'Einnahmezeitpunkte optimieren', desc: 'Aktuelle Einnahmezeiten: 7:00, 12:00, 18:00. Gleichmässige Abstände sind korrekt eingehalten.', action: 'Zeitplan prüfen' },
+        { icon: 'ai-icon-action', iconName: 'check_circle', title: 'Sturzprophylaxe aktiv', desc: 'Parkinson erhöht Sturzrisiko. Physiotherapie und Hilfsmittelversorgung sind dokumentiert.', action: 'Massnahmen anzeigen' }
+      ]
+    },
+    m4: {
+      name: 'Morphin Tropfen 2%',
+      wirkstoff: 'Morphinhydrochlorid',
+      dosierung: '4x täglich (6h-Intervall)',
+      dosierungKurz: '4x täglich',
+      klient: 'W. Huber',
+      klientId: 'c4',
+      verordnet: 'Dr. S. Lang, Palliativmedizin',
+      seit: '05.11.2025',
+      naechsteKontrolle: '05.03.2026',
+      hinweise: 'BtM-pflichtig. Tropfenzählung dokumentieren. Atemdepression überwachen. Laxantien prophylaktisch verordnen.',
+      interaktionen: 'ZNS-Depressiva verstärken Sedierung. Benzodiazepine nur mit äusserster Vorsicht. CYP3A4-Inhibitoren erhöhen Wirkung.',
+      status: 'Kontrolle fällig',
+      statusColor: 'orange',
+      icon: 'water_drop',
+      aiSuggestions: [
+        { icon: 'ai-icon-error', iconName: 'error', title: 'Kontrolle überfällig', desc: 'Nächste BtM-Kontrolle war für 05.03.2026 geplant. Bitte umgehend Arzttermin vereinbaren.', action: 'Termin planen' },
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'Obstipationsprophylaxe prüfen', desc: 'Opioid-induzierte Obstipation ist häufig. Laxantien-Einnahme sollte dokumentiert und überprüft werden.', action: 'Protokoll prüfen' },
+        { icon: 'ai-icon-info', iconName: 'info', title: 'Schmerztagebuch aktuell', desc: 'Letzte Schmerzdokumentation: heute. VAS-Werte stabil bei 3-4. Dosisanpassung aktuell nicht nötig.', action: 'Verlauf anzeigen' }
+      ]
+    },
+    m5: {
+      name: 'Sertralin 50mg',
+      wirkstoff: 'Sertralinhydrochlorid',
+      dosierung: '1x morgens',
+      dosierungKurz: '1x morgens',
+      klient: 'E. Meier',
+      klientId: 'c3',
+      verordnet: 'Dr. K. Baumann, Psychiatrie',
+      seit: '12.06.2025',
+      naechsteKontrolle: '12.06.2026',
+      hinweise: 'Nicht abrupt absetzen. Bei Suizidalität sofort melden. Wirkungseintritt nach 2-4 Wochen. Regelmässige psychiatrische Kontrolle.',
+      interaktionen: 'MAO-Hemmer kontraindiziert (14 Tage Abstand). Triptane erhöhen Serotoninsyndrom-Risiko. NSAID erhöhen Blutungsrisiko.',
+      status: 'Aktiv',
+      statusColor: 'green',
+      icon: 'pill',
+      aiSuggestions: [
+        { icon: 'ai-icon-info', iconName: 'info', title: 'Stimmungsverlauf positiv', desc: 'Seit Therapiebeginn dokumentierte Verbesserung der depressiven Symptomatik. GDS-Score von 12 auf 7 gesunken.', action: 'Verlauf anzeigen' },
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'Sturzrisiko beachten', desc: 'SSRI können orthostatische Hypotonie verursachen. Besonders morgens nach Einnahme auf Schwindel achten.', action: 'Massnahmen prüfen' }
+      ]
+    },
+    m6: {
+      name: 'Alendronat 70mg',
+      wirkstoff: 'Alendronsäure (als Natriumalendronat-Trihydrat)',
+      dosierung: '1x wöchentlich (Montag morgens)',
+      dosierungKurz: '1x wöchentlich',
+      klient: 'R. Steffen',
+      klientId: 'c5',
+      verordnet: 'Dr. A. Weber, Hausarzt',
+      seit: '03.02.2025',
+      naechsteKontrolle: '03.08.2026',
+      hinweise: 'Nüchtern einnehmen mit 200ml Wasser. 30 Min. aufrecht bleiben. Nicht mit Kalzium/Eisen gleichzeitig. Zahnärztliche Kontrolle wegen Kiefernekrose.',
+      interaktionen: 'NSAID erhöhen GI-Nebenwirkungen. Kalzium und Antazida reduzieren Resorption. PPI können Wirksamkeit beeinflussen.',
+      status: 'Pausiert',
+      statusColor: 'blue',
+      icon: 'pill',
+      aiSuggestions: [
+        { icon: 'ai-icon-info', iconName: 'info', title: 'Pausierung dokumentiert', desc: 'Medikament pausiert seit 01.02.2026 wegen geplanter Zahnextraktion. Wiederaufnahme nach Wundheilung vorgesehen.', action: 'Status prüfen' },
+        { icon: 'ai-icon-warning', iconName: 'warning', title: 'Vitamin D sicherstellen', desc: 'Unter Bisphosphonat-Therapie ist adäquate Vitamin-D-Versorgung essenziell. Aktueller 25-OH-D-Wert anfordern.', action: 'Labor anfordern' },
+        { icon: 'ai-icon-action', iconName: 'check_circle', title: 'DEXA-Scan planen', desc: 'Letzte Knochendichtemessung vor 18 Monaten. Kontrolle nach 2 Jahren empfohlen.', action: 'Untersuchung planen' }
+      ]
+    }
+  };
+
+  // ===== STATE =====
+  let selectedId = null;
+  let aiVisible = true;
+
+  // ===== INIT =====
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    const entityParam = params.get('entity');
+
+    renderList();
+
+    if (entityParam && medications[entityParam]) {
+      selectMedication(entityParam);
+    }
+  }
+
+  // ===== RENDER LIST =====
+  function renderList(filter) {
+    const body = document.getElementById('listBody');
+    const filterLower = (filter || '').toLowerCase();
+
+    const entries = Object.entries(medications).filter(([id, m]) => {
+      if (!filterLower) return true;
+      return m.name.toLowerCase().includes(filterLower) ||
+             m.klient.toLowerCase().includes(filterLower) ||
+             m.wirkstoff.toLowerCase().includes(filterLower);
+    });
+
+    document.getElementById('listCount').textContent = entries.length + ' Einträge';
+
+    body.innerHTML = entries.map(([id, m]) => `
+      <div class="record-card ${selectedId === id ? 'active' : ''}" onclick="selectMedication('${id}')">
+        <div class="record-card-name">${m.name}</div>
+        <div class="record-card-sub">${m.klient} · ${m.dosierungKurz}</div>
+        <div class="record-card-footer">
+          <span class="badge ${m.statusColor}">${m.status}</span>
+          <span class="record-card-time">seit ${m.seit}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ===== SELECT MEDICATION =====
+  function selectMedication(id) {
+    const m = medications[id];
+    if (!m) return;
+
+    selectedId = id;
+    renderList(document.getElementById('searchInput').value);
+
+    document.getElementById('wsTitle').textContent = m.name;
+    document.getElementById('wsSub').textContent = m.klient + ' · ' + m.status;
+
+    // Update tab label in shell
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'update-tab-label', label: m.name }, '*');
+    }
+
+    renderDetail(id, m);
+    renderAISuggestions(m);
+  }
+
+  // ===== RENDER DETAIL =====
+  function renderDetail(id, m) {
+    const body = document.getElementById('wsBody');
+    body.innerHTML = `
+      <div class="fade-in">
+        <div class="detail-header">
+          <div class="detail-avatar" style="background: var(--orange);">
+            <span class="material-symbols-outlined">${m.icon === 'water_drop' ? 'water_drop' : 'medication'}</span>
+          </div>
+          <div class="detail-header-info">
+            <h2>${m.name}</h2>
+            <p>${m.wirkstoff}</p>
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <span class="badge ${m.statusColor}">${m.status}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-tabs">
+          <button class="detail-tab active" onclick="showTab(this, 'overview-${id}')">Übersicht</button>
+          <button class="detail-tab" onclick="showTab(this, 'interactions-${id}')">Interaktionen</button>
+          <button class="detail-tab" onclick="showTab(this, 'history-${id}')">Verlauf</button>
+        </div>
+
+        <!-- ÜBERSICHT -->
+        <div class="tab-content" id="overview-${id}">
+          <div class="section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">info</span>
+              Verordnung
+            </div>
+            <div class="info-grid">
+              <div class="info-field">
+                <span class="info-label">Wirkstoff</span>
+                <span class="info-value">${m.wirkstoff}</span>
+              </div>
+              <div class="info-field">
+                <span class="info-label">Dosierung</span>
+                <span class="info-value">${m.dosierung}</span>
+              </div>
+              <div class="info-field">
+                <span class="info-label">Klient</span>
+                <span class="info-value">
+                  <a class="entity-link" onclick="navigateToClient('${m.klientId}')">${m.klient}</a>
+                </span>
+              </div>
+              <div class="info-field">
+                <span class="info-label">Verordnet durch</span>
+                <span class="info-value">${m.verordnet}</span>
+              </div>
+              <div class="info-field">
+                <span class="info-label">Seit</span>
+                <span class="info-value">${m.seit}</span>
+              </div>
+              <div class="info-field">
+                <span class="info-label">Nächste Kontrolle</span>
+                <span class="info-value">${m.naechsteKontrolle}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">notes</span>
+              Hinweise
+            </div>
+            <p style="font-size:13px;line-height:1.7;color:var(--text);padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+              ${m.hinweise}
+            </p>
+          </div>
+        </div>
+
+        <!-- INTERAKTIONEN -->
+        <div class="tab-content" id="interactions-${id}" style="display:none;">
+          <div class="section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">sync_alt</span>
+              Bekannte Interaktionen
+            </div>
+            <p style="font-size:13px;line-height:1.7;color:var(--text);padding:10px 14px;background:var(--surface-2);border-radius:var(--radius-sm);">
+              ${m.interaktionen}
+            </p>
+          </div>
+
+          <div class="section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">medication</span>
+              Weitere Medikamente des Klienten
+            </div>
+            ${renderClientMedications(id, m.klientId)}
+          </div>
+        </div>
+
+        <!-- VERLAUF -->
+        <div class="tab-content" id="history-${id}" style="display:none;">
+          <div class="section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">history</span>
+              Dokumentation
+            </div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <span class="material-symbols-outlined">edit_note</span>
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Dosierung bestätigt</div>
+                  <div class="timeline-desc">Aktuelle Dosierung bei ärztlicher Visite bestätigt. Keine Anpassung nötig.</div>
+                </div>
+                <div class="timeline-time">Vor 2 Wochen</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <span class="material-symbols-outlined">science</span>
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Laborwerte kontrolliert</div>
+                  <div class="timeline-desc">Relevante Laborparameter im Normbereich. Nächste Kontrolle planmässig.</div>
+                </div>
+                <div class="timeline-time">Vor 1 Monat</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">
+                  <span class="material-symbols-outlined">medication</span>
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-title">Verordnung erstellt</div>
+                  <div class="timeline-desc">Erstverordnung durch ${m.verordnet}.</div>
+                </div>
+                <div class="timeline-time">${m.seit}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== RENDER CLIENT MEDICATIONS =====
+  function renderClientMedications(currentId, clientId) {
+    const clientMeds = Object.entries(medications)
+      .filter(([id, m]) => m.klientId === clientId && id !== currentId);
+
+    if (clientMeds.length === 0) {
+      return '<p style="font-size:12px;color:var(--text-muted);padding:10px 14px;">Keine weiteren Medikamente für diesen Klienten.</p>';
+    }
+
+    return clientMeds.map(([id, m]) => `
+      <div class="doc-item" onclick="selectMedication('${id}')">
+        <div class="doc-item-icon">
+          <span class="material-symbols-outlined">medication</span>
+        </div>
+        <div class="doc-item-info">
+          <div class="doc-item-name">${m.name}</div>
+          <div class="doc-item-meta">${m.dosierungKurz} · ${m.status}</div>
+        </div>
+        <span class="badge ${m.statusColor}" style="font-size:9px;">${m.status}</span>
+      </div>
+    `).join('');
+  }
+
+  // ===== TABS =====
+  function showTab(btn, tabId) {
+    const parent = btn.closest('.workspace-body') || document.getElementById('wsBody');
+    parent.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    parent.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+    const target = document.getElementById(tabId);
+    if (target) target.style.display = 'block';
+  }
+
+  // ===== AI SUGGESTIONS =====
+  function renderAISuggestions(m) {
+    const body = document.getElementById('aiBody');
+    body.innerHTML = m.aiSuggestions.map(s => `
+      <div class="ai-suggestion">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ${s.icon}">${s.iconName}</span>
+          <span class="ai-suggestion-title">${s.title}</span>
+        </div>
+        <div class="ai-suggestion-desc">${s.desc}</div>
+        <button class="ai-suggestion-action" onclick="showToast('${s.action}')">
+          ${s.action}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ===== AI TOGGLE =====
+  function toggleAI() {
+    aiVisible = !aiVisible;
+    const page = document.getElementById('domainPage');
+    const panel = document.getElementById('aiPanel');
+    const btn = document.getElementById('aiToggleBtn');
+
+    if (aiVisible) {
+      page.classList.add('with-ai');
+      panel.classList.remove('hidden');
+      btn.classList.add('active');
+    } else {
+      page.classList.remove('with-ai');
+      panel.classList.add('hidden');
+      btn.classList.remove('active');
+    }
+  }
+
+  // ===== CLIENT NAVIGATION =====
+  function navigateToClient(clientId) {
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'open-tab', domain: 'clients', entity: clientId }, '*');
+    } else {
+      window.open('domain-clients.html?entity=' + clientId, '_blank');
+    }
+  }
+
+  // ===== SEARCH =====
+  document.getElementById('searchInput').addEventListener('input', function() {
+    renderList(this.value);
+  });
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  }
+
+  // ===== START =====
+  init();
+</script>
+
+</body>
+</html>
