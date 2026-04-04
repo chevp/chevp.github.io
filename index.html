@@ -448,6 +448,7 @@
     // Repository Data
     const projectData = {
       "Projects": [
+        { name: "Projects Hub (antarctica.io)", desc: "Explanation pages for all private projects, grouped by state.", url: "https://chevp.github.io/antarctica.io/#/projects", org: "projects" },
         { name: "ECS Configurator", desc: "Visual configuration & structured asset management for ECS systems.", url: "https://chevp.github.io/ecs-configurator-site/", org: "projects" },
         { name: "Vulkan Playground", desc: "Experimentation with Vulkan rendering pipelines and custom shaders.", url: "https://github.com/chevp/vulkan-playground", org: "projects" },
         { name: "Programming Tutorials", desc: "Curated code examples and guides on graphics, tools, and performance topics.", url: "https://chevp.github.io/tutorials/", org: "projects" },
@@ -456,120 +457,269 @@
         { name: "Kitty on Screen", desc: "Your adorable desktop pet companion - a nostalgic Screen Mate from the year 2000!", url: "https://chevp.github.io/kitty-on-screen/", org: "projects" }
       ],
       "Assets": [
-        { name: "blender-assets-library", desc: "Organisation: projects", org: "projects" },
-        { name: "scene-assets-library", desc: "Organisation: projects", org: "projects" },
-        { name: "scoe-assets-library", desc: "Organisation: projects", org: "projects" },
-        { name: "lunara-assets-lib", desc: "Organisation: projects", org: "projects" },
-        { name: "image-assets-library", desc: "Organisation: projects", org: "projects" },
-        { name: "pbr-materials-library", desc: "Organisation: projects", org: "projects" }
+        { name: "blender-assets-library", desc: "This repository contains a collection of Blender project files, organized into individual folders.", org: "projects", private: true },
+        { name: "cryo-asset", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-content-library-prime", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-content-library-stylized-nature", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-content-library-ui", desc: "UI for the Cryo Framework", org: "projects", private: true },
+        { name: "cryo-web-assets", desc: "Organisation: projects", url: "https://github.com/chevp/cryo-web-assets", org: "projects" },
+        { name: "image-assets-library", desc: "Image Assets Library is a powerful toolkit designed to help developers manage, organize, and manipulate 2D image assets efficiently. ", org: "projects", private: true },
+        { name: "lunara-assets-lib", desc: "Lunara Asset Library is a lightweight Java module for managing, storing, and accessing digital assets across distributed applications.", org: "projects", private: true },
+        { name: "pbr-materials-library", desc: "A curated collection of high-quality PBR (Physically Based Rendering) materials with various resolutions for use in 3D rendering engines, supporting multiple texture maps such as albedo, normal, roughness, and more.", org: "projects", private: true },
+        { name: "scene-assets-library", desc: "The scene-assets-library is a structured directory that houses all assets related to scene creation and management for a large-scale project.", url: "https://github.com/chevp/scene-assets-library", org: "projects" },
+        { name: "scoe-assets-library", desc: "The scoe-assets-library provides a collection of 3D assets, textures, materials and shaders.", org: "projects", private: true }
       ],
       "Data": [
-        { name: "data-morph", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-data", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-json-server", desc: "Organisation: projects", org: "projects" },
-        { name: "rust-genomics", desc: "Organisation: projects", org: "projects" },
-        { name: "biomedical", desc: "Organisation: projects", org: "projects" }
+        { name: "biomedical", desc: "DSL biomedical calculations", org: "projects", private: true },
+        { name: "cryo-data", desc: "Cryo data files (Synth XML, templates, pipelines) for GitHub Pages hosting", url: "https://github.com/chevp/cryo-data", org: "projects" },
+        { name: "data-morph", desc: "Data-Morph is an efficient CLI tool built with Java Spring Boot designed for seamless data transformation and format conversion.", org: "projects", private: true },
+        { name: "nexus-data", desc: "The Nexus server is responsible for managing user access to Google Cloud Storage and providing a RESTful API for interacting with cloud storage resources.", org: "projects", private: true },
+        { name: "nexus-json-server", desc: "Organisation: echo", org: "echo", private: true },
+        { name: "rust-genomics", desc: "Rust-based bioinformatics project with Angular UI, Tauri desktop app, and backend services.", org: "projects", private: true }
       ],
       "Development": [
-        { name: "scoe-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "quantum-rift-electron-client", desc: "Organisation: quantum-rift", org: "quantum-rift" },
-        { name: "nebulon-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "elyrion-studio-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "silvarin-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "lunara-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "coregfx-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "kalyra-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "ad-flow-sdk", desc: "Organisation: projects", org: "projects" },
-        { name: "che-sdk-dev", desc: "Organisation: projects", org: "projects" },
-        { name: "lunara-cli", desc: "Organisation: projects", org: "projects" },
-        { name: "lunara-quickstarts", desc: "Organisation: projects", org: "projects" },
-        { name: "coreflux", desc: "Organisation: projects", org: "projects" },
-        { name: "direct-dispatch", desc: "Organisation: projects", org: "projects" },
-        { name: "logic-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "scoe-dashboard", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-data", desc: "Organisation: projects", org: "projects" },
-        { name: "shop-front-angular-webapp", desc: "Organisation: projects", org: "projects" },
-        { name: "shop-front-native-script", desc: "Organisation: projects", org: "projects" },
-        { name: "cross-platform-angular", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-json-server", desc: "Organisation: echo", org: "echo" },
-        { name: "mapping-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-control", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-editor-frame", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-frame", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-map-frame", desc: "Organisation: projects", org: "projects" }
+        { name: "ad-flow-sdk", desc: "Ad Flow SDK is a backend SDK for managing and searching classified ads.", org: "projects", private: true },
+        { name: "antarctica-backend", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "antarctica-mcp", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "arctic-content-bundle-system", desc: "Tree Domain Architecture for Parameter-Driven Game Content Development", org: "projects", private: true },
+        { name: "arctic-proto", desc: "Organisation: projects", org: "projects", private: true, archived: true },
+        { name: "arctic-stylized-nature", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "arctic-tutorial-furniture", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "arctic-ux-prototypes", desc: "This repo would explore and prototype UX concepts for arctic-workspace.", org: "projects", private: true },
+        { name: "arktos", desc: "Arktos: a silent, shadowy penguin gliding beneath moonlit digital ice realms.", org: "projects", private: true },
+        { name: "atlas-integration", desc: "Kunden-Monorepo für atlas-studio.", org: "projects", private: true },
+        { name: "axon-resource-registry", desc: "Central registry service managing scene bundles, components, and assets for Axon platform.", url: "https://nex.sowuvuma.cyon.site/axon-resource-registry/latest/index.html", org: "projects", private: true },
+        { name: "axon-runtime", desc: "Render and display interactive 3D scenes.", url: "https://nex.sowuvuma.cyon.site/org/axon-runtime/latest", org: "projects", private: true },
+        { name: "baselone-ai-workshop", desc: "Opensource RAG Workshop at baselone 2025", url: "https://chevp.github.io/tutorials/data-science-and-analytics/LLM_Basics_Tutorial", org: "projects" },
+        { name: "che-bundle", desc: "CheBUNDLE visualizes bundle.xml content using Three.js and Angular for interactive rendering.", org: "projects", private: true },
+        { name: "che-cli", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "che-sdk-dev", desc: "CLI tool for server-driven, generative project and folder automation.", org: "projects", private: true },
+        { name: "che-ui", desc: "CHE UI Application", org: "projects", private: true },
+        { name: "chejs", desc: "Framework-agnostic vanilla JS UI library for Vue.js and Angular", org: "projects", private: true },
+        { name: "chevp-app-template", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "chevp-blender-mcp", desc: "MCP server for direct Blender integration with Python", org: "projects", private: true },
+        { name: "chevp-components", desc: "Reusable Vanilla Web Components for workspace-based business applications. Framework-agnostic, built on the Web Components standard with TypeScript and Shadow DOM encapsulation.", url: "https://chevp.github.io/chevp-components/docs/demo.html", org: "projects" },
+        { name: "chevp-desktop", desc: "Electron desktop application that embeds the chevp.github.io web application.", org: "projects", private: true },
+        { name: "chevp-footer", desc: "Organisation: projects", url: "https://chevp.github.io/chevp-footer/sample-usage.html", org: "projects" },
+        { name: "chevp-portfolio", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "chevp-setup", desc: "Setup scripts to bootstrap the complete chevp workspace from GitHub", org: "projects", private: true },
+        { name: "coreflux", desc: "Coreflux streamlines data transformation and instruction logic across PHP-based backend systems.", url: "https://chevp.github.io/coreflux-hub", org: "projects", private: true },
+        { name: "coregfx-sdk-dev", desc: "CoreGFX is a C++ library designed to simplify the usage of Vulkan", org: "projects", private: true },
+        { name: "cross-platform-angular", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-base", desc: "Vulkan-API based Cryo framework", org: "projects", private: true },
+        { name: "cryo-build-lab-tools", desc: "Angular multi-tool application for Cryo Build Lab", url: "https://chevp.github.io/cryo-build-lab-tools/", org: "projects" },
+        { name: "cryo-cache", desc: "Scene & Asset Caching Library", org: "projects", private: true },
+        { name: "cryo-configurator", desc: "Client for managing CRYO Files (.cryo) - XML-based scene definition format with Lua scripting", org: "projects", private: true },
+        { name: "cryo-container", desc: "A gRPC-based Cryo implementation.", org: "projects", private: true },
+        { name: "cryo-deck", desc: "Vue.js Web Component for Cryo Deck", org: "projects", private: true },
+        { name: "cryo-distributed-rendering-system", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-pipeline", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-quickstarts", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-specification", desc: "JSON schemas for Cryo protocol alignment", org: "projects", private: true },
+        { name: "cryo-tooling", desc: "Tooling library for shaders, scenes, GLTF, and asset processing.", org: "projects", private: true },
+        { name: "cryojs", desc: "nodejs libraries for Cryo", org: "projects", private: true },
+        { name: "cura", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "desktop-pet", desc: "Remembering the lovely eSheep (stray sheep) from 1995 - ", url: "https://adrianotiger.github.io/desktopPet/", org: "projects" },
+        { name: "dev-sync", desc: "An application that automatically restores and organizes your complete GitHub repository structure with just one click.", org: "projects", private: true },
+        { name: "direct-dispatch", desc: "'Direct Dispatch' is a reliable, efficient product delivery straight from producers to customers.", org: "projects", private: true },
+        { name: "domain-knowledge-antarctica", desc: "Token-minimale KI-Wissensdatenbank für ein Beispielprojekt.", url: "https://github.com/chevp/domain-knowledge-antarctica", org: "projects" },
+        { name: "ecs-configurator", desc: "Visual tool to inspect, edit, and manage ECS data from .ecscfg files.", url: "https://chevp.github.io/ecs-configurator-site", org: "projects", private: true },
+        { name: "elyrion-cube", desc: "Subgame containing a minimal bundle with one cube.", org: "projects", private: true },
+        { name: "elyrion-studio-sdk-dev", desc: "Development repository for the Elyrion Studio SDK.", org: "projects", private: true },
+        { name: "fire", desc: "Framework components and tools for game developers and content creators.", org: "projects", private: true },
+        { name: "frost-mcp-server", desc: "MCP (Model Context Protocol) Server for Frost Runtime", org: "projects", private: true },
+        { name: "frost-runtime", desc: "Java/Quarkus desktop client with JNI bridge to frost-coregfx (Android-compatible architecture)", org: "projects", private: true },
+        { name: "frost-server-php", desc: "Authoritative PHP server with RoadRunner - stateless validation, Firebase Auth, gRPC", org: "projects", private: true },
+        { name: "frost-shared", desc: "Shared Java classes for Frost ecosystem (Entity, Component, State Management)", org: "projects", private: true },
+        { name: "frostpile", desc: "Stapel von Bundles", org: "projects", private: true },
+        { name: "fusion-panel", desc: "FusionPanel is a sleek and modern Angular admin template designed for seamless user experience and efficient management.", org: "projects", private: true },
+        { name: "icevault", desc: "sicherer Speicher, eisig", org: "projects", private: true },
+        { name: "interior-lab", desc: "Design, edit, and visualize detailed 3D interiors with precision and ease.", url: "https://nex.sowuvuma.cyon.site/interior-lab/latest/index.html", org: "projects", private: true },
+        { name: "jnativefx", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "kalyra-dev", desc: "Kalyra connects Java and C++ over gRPC to power fast, native rendering with a clean architecture.", org: "projects", private: true },
+        { name: "legacy-projects", desc: "Collection of legacy software projects, archived for reference and reuse.", org: "projects", private: true },
+        { name: "logic-hub", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "lunara-cli", desc: "Lunara CLI erstellt die Ordnerstruktur für Lunara SDK", org: "projects", private: true },
+        { name: "lunara-quickstarts", desc: "Lunara quickstart code", org: "projects", private: true },
+        { name: "lunara-sdk-dev", desc: "Lunara SDK: Unified C#/C++ toolkit for feature-driven logic and Vulkan rendering.", org: "projects", private: true, archived: true },
+        { name: "mapping-hub", desc: "Mapping Hub is a central repository that provides a map with references and links to various geographic areas, regions, or points of interest.", org: "projects", private: true },
+        { name: "mesh-match", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "nebulon-sdk-dev", desc: "Nebulon SDK is a toolchain for building, validating, and deploying domain-specific 3D scene configurations using a custom DSL.", org: "projects", private: true },
+        { name: "nexus-control", desc: "Nexus Control serves as an admin panel for producers to manage their content, production settings, and other relevant resources.", org: "projects", private: true },
+        { name: "nexus-editor-frame", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "nexus-frame", desc: "'Nexus Frame' is an Angular application that integrates the Three.js library to render and display interactive 3D scenes.", org: "projects", private: true },
+        { name: "nexus-map-frame", desc: "Nexus Map Frame is an iframe component designed for displaying a map-like view in the `nexus-control` front-end, which interacts with the 'nexus' server.", org: "projects", private: true },
+        { name: "nuna", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "nuna-backend-core", desc: "Organisation: projects", org: "projects", private: true, archived: true },
+        { name: "nuna-backend-plugins", desc: "Organisation: projects", org: "projects", private: true, archived: true },
+        { name: "nuna-content-forge", desc: "Programmatic 3D asset generation via GLTF for Nuna Engine", org: "projects", private: true },
+        { name: "nuna-docs", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "nuna-kit-system", desc: "Standardized contract and loader for game content kits", org: "projects", private: true },
+        { name: "nuna-mcp", desc: "Nuna MCP Server - Code documentation for LLMs and AI code editors", org: "projects", private: true, archived: true },
+        { name: "nuna-plugin-sdk", desc: "Nuna Plugin SDK", org: "projects", private: true },
+        { name: "nuna-plugin-template", desc: "Nuna Plugin Template", org: "projects", private: true },
+        { name: "nuna-sdk-cpp", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "nuqqaq", desc: "Nuqqaq is the 'core brain' of the Cryo game world. It defines what your game means — the rules, systems, and models that make up your RPG's living universe.", org: "projects", private: true },
+        { name: "nyxarctica", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "pengra", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "penguin-content", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "penguin-on-screen", desc: "A Vulkan-based renderer that displays an animated penguin walking across your desktop.", org: "projects", private: true },
+        { name: "polarstore", desc: "zentraler Polar-Speicher", org: "projects", private: true },
+        { name: "qilak-quickstarts", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "qimmiit", desc: "Qimmiit is a coordinated but individualized engine architecture, like a dog sled team working together towards a common goal", org: "projects", private: true },
+        { name: "quantum-rift-electron-client", desc: "Typescript Electron Client-App for Quantum Rift.", url: "https://github.com/chevp/quantum-rift-electron-client", org: "quantum-rift" },
+        { name: "scene-3d", desc: "Lightweight web component to render interactive 3D scenes using WebGL and JavaScript.", url: "https://nex.sowuvuma.cyon.site/org/scene-3d/latest/suzanne-in-box.html", org: "projects", private: true },
+        { name: "scene-components", desc: "Modular 3D assets for building districts, zones, and interactive virtual environments.", org: "projects", private: true },
+        { name: "scene-stream", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "scoe-dashboard", desc: "Scoe Dashboard is a Java-based server built using the Quarkus framework. It serves as an endpoint for Scoe-scene requests and provides a visualization interface.", url: "https://github.com/chevp/scoe-dashboard", org: "projects" },
+        { name: "scoe-dev-suite", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "scoe-sdk-dev", desc: "scoe-sdk is a comprehensive toolkit designed to streamline the setup and management of development environments.", org: "projects", private: true },
+        { name: "semantic-business-ui-schema", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "shop-front-angular-webapp", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "shop-front-native-script", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "silvarin-sdk-dev", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "site-policy", desc: "Organisation: projects", url: "https://github.com/chevp/site-policy", org: "projects" },
+        { name: "synth-agents", desc: "Autonomous AI Agents for the Synth ecosystem", org: "projects", private: true },
+        { name: "synth-content-gen", desc: "Generative AI for Game Assets - Textures, Materials, Content for Cryo/Arctic", org: "projects", private: true },
+        { name: "synth-core", desc: "Core ML Framework and Inference Engine for the Synth ecosystem", org: "projects", private: true },
+        { name: "synth-docs", desc: "Synth SDK Architecture Documentation and Concepts", org: "projects", private: true },
+        { name: "synth-mcp-php", desc: "Remote MCP Server implementation in PHP for Synth Platform", org: "projects", private: true },
+        { name: "synth-nlp", desc: "Natural Language Processing services for the Synth ecosystem", org: "projects", private: true },
+        { name: "synth-nodejs-plugins", desc: "Synth TypeScript/Vue.js Plugins Monorepo - MS Office, Blender, GLTF and more", org: "projects", private: true },
+        { name: "synth-plugin-api", desc: "Synth Plugin API - Central plugin system for the Synth AI/ML ecosystem with MCP server integration", org: "projects", private: true },
+        { name: "synth-plugin-blender", desc: "Synth Plugin for Blender integration", org: "projects", private: true },
+        { name: "synth-plugin-cpp-quick-start", desc: "Synth Plugin Quick Start Template - C++ Native Plugin with nuna-plugin-sdk", org: "projects", private: true },
+        { name: "synth-plugin-gltf", desc: "Synth Plugin for glTF 3D model viewing and editing", org: "projects", private: true },
+        { name: "synth-plugin-java-quick-start", desc: "Synth Plugin Quick Start Template - Java MCP Tools + Vue.js Web UI (Text Editor Example)", org: "projects", private: true },
+        { name: "synth-plugin-ms-office", desc: "Synth Plugin for Microsoft Office integration - Open Word/Excel/PowerPoint documents directly from synth-platform-web", org: "projects", private: true },
+        { name: "synth-sdk-dev", desc: "Synth SDK Development Toolkit - CLI, templates, dev server for plugin development", org: "projects", private: true },
+        { name: "synth-typescript-ms-office", desc: "Microsoft Office Integration Plugin for Synth - Pure TypeScript/Vue.js implementation", org: "projects", private: true },
+        { name: "synth-ui-pages", desc: "Synth UI Pages", org: "projects", private: true },
+        { name: "territory-3d", desc: "Design, edit, and manage expansive 3D districts with powerful, intuitive world-building tools.", org: "projects", private: true },
+        { name: "texturekit", desc: "Sammlung aus CLI, Lib und API.", org: "projects", private: true },
+        { name: "veyra-erp", desc: "Veyra ERP is an enterprise resource planning system for data management.", org: "projects", private: true },
+        { name: "webgl-component", desc: "Pure Web Component for rendering 3D scenes using foundation/webgl-protocol via HTTP REST JSON", org: "projects", private: true }
       ],
       "Engine": [
-        { name: "scoe-cpp-engine", desc: "Organisation: projects", org: "projects" },
-        { name: "scoe-node", desc: "Organisation: projects", org: "projects" },
-        { name: "orion-framework", desc: "Organisation: projects", org: "projects" },
-        { name: "creative-node", desc: "Organisation: projects", org: "projects" },
-        { name: "lunara-nexus", desc: "Organisation: projects", org: "projects" },
-        { name: "fire-mesh", desc: "Organisation: projects", org: "projects" }
+        { name: "creative-node", desc: "Creative-Node is a dynamic playground for exploring generative AI applications, built on a robust multi-stack foundation.", url: "https://github.com/chevp/creative-node", org: "projects" },
+        { name: "cryo-engine-interface", desc: "Clean, versioned, and future-proof bridge between UI layers and the Cryo Engine", org: "projects", private: true },
+        { name: "cryo-engine-specification", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "fire-mesh", desc: "FireMesh is an ecosystem that seamlessly integrates Angular for dynamic web interfaces, Three.js for immersive 3D graphics, and Firebase Functions for scalable, serverless backend solutions. ", org: "projects", private: true },
+        { name: "lunara-nexus", desc: "Lunara Nexus is a C++ broker that provides direct access to the CoreGFX rendering engine.", org: "projects", private: true, archived: true },
+        { name: "orion-framework", desc: "Orion Framework is a flexible C++ platform designed for building modular, dynamically loadable microservices and plugins.", url: "https://github.com/chevp/orion-framework", org: "projects" },
+        { name: "scoe-cpp-engine", desc: "C++ Vulkan Renderer for gRPC-Streaming acting as a consumer client for an ocean server.", org: "projects", private: true },
+        { name: "scoe-node", desc: "Organisation: projects", org: "projects", private: true }
       ],
       "Frameworks": [
-        { name: "logic-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "ecs-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "nimbus", desc: "Organisation: projects", org: "projects" },
-        { name: "hecaris", desc: "Organisation: projects", org: "projects" },
-        { name: "nyx-broker", desc: "Organisation: projects", org: "projects" }
+        { name: "arctic-protocol", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "chevp-ai-framework", desc: "AI-assisted software development lifecycle framework", url: "https://chevp.github.io/chevp-ai-framework/", org: "projects" },
+        { name: "chevp-mcp-suite", desc: "MCP servers for the chevp workspace ecosystem.", org: "projects", private: true },
+        { name: "cryo-protocol", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "ecs-hub", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "frost-protocol", desc: "Protocol Buffers for Frost ecosystem - game state sync and gRPC communication", org: "projects", private: true },
+        { name: "hecaris", desc: "Hecaris Library is a lightweight Java module for managing, storing, and accessing digital assets across distributed applications.", org: "projects", private: true },
+        { name: "imkaluk-protocol", desc: "Protocol Buffer schemas for Imkaluk game synchronization (state machine, multiplayer, input validation)", org: "projects", private: true },
+        { name: "nimbus", desc: "Nimbus is a high-performance, scalable gRPC server framework.", org: "projects", private: true },
+        { name: "nuna-ai-framework", desc: "Modular AI-powered game development orchestrator for Nuna Engine", org: "projects", private: true },
+        { name: "nuna-protocol", desc: "Sequential/compositional Protocol Buffers for Nuna SDK", org: "projects", private: true },
+        { name: "nyx-broker", desc: "Nyx Broker is a lightweight, versatile communication bridge designed to act as either a central or local broker.", org: "projects", private: true },
+        { name: "resource-hub", desc: "Central hub hosting multiple bundled scenes as standalone static HTML files.", url: "https://nex.sowuvuma.cyon.site/resource-hub/latest/suzanne-in-box.html", org: "projects", private: true },
+        { name: "synth-protocol", desc: "Protocol Buffer schemas for ML models, agents, and inference in the Synth ecosystem", org: "projects", private: true }
       ],
       "Gaming": [
-        { name: "arcane-horizon", desc: "Organisation: projects", org: "projects" },
-        { name: "arcane-horizon-nodejs", desc: "Organisation: projects", org: "projects" },
-        { name: "scape-sphere", desc: "Organisation: projects", org: "projects" },
-        { name: "scapestation", desc: "Organisation: projects", org: "projects" },
-        { name: "scapestation-admin", desc: "Organisation: projects", org: "projects" },
-        { name: "sprite-control", desc: "Organisation: projects", org: "projects" },
-        { name: "axon-node", desc: "Organisation: projects", org: "projects" }
+        { name: "arcane-horizon", desc: "Arcane-Horizon is a game development repository.", org: "projects", private: true },
+        { name: "arcane-horizon-nodejs", desc: "TypeScript NodeJS Backend Sample for Arcane Horizon.", url: "https://github.com/chevp/arcane-horizon-nodejs", org: "projects" },
+        { name: "arctic-game-snowball", desc: "This project demonstrates a clean separation between the C++ rendering engine and Java game logic, with cross-platform support for Desktop, Android, and Web.", org: "projects", private: true },
+        { name: "axon-node", desc: "Axon-Node is a real-time, WebSocket-driven 3D game client with Angular.", url: "https://chevp.github.io/axon-node-site", org: "projects", private: true },
+        { name: "business-context-playground", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-game-sdk", desc: "Plugin-based Game Development SDK for Arctic Game Server", org: "projects", private: true },
+        { name: "frost-synth-playground", desc: "Playground for Frost ecosystem integration with Synth AI/ML capabilities", org: "projects", private: true },
+        { name: "ice-station.io", desc: "Organisation: projects", url: "https://github.com/chevp/ice-station.io", org: "projects" },
+        { name: "native-script-playground", desc: "Interactive sandbox for building, testing, and sharing NativeScript mobile apps.", org: "projects", private: true },
+        { name: "nuna-games", desc: "Game content and scene definitions for the Synth runtime.", org: "projects", private: true },
+        { name: "nuna-playground-cpp", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "qinu-game-sdk", desc: "Java/Quarkus Plugin-based Game Development SDK for Arctic Game Server.", org: "projects", private: true },
+        { name: "quantum-rift-sample-csharp-backend-project", desc: "CSharp Backend Sample Project for Quantum Rift.", org: "projects", private: true },
+        { name: "quantum-rift-sample-quarkus-backend-project", desc: "Quarkus Java Backend Sample Project for Quantum Rift.", url: "https://github.com/chevp/quantum-rift-sample-quarkus-backend-project", org: "projects" },
+        { name: "rust-playground", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "scape-sphere", desc: "Scape-Sphere is an intuitive Angular app designed for creating, editing, and searching targeted advertisements within a dynamic commerce ecosystem.", org: "projects", private: true },
+        { name: "scapestation", desc: "Development Repository for the scapestation.com Homepage.", url: "https://scoe-bc4d1.web.app", org: "projects", private: true },
+        { name: "scapestation-admin", desc: "Organisation: projects", url: "https://admin-scoe-bc4d1.web.app", org: "projects", private: true },
+        { name: "sprite-control", desc: "sprite-control is a CSharp backend server designed to manage an avatar's actions, ultimate abilities, and scene states through a state machine.", url: "https://github.com/chevp/sprite-control", org: "projects" },
+        { name: "synth-game", desc: "Synth Game Server - Quarkus backend for live game operations with synth-core-hub integration", org: "projects", private: true },
+        { name: "synth-playground", desc: "Full-stack Synth ecosystem playground with Electron, Angular, C++, and Java debugging support", org: "projects", private: true }
       ],
       "Graphics": [
-        { name: "angular-three-render", desc: "Organisation: projects", org: "projects" },
-        { name: "next-three-render", desc: "Organisation: projects", org: "projects" },
-        { name: "ngx-three-scene", desc: "Organisation: projects", org: "projects" },
-        { name: "angular-threejs-websocket-quick-start", desc: "Organisation: projects", org: "projects" },
-        { name: "cross-platform-angular-vulkan", desc: "Organisation: projects", org: "projects" },
-        { name: "vulkan-grpc-renderer", desc: "Organisation: projects", org: "projects" },
-        { name: "coregfx", desc: "Organisation: projects", org: "projects" },
-        { name: "render-forge", desc: "Organisation: projects", org: "projects" },
-        { name: "scoe-cpp-renderer", desc: "Organisation: projects", org: "projects" },
-        { name: "csharp-opengl-grpc-node", desc: "Organisation: projects", org: "projects" },
-        { name: "pbr-material-dump-tool", desc: "Organisation: projects", org: "projects" },
-        { name: "vulkan-playground", desc: "Organisation: projects", org: "projects" },
-        { name: "snow-pipe", desc: "Organisation: projects", org: "projects" },
-        { name: "ice-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "quantum-rift-csharp-mongodb", desc: "Organisation: quantum-rift", org: "quantum-rift" }
+        { name: "angular-three-render", desc: "Angular Three Render is an Angular application that leverages the Three.js library to render interactive 3D scenes.", org: "projects", private: true },
+        { name: "angular-threejs-websocket-quick-start", desc: "This project is a boilerplate for integrating Angular, Three.js, and WebSocket to build interactive 3D applications with real-time communication.", url: "https://github.com/chevp/angular-threejs-websocket-quick-start", org: "projects" },
+        { name: "coregfx", desc: "CoreGFX is a C++ library designed to simplify the usage of Vulkan", org: "projects", private: true, archived: true },
+        { name: "cross-platform-angular-vulkan", desc: "Cross-Platform Angular and C++ Vulkan Application", url: "https://github.com/chevp/cross-platform-angular-vulkan", org: "projects" },
+        { name: "cryo-renderer", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "cryo-shader-cli", desc: "Command-line tool for validating and testing shader compilation workflows.", org: "projects", private: true },
+        { name: "csharp-opengl-grpc-node", desc: "CSharp OpenGL Abstraction Layer for Quantum Rift", org: "projects", private: true },
+        { name: "frost-coregfx", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "ice-hub", desc: "IceHub: Central arctic brain managing assets and states for distributed renderers worldwide.", org: "projects", private: true },
+        { name: "next-three-render", desc: "A Next.js project using Three.js to create 3D renderings on the web.", org: "projects", private: true },
+        { name: "ngx-three-render", desc: "'ngx-three-render' is an Angular application that leverages the Three.js library to render interactive 3D scenes. ", org: "projects", private: true, archived: true },
+        { name: "ngx-three-scene", desc: "ngx-three-scene is an Angular library for seamlessly integrating Three.js scenes into Angular applications.", org: "projects", private: true },
+        { name: "nuna-plugin-coregfx", desc: "Nuna plugin template with coregfx graphics library integration", org: "projects", private: true },
+        { name: "nuna-plugin-coregfx-desktop", desc: "Desktop renderer plugin for nuna-plugin-coregfx (Windows/Linux)", org: "projects", private: true },
+        { name: "pbr-material-dump-tool", desc: "CSharp Program to convert PBR-Materials to Dump-Files.", url: "https://github.com/chevp/pbr-material-dump-tool", org: "projects" },
+        { name: "quantum-rift-csharp-mongodb", desc: "CSharp MongoDB Abstraction Layer for Quantum Rift.", url: "https://github.com/chevp/quantum-rift-csharp-mongodb", org: "quantum-rift" },
+        { name: "render-forge", desc: "RenderForge is a CLI tool designed for automating 3D rendering tasks and scene manipulation through scripts.", url: "https://github.com/chevp/render-forge", org: "projects" },
+        { name: "scoe-cpp-renderer", desc: "C++ Vulkan Renderer for gRPC-Streaming acting as a consumer client for an ocean server.", org: "projects", private: true },
+        { name: "snow-pipe", desc: "Zentraler Server als gRPC-Server, und der Renderer (C++) ist ein gRPC-Client.", org: "projects", private: true },
+        { name: "vkpbr5", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "vulkan-grpc-renderer", desc: "C++ Vulkan Renderer for gRPC-Streaming.", url: "https://github.com/chevp/vulkan-grpc-renderer", org: "projects" }
       ],
       "Platform": [
-        { name: "playvibes", desc: "Organisation: projects", org: "projects" },
-        { name: "quon-cli", desc: "Organisation: projects", org: "projects" },
-        { name: "ice-box", desc: "Organisation: projects", org: "projects" }
+        { name: "arctic-bundle-service", desc: "PHP Server for bundle crud for arctic ecosystem", org: "projects", private: true },
+        { name: "arctic-container-registry", desc: "Arctic platform for storing and managing custom game containers.", org: "projects", private: true },
+        { name: "arctic-php-services", desc: "Microservices architecture for Arctic Engine with domain-specific use-cases.", org: "projects", private: true },
+        { name: "arctic-workspace", desc: "A cloud-native game development ecosystem combining Vulkan rendering, visual workflow tools, and multi-tenant architecture.", org: "projects", private: true },
+        { name: "axon-registration-service", desc: "Scalable backend service for secure user registration, authentication, and app integration.", url: "https://nex.sowuvuma.cyon.site/axon-registration/latest/index.html", org: "projects", private: true },
+        { name: "chevp-ai-service", desc: "Tenant-unabhängiger AI Proxy Service (PHP/Lumen) für Infomaniak AI API", org: "projects", private: true },
+        { name: "chevp-platform", desc: "Generic config-driven platform app (Angular + Quarkus) - used by Veyra, Cura, and other products", url: "https://cpl.sowuvuma.cyon.site", org: "projects", private: true },
+        { name: "chevp-workspace", desc: "Organisation: projects", org: "projects", private: true, archived: true },
+        { name: "cryo-platform", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "ice-box", desc: "IceBox: Arctic-grade desktop tool for managing, editing, and previewing game assets.", org: "projects", private: true },
+        { name: "nuna-workspace", desc: "Multi-Arctic SDK architecture pattern", org: "projects", private: true },
+        { name: "pengra-workspace", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "platform-arctic-prime", desc: "Modular, scalable platform powering Arctic-inspired innovation and seamless integrations.", org: "projects", private: true },
+        { name: "playvibes", desc: "Discover, connect, and play - your ultimate hub for gaming communities.", org: "projects", private: true },
+        { name: "quon-cli", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "synth-ai-native-platform", desc: "AI-Native Content Creation Platform - Unified Data + Messaging Protocol", org: "projects", private: true },
+        { name: "synth-platform-browser", desc: "Synth Platform - Browser-only Angular UI", org: "projects", private: true },
+        { name: "synth-platform-console", desc: "Synth Platform Electron - Desktop application for the Synth AI/ML ecosystem", org: "projects", private: true },
+        { name: "synth-studio-platform-electron", desc: "Synth Studio Platform - AI Orchestrator with Ribbon UI", org: "projects", private: true }
       ],
       "Tools": [
-        { name: "verto", desc: "Organisation: projects", org: "projects" },
-        { name: "direct-dispatch", desc: "Organisation: projects", org: "projects" },
-        { name: "scoe-dashboard", desc: "Organisation: projects", org: "projects" },
-        { name: "mapping-hub", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-control", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-editor-frame", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-frame", desc: "Organisation: projects", org: "projects" },
-        { name: "nexus-map-frame", desc: "Organisation: projects", org: "projects" },
-        { name: "quantum-rift-scene-converter", desc: "Organisation: quantum-rift", org: "quantum-rift" }
+        { name: "atlas-studio", desc: "Atlas Studio is a multi-platform 3D content creation and game development platform with components in TypeScript, Java, C++, and Python.", org: "projects", private: true },
+        { name: "frost-studio", desc: "Frost Studio - Visual editor for the Frost ecosystem", org: "projects", private: true },
+        { name: "quantum-rift-scene-converter", desc: "Converts a Blender scene into a 'Quantum Rift' scene.", url: "https://github.com/chevp/quantum-rift-scene-converter", org: "quantum-rift" },
+        { name: "synth-cluster-editor", desc: "Synth Cluster Editor", org: "projects", private: true },
+        { name: "verto", desc: "Python backend converting data formats seamlessly across services and applications.", org: "projects", private: true }
       ],
       "Web": [
-        { name: "lunara-studio-site", desc: "Organisation: projects", org: "projects" },
-        { name: "chevp.github.io", desc: "Organisation: projects", org: "projects" },
-        { name: "atelier-art-gold.io", desc: "Organisation: projects", org: "projects" },
-        { name: "daily-display", desc: "Organisation: projects", org: "projects" },
-        { name: "shop-front-angular-webapp", desc: "Organisation: projects", org: "projects" },
-        { name: "cross-platform-angular", desc: "Organisation: projects", org: "projects" },
-        { name: "spring-native-app", desc: "Organisation: projects", org: "projects" },
-        { name: "spring-board", desc: "Organisation: projects", org: "projects" },
-        { name: "commerce-sphere", desc: "Organisation: projects", org: "projects" },
-        { name: "shop-front-native-script", desc: "Organisation: projects", org: "projects" },
-        { name: "public-playground-site", desc: "Organisation: projects", org: "projects" },
-        { name: "ecs-studio-site", desc: "Organisation: projects", org: "projects" },
-        { name: "axon-node-site", desc: "Organisation: projects", org: "projects" },
-        { name: "coreflux-hub", desc: "Organisation: projects", org: "projects" }
+        { name: "antarctica.io", desc: "A modern, glassmorphic Vue.js application built with Tailwind CSS and Vite.", url: "https://github.com/chevp/antarctica.io", org: "projects" },
+        { name: "atelier-art-gold.io", desc: "Atelier Art Gold, a creative studio dedicated to providing exquisite, handcrafted artwork and designs.", url: "https://github.com/chevp/atelier-art-gold.io", org: "projects" },
+        { name: "axon-node-site", desc: "Axon-Node-Site showcases the real-time 3D game client.", url: "https://chevp.github.io/axon-node-site", org: "projects", private: true },
+        { name: "chevp.github.io", desc: "DevOps projects by chevp – studio tools, asset workflows and graphics.", url: "https://chevp.github.io", org: "projects" },
+        { name: "commerce-sphere", desc: "Commerce Sphere is an e-commerce microservice ecosystem designed to provide scalable, flexible, and high-performance solutions for online stores.", url: "https://github.com/chevp/commerce-sphere", org: "projects" },
+        { name: "coreflux-hub", desc: "Coreflux Hub centralizes control, data flow, and logic operations.", url: "https://chevp.github.io/coreflux-hub", org: "projects", private: true },
+        { name: "cryo-hub.io", desc: "Cryo Hub Website", org: "projects", private: true },
+        { name: "cryo-platform-web", desc: "Organisation: projects", org: "projects", private: true, archived: true },
+        { name: "daily-display", desc: "Rotating content display for an RSS feed, daily menu, and weather forecast.", url: "https://chevp.github.io/daily-display/", org: "projects" },
+        { name: "lunara-studio-site", desc: "Visual host for Lunara plugins with preview, hierarchy, config, and extensibility.", url: "https://chevp.github.io/lunara-studio-site/", org: "projects" },
+        { name: "nuna-shop-front", desc: "Nuna Shop Front", org: "projects", private: true },
+        { name: "nuna-web-platform", desc: "Organisation: projects", org: "projects", private: true },
+        { name: "pengra-site", desc: "Organisation: projects", url: "https://github.com/chevp/pengra-site", org: "projects" },
+        { name: "public-playground-site", desc: "Platform for sharing, testing, and collaborating on public playground code projects.", url: "https://chevp.github.io/public-playground-site/", org: "projects" },
+        { name: "shop-front", desc: "Shop Front is a multi-platform application designed to run seamlessly on Web, Desktop (via Electron), and Mobile (via NativeScript). ", org: "projects", private: true },
+        { name: "spring-board", desc: "A dynamic Java Spring playground for exploring, experimenting, and innovating with cutting-edge features and tools.", org: "projects", private: true },
+        { name: "spring-native-app", desc: "A lightweight Spring Boot application compiled to a native executable using GraalVM.", org: "projects", private: true },
+        { name: "synth-platform-web", desc: "Synth Platform Web - Browser-based UI for the Synth AI/ML ecosystem", org: "projects", private: true },
+        { name: "veyra-site", desc: "An enterprise resource planning system for data management with a modern Entity-Component-System architecture.", url: "https://chevp.github.io/veyra-site/", org: "projects" }
       ]
     };
 
@@ -697,14 +847,29 @@
       const card = document.createElement('div');
       card.className = 'card repo-card glass rounded-xl p-4 border border-slate-700/50';
 
-      const hasUrl = repo.url && repo.url.trim() !== '';
+      // Private repos without a public URL get an antarctica.io explanation page link
+      const slug = repo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const hasPublicUrl = repo.url && repo.url.trim() !== '';
+      const privateUrl = !hasPublicUrl && repo.private ? `https://chevp.github.io/antarctica.io/#/projects/${slug}` : null;
+      const effectiveUrl = hasPublicUrl ? repo.url : privateUrl;
+      const opensExternally = hasPublicUrl;
+
+      const statePill = repo.archived
+        ? `<span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-red-500/15 text-red-300 border border-red-500/30">Archived</span>`
+        : (privateUrl
+            ? `<span class="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30">Private</span>`
+            : '');
+
+      const arrowIcon = opensExternally
+        ? `<span class="material-symbols-outlined ${colors.text}">open_in_new</span>`
+        : (privateUrl ? `<span class="material-symbols-outlined ${colors.text}">arrow_forward</span>` : '');
 
       card.innerHTML = `
         <div class="flex items-start justify-between mb-3">
           <div class="w-12 h-12 squircle bg-gradient-to-br ${colors.gradient} flex items-center justify-center flex-shrink-0">
             <span class="material-symbols-outlined text-white text-2xl repo-icon">folder</span>
           </div>
-          ${hasUrl ? `<span class="material-symbols-outlined ${colors.text}">open_in_new</span>` : ''}
+          <div class="flex items-center gap-2">${statePill}${arrowIcon}</div>
         </div>
         <h3 class="repo-name">${repo.name}</h3>
         <p class="text-sm text-slate-400 mb-2">${repo.desc}</p>
@@ -715,9 +880,10 @@
         </div>
       `;
 
-      if (hasUrl) {
+      if (effectiveUrl) {
         card.addEventListener('click', () => {
-          window.open(repo.url, '_blank');
+          if (opensExternally) window.open(effectiveUrl, '_blank');
+          else window.location.href = effectiveUrl;
         });
       } else {
         card.style.cursor = 'default';

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synth Protocol - Cryo Szenen-Format fuer Cluster Editor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+    * { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .gradient-cryo {
+      background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 50%, #0891b2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav-link:hover {
+      background: rgba(6, 182, 212, 0.1);
+      border-left-color: #06b6d4;
+    }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+          <span class="material-icons-outlined text-white">ac_unit</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold gradient-cryo">Synth Protocol (.synth)</h1>
+          <p class="text-xs text-slate-400">Cryo Szenen-Format fuer den Cluster Editor</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex pt-20">
+
+    <!-- Sidebar -->
+    <aside class="fixed left-0 top-20 bottom-0 w-64 glass border-r border-slate-700/50 p-4 overflow-y-auto">
+      <nav class="space-y-1">
+        <a href="#overview" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">home</span>
+            Uebersicht
+          </span>
+        </a>
+        <a href="#cluster-editor" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">dashboard</span>
+            Cluster Editor
+          </span>
+        </a>
+        <a href="#xml-format" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">code</span>
+            XML Format
+          </span>
+        </a>
+        <a href="#cluster-nodes" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">account_tree</span>
+            ClusterNodes
+          </span>
+        </a>
+        <a href="#components" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">widgets</span>
+            Components
+          </span>
+        </a>
+        <a href="#mcp-integration" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">settings_input_component</span>
+            MCP Integration
+          </span>
+        </a>
+        <a href="#web-output" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">web</span>
+            Web Output
+          </span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="ml-64 flex-1 p-8">
+      <div class="max-w-4xl mx-auto space-y-12">
+
+        <!-- Overview -->
+        <section id="overview" class="scroll-mt-24">
+          <div class="glass rounded-2xl p-8 border border-slate-700/50">
+            <h2 class="text-3xl font-bold gradient-cryo mb-6">Synth Protocol: Native Szenen-Beschreibung</h2>
+            <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+              Das <strong class="text-cyan-400">synth-protocol</strong> ist ein XML-basiertes Format fuer Projekt- und Szenen-Definitionen.
+              Der <strong class="text-white">Cluster Synth Editor</strong> versteht dieses Format nativ.
+            </p>
+
+            <div class="grid grid-cols-3 gap-4">
+              <div class="glass rounded-xl p-4 border border-cyan-500/20">
+                <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-cyan-400">description</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">.synth XML</h3>
+                <p class="text-sm text-slate-400">Human-readable Projektformat</p>
+              </div>
+              <div class="glass rounded-xl p-4 border border-purple-500/20">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-purple-400">dashboard</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Cluster Editor</h3>
+                <p class="text-sm text-slate-400">Native Unterstuetzung</p>
+              </div>
+              <div class="glass rounded-xl p-4 border border-green-500/20">
+                <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-green-400">settings_input_component</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">MCP Tools</h3>
+                <p class="text-sm text-slate-400">Erweiterbar via Plugins</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cluster Editor -->
+        <section id="cluster-editor" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-purple-400">dashboard</span>
+            Der Cluster Synth Editor
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-purple-500/20">
+            <p class="text-slate-300 mb-4">
+              Der Cluster Editor ist die native Arbeitsumgebung fuer synth-protocol Dateien.
+              Er laedt <code class="text-cyan-400">.synth</code> Dateien direkt und stellt ClusterNodes, Components und MCP-Tools visuell dar.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="glass rounded-lg p-4 border border-slate-700/50">
+                <h4 class="font-medium text-cyan-400 mb-2">Direkte Verarbeitung</h4>
+                <ul class="text-xs text-slate-300 space-y-1">
+                  <li>+ Oeffnet .synth Dateien nativ</li>
+                  <li>+ Rendert ClusterNode-Hierarchie</li>
+                  <li>+ Zeigt Component-Daten</li>
+                  <li>+ Verbindet zu MCP-Servern</li>
+                </ul>
+              </div>
+              <div class="glass rounded-lg p-4 border border-slate-700/50">
+                <h4 class="font-medium text-purple-400 mb-2">Kein Zwischenschritt</h4>
+                <ul class="text-xs text-slate-300 space-y-1">
+                  <li>+ Kein HTML-Export noetig</li>
+                  <li>+ Kein Protobuf-Parsing</li>
+                  <li>+ Direkte XML-Bearbeitung</li>
+                  <li>+ Version Control friendly</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-sm">
+              <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-400">Figma</span>
+              <span class="text-slate-600">→</span>
+              <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400">.synth XML</span>
+              <span class="text-slate-600">→</span>
+              <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400">Cluster Editor</span>
+              <span class="text-slate-600">→</span>
+              <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400">Vulkan Render / Web Export</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- XML Format -->
+        <section id="xml-format" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold gradient-cryo mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-cyan-400">code</span>
+            Das .synth XML Format
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-cyan-500/20 mb-6">
+            <p class="text-slate-300 mb-4">
+              Eine <code class="text-cyan-400">.synth</code> Datei ist ein XML-Dokument mit definierten Namespaces.
+              Es beschreibt Projekte, Szenen, Assets und MCP-Server-Konfigurationen.
+            </p>
+
+            <h4 class="font-semibold text-white mb-3">Grundstruktur:</h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-slate-500">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="text-blue-400">&lt;synthProject</span>
+    <span class="text-purple-400">xmlns</span>=<span class="text-green-400">"https://chevp.github.io/synth-protocol/schema/synth/project/1.0"</span>
+    <span class="text-purple-400">xmlns:core</span>=<span class="text-green-400">"https://chevp.github.io/synth-protocol/schema/synth/core/1.0"</span>
+    <span class="text-purple-400">xmlns:mcp</span>=<span class="text-green-400">"https://chevp.github.io/synth-protocol/schema/synth/mcp/1.0"</span><span class="text-blue-400">&gt;</span>
+
+    <span class="text-blue-400">&lt;header&gt;</span>
+        <span class="text-blue-400">&lt;magic&gt;</span>SYNTH<span class="text-blue-400">&lt;/magic&gt;</span>
+        <span class="text-blue-400">&lt;schemaVersion&gt;</span>1.0.0<span class="text-blue-400">&lt;/schemaVersion&gt;</span>
+    <span class="text-blue-400">&lt;/header&gt;</span>
+
+    <span class="text-blue-400">&lt;project&gt;</span>
+        <span class="text-blue-400">&lt;name&gt;</span>Mein Projekt<span class="text-blue-400">&lt;/name&gt;</span>
+        <span class="text-blue-400">&lt;settings&gt;</span>
+            <span class="text-blue-400">&lt;defaultSceneId&gt;</span>scene_main<span class="text-blue-400">&lt;/defaultSceneId&gt;</span>
+        <span class="text-blue-400">&lt;/settings&gt;</span>
+    <span class="text-blue-400">&lt;/project&gt;</span>
+
+    <span class="text-blue-400">&lt;mcpServers&gt;</span>...<span class="text-blue-400">&lt;/mcpServers&gt;</span>
+    <span class="text-blue-400">&lt;clusterNodes&gt;</span>...<span class="text-blue-400">&lt;/clusterNodes&gt;</span>
+    <span class="text-blue-400">&lt;components&gt;</span>...<span class="text-blue-400">&lt;/components&gt;</span>
+    <span class="text-blue-400">&lt;assets&gt;</span>...<span class="text-blue-400">&lt;/assets&gt;</span>
+
+<span class="text-blue-400">&lt;/synthProject&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ClusterNodes -->
+        <section id="cluster-nodes" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-orange-400">account_tree</span>
+            ClusterNodes: Die Szenen-Hierarchie
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-orange-500/20 mb-6">
+            <p class="text-slate-300 mb-4">
+              ClusterNodes bilden den Szenen-Graph. Jeder Node hat einen Typ (Scene, Folder, Document, Asset)
+              und kann Children sowie Components haben.
+            </p>
+
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto mb-4">
+              <pre class="text-slate-300"><span class="text-blue-400">&lt;clusterNodes&gt;</span>
+    <span class="text-slate-500">&lt;!-- Scene Node (Root) --&gt;</span>
+    <span class="text-blue-400">&lt;node&gt;</span>
+        <span class="text-blue-400">&lt;core:entityId&gt;</span>
+            <span class="text-blue-400">&lt;uuid&gt;</span>scene_main<span class="text-blue-400">&lt;/uuid&gt;</span>
+        <span class="text-blue-400">&lt;/core:entityId&gt;</span>
+        <span class="text-blue-400">&lt;name&gt;</span>Main Scene<span class="text-blue-400">&lt;/name&gt;</span>
+        <span class="text-blue-400">&lt;nodeType&gt;</span>CLUSTER_NODE_TYPE_SCENE<span class="text-blue-400">&lt;/nodeType&gt;</span>
+        <span class="text-blue-400">&lt;childIds&gt;</span>
+            <span class="text-blue-400">&lt;id&gt;</span>folder_models<span class="text-blue-400">&lt;/id&gt;</span>
+            <span class="text-blue-400">&lt;id&gt;</span>asset_hero<span class="text-blue-400">&lt;/id&gt;</span>
+        <span class="text-blue-400">&lt;/childIds&gt;</span>
+    <span class="text-blue-400">&lt;/node&gt;</span>
+
+    <span class="text-slate-500">&lt;!-- Asset Node (3D Modell) --&gt;</span>
+    <span class="text-blue-400">&lt;node&gt;</span>
+        <span class="text-blue-400">&lt;core:entityId&gt;</span>
+            <span class="text-blue-400">&lt;uuid&gt;</span>asset_hero<span class="text-blue-400">&lt;/uuid&gt;</span>
+        <span class="text-blue-400">&lt;/core:entityId&gt;</span>
+        <span class="text-blue-400">&lt;name&gt;</span>hero_character.glb<span class="text-blue-400">&lt;/name&gt;</span>
+        <span class="text-blue-400">&lt;nodeType&gt;</span>CLUSTER_NODE_TYPE_ASSET<span class="text-blue-400">&lt;/nodeType&gt;</span>
+        <span class="text-blue-400">&lt;parentId&gt;</span>scene_main<span class="text-blue-400">&lt;/parentId&gt;</span>
+        <span class="text-blue-400">&lt;metadata&gt;</span>
+            <span class="text-blue-400">&lt;entry</span> <span class="text-purple-400">key</span>=<span class="text-green-400">"format"</span><span class="text-blue-400">&gt;</span>glTF<span class="text-blue-400">&lt;/entry&gt;</span>
+            <span class="text-blue-400">&lt;entry</span> <span class="text-purple-400">key</span>=<span class="text-green-400">"vertex_count"</span><span class="text-blue-400">&gt;</span>125000<span class="text-blue-400">&lt;/entry&gt;</span>
+        <span class="text-blue-400">&lt;/metadata&gt;</span>
+    <span class="text-blue-400">&lt;/node&gt;</span>
+<span class="text-blue-400">&lt;/clusterNodes&gt;</span></pre>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3">
+              <div class="glass rounded-lg p-3 border border-slate-700/50 text-center">
+                <span class="text-cyan-400 font-mono text-xs">SCENE</span>
+                <p class="text-xs text-slate-500 mt-1">Root Container</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50 text-center">
+                <span class="text-orange-400 font-mono text-xs">FOLDER</span>
+                <p class="text-xs text-slate-500 mt-1">Gruppierung</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50 text-center">
+                <span class="text-green-400 font-mono text-xs">ASSET</span>
+                <p class="text-xs text-slate-500 mt-1">3D Modelle, Bilder</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50 text-center">
+                <span class="text-purple-400 font-mono text-xs">DOCUMENT</span>
+                <p class="text-xs text-slate-500 mt-1">Text, Scripts</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Components -->
+        <section id="components" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-green-400">widgets</span>
+            Components: Daten an Nodes
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-green-500/20">
+            <p class="text-slate-300 mb-4">
+              Components enthalten die eigentlichen Daten (Text, JSON, Bilder als Base64).
+              Sie werden an ClusterNodes gehaengt - typisches ECS-Pattern.
+            </p>
+
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-blue-400">&lt;components&gt;</span>
+    <span class="text-slate-500">&lt;!-- Scene Settings als JSON --&gt;</span>
+    <span class="text-blue-400">&lt;component&gt;</span>
+        <span class="text-blue-400">&lt;core:entityId&gt;</span>
+            <span class="text-blue-400">&lt;uuid&gt;</span>comp_scene_settings<span class="text-blue-400">&lt;/uuid&gt;</span>
+        <span class="text-blue-400">&lt;/core:entityId&gt;</span>
+        <span class="text-blue-400">&lt;clusterNodeId&gt;</span>scene_main<span class="text-blue-400">&lt;/clusterNodeId&gt;</span>
+        <span class="text-blue-400">&lt;componentType&gt;</span>scene_settings<span class="text-blue-400">&lt;/componentType&gt;</span>
+        <span class="text-blue-400">&lt;data</span> <span class="text-purple-400">encoding</span>=<span class="text-green-400">"json"</span><span class="text-blue-400">&gt;</span>{
+            "gravity": {"x": 0, "y": -9.81, "z": 0},
+            "ambient_color": {"r": 0.1, "g": 0.1, "b": 0.15}
+        }<span class="text-blue-400">&lt;/data&gt;</span>
+    <span class="text-blue-400">&lt;/component&gt;</span>
+
+    <span class="text-slate-500">&lt;!-- Transform Component --&gt;</span>
+    <span class="text-blue-400">&lt;component&gt;</span>
+        <span class="text-blue-400">&lt;clusterNodeId&gt;</span>asset_hero<span class="text-blue-400">&lt;/clusterNodeId&gt;</span>
+        <span class="text-blue-400">&lt;componentType&gt;</span>transform<span class="text-blue-400">&lt;/componentType&gt;</span>
+        <span class="text-blue-400">&lt;data</span> <span class="text-purple-400">encoding</span>=<span class="text-green-400">"json"</span><span class="text-blue-400">&gt;</span>{
+            "position": {"x": 0, "y": 0, "z": -5},
+            "rotation": {"x": 0, "y": 45, "z": 0},
+            "scale": {"x": 1, "y": 1, "z": 1}
+        }<span class="text-blue-400">&lt;/data&gt;</span>
+    <span class="text-blue-400">&lt;/component&gt;</span>
+
+    <span class="text-slate-500">&lt;!-- Bild als Base64 --&gt;</span>
+    <span class="text-blue-400">&lt;component&gt;</span>
+        <span class="text-blue-400">&lt;clusterNodeId&gt;</span>asset_texture<span class="text-blue-400">&lt;/clusterNodeId&gt;</span>
+        <span class="text-blue-400">&lt;componentType&gt;</span>image_content<span class="text-blue-400">&lt;/componentType&gt;</span>
+        <span class="text-blue-400">&lt;data</span> <span class="text-purple-400">encoding</span>=<span class="text-green-400">"base64"</span> <span class="text-purple-400">mimeType</span>=<span class="text-green-400">"image/png"</span><span class="text-blue-400">&gt;</span>
+            iVBORw0KGgoAAAANSUhEUgAA...
+        <span class="text-blue-400">&lt;/data&gt;</span>
+    <span class="text-blue-400">&lt;/component&gt;</span>
+<span class="text-blue-400">&lt;/components&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- MCP Integration -->
+        <section id="mcp-integration" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-blue-400">settings_input_component</span>
+            MCP-Server Integration
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-blue-500/20 mb-6">
+            <p class="text-slate-300 mb-4">
+              MCP-Server werden direkt in der <code class="text-cyan-400">.synth</code> Datei konfiguriert.
+              Der Cluster Editor startet sie automatisch und verbindet die Tools mit der UI (Ribbon).
+            </p>
+
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-blue-400">&lt;mcpServers&gt;</span>
+    <span class="text-blue-400">&lt;server&gt;</span>
+        <span class="text-blue-400">&lt;serverName&gt;</span>synth-plugin-blender<span class="text-blue-400">&lt;/serverName&gt;</span>
+        <span class="text-blue-400">&lt;version&gt;</span>1.0.0<span class="text-blue-400">&lt;/version&gt;</span>
+        <span class="text-blue-400">&lt;required&gt;</span>true<span class="text-blue-400">&lt;/required&gt;</span>
+        <span class="text-blue-400">&lt;config&gt;</span>
+            <span class="text-blue-400">&lt;parameters&gt;</span>
+                <span class="text-blue-400">&lt;entry</span> <span class="text-purple-400">key</span>=<span class="text-green-400">"blender.executable"</span><span class="text-blue-400">&gt;</span>/usr/bin/blender<span class="text-blue-400">&lt;/entry&gt;</span>
+            <span class="text-blue-400">&lt;/parameters&gt;</span>
+            <span class="text-blue-400">&lt;autoStart&gt;</span>true<span class="text-blue-400">&lt;/autoStart&gt;</span>
+        <span class="text-blue-400">&lt;/config&gt;</span>
+    <span class="text-blue-400">&lt;/server&gt;</span>
+<span class="text-blue-400">&lt;/mcpServers&gt;</span>
+
+<span class="text-slate-500">&lt;!-- Ribbon: MCP Tools in der UI --&gt;</span>
+<span class="text-blue-400">&lt;ribbon&gt;</span>
+    <span class="text-blue-400">&lt;tabs&gt;</span>
+        <span class="text-blue-400">&lt;tab&gt;</span>
+            <span class="text-blue-400">&lt;label&gt;</span>Blender<span class="text-blue-400">&lt;/label&gt;</span>
+            <span class="text-blue-400">&lt;mcpServerId&gt;</span>mcp_blender<span class="text-blue-400">&lt;/mcpServerId&gt;</span>
+            <span class="text-blue-400">&lt;groups&gt;</span>
+                <span class="text-blue-400">&lt;group&gt;</span>
+                    <span class="text-blue-400">&lt;label&gt;</span>Export<span class="text-blue-400">&lt;/label&gt;</span>
+                    <span class="text-blue-400">&lt;tools&gt;</span>
+                        <span class="text-blue-400">&lt;tool&gt;</span>
+                            <span class="text-blue-400">&lt;mcpToolName&gt;</span>blender/export/gltf<span class="text-blue-400">&lt;/mcpToolName&gt;</span>
+                            <span class="text-blue-400">&lt;label&gt;</span>Export glTF<span class="text-blue-400">&lt;/label&gt;</span>
+                            <span class="text-blue-400">&lt;icon&gt;</span>3d_rotation<span class="text-blue-400">&lt;/icon&gt;</span>
+                        <span class="text-blue-400">&lt;/tool&gt;</span>
+                    <span class="text-blue-400">&lt;/tools&gt;</span>
+                <span class="text-blue-400">&lt;/group&gt;</span>
+            <span class="text-blue-400">&lt;/groups&gt;</span>
+        <span class="text-blue-400">&lt;/tab&gt;</span>
+    <span class="text-blue-400">&lt;/tabs&gt;</span>
+<span class="text-blue-400">&lt;/ribbon&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Web Output -->
+        <section id="web-output" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-green-400">web</span>
+            Web Output Pipeline
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-green-500/20">
+            <p class="text-slate-300 mb-4">
+              Fuer Web-Export rendert der Cluster Editor (via C++ Vulkan) die Szenen zu Assets
+              und generiert Web Components. Die <code class="text-cyan-400">.synth</code> Datei bleibt die Source of Truth.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div class="glass rounded-lg p-4 border border-slate-700/50">
+                <h4 class="font-medium text-cyan-400 mb-2">Native Workflow</h4>
+                <p class="text-xs text-slate-400">
+                  Cluster Editor arbeitet direkt mit .synth →
+                  Vulkan Pre-Rendering → Web Component Export
+                </p>
+              </div>
+              <div class="glass rounded-lg p-4 border border-slate-700/50">
+                <h4 class="font-medium text-green-400 mb-2">Output</h4>
+                <p class="text-xs text-slate-400">
+                  Sprite-Sheets, Videos mit Alpha,
+                  leichtgewichtige Custom Elements
+                </p>
+              </div>
+            </div>
+
+            <div class="code-block rounded-xl p-4 font-mono text-xs">
+              <pre class="text-slate-300"><span class="text-slate-500">&lt;!-- Generiertes Web Component aus .synth Asset --&gt;</span>
+<span class="text-blue-400">&lt;cryo-viewer</span>
+    <span class="text-purple-400">data-scene</span>=<span class="text-green-400">"scene_main"</span>
+    <span class="text-purple-400">data-sprite</span>=<span class="text-green-400">"assets/cryo/hero_360.webp"</span>
+    <span class="text-purple-400">data-frames</span>=<span class="text-green-400">"72"</span>
+<span class="text-blue-400">&gt;&lt;/cryo-viewer&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="scroll-mt-24 pb-16">
+          <div class="glass rounded-2xl p-6 border border-slate-700/50 bg-gradient-to-br from-cyan-500/5 to-purple-500/5">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span class="material-icons-outlined text-cyan-400">summarize</span>
+              Zusammenfassung
+            </h2>
+
+            <p class="text-slate-300 mb-4">
+              Das <strong class="text-cyan-400">synth-protocol</strong> ist das native Format des Cluster Editors.
+              .synth Dateien werden direkt geladen, bearbeitet und bei Bedarf zu Web-Assets exportiert.
+            </p>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700/50">
+                    <th class="text-left py-2 px-3 text-slate-400">Konzept</th>
+                    <th class="text-left py-2 px-3 text-cyan-400">synth-protocol</th>
+                  </tr>
+                </thead>
+                <tbody class="text-xs">
+                  <tr class="border-b border-slate-700/30">
+                    <td class="py-2 px-3 text-slate-300">Dateiformat</td>
+                    <td class="py-2 px-3 text-slate-300">.synth (XML)</td>
+                  </tr>
+                  <tr class="border-b border-slate-700/30">
+                    <td class="py-2 px-3 text-slate-300">Hierarchie</td>
+                    <td class="py-2 px-3 text-slate-300">ClusterNodes (Scene, Folder, Asset, Document)</td>
+                  </tr>
+                  <tr class="border-b border-slate-700/30">
+                    <td class="py-2 px-3 text-slate-300">Daten</td>
+                    <td class="py-2 px-3 text-slate-300">Components (JSON, Base64)</td>
+                  </tr>
+                  <tr class="border-b border-slate-700/30">
+                    <td class="py-2 px-3 text-slate-300">Erweiterung</td>
+                    <td class="py-2 px-3 text-slate-300">MCP-Server + Ribbon Tools</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 px-3 text-slate-300">Editor</td>
+                    <td class="py-2 px-3 text-slate-300">Cluster Synth Editor (native)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="ml-64 border-t border-slate-700/50 py-6 px-8">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <p class="text-sm text-slate-500">Synth Protocol (.synth)</p>
+      <p class="text-sm text-slate-500">chevp Development</p>
+    </div>
+  </footer>
+
+</body>
+</html>

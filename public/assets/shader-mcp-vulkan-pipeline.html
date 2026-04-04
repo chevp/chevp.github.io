@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader MCP Pipeline - 3D Scene AI mit Vulkan/gRPC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            vulkan: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              200: '#fecaca',
+              300: '#fca5a5',
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              700: '#b91c1c',
+              800: '#991b1b',
+              900: '#7f1d1d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #f87171 0%, #ef4444 50%, #dc2626 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-purple {
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-green {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-orange {
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-cyan {
+      background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 50%, #0891b2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .flow-line {
+      stroke-dasharray: 8 4;
+      animation: dash 1s linear infinite;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -12; }
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link {
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-left-color: #ef4444;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .shader-glow {
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center shader-glow">
+          <span class="material-icons-outlined text-white">view_in_ar</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold gradient-text">Shader MCP Pipeline</h1>
+          <p class="text-xs text-slate-400">3D Scene AI mit Vulkan, gRPC und Entity-Components</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#paradigm-shift" class="text-sm text-slate-300 hover:text-white transition-colors">Paradigmenwechsel</a>
+        <a href="#architecture" class="text-sm text-slate-300 hover:text-white transition-colors">Architektur</a>
+        <a href="#shaders" class="text-sm text-slate-300 hover:text-white transition-colors">Shader</a>
+        <a href="#grpc" class="text-sm text-slate-300 hover:text-white transition-colors">gRPC Streams</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex pt-20">
+
+    <!-- Sidebar Navigation -->
+    <aside class="fixed left-0 top-20 bottom-0 w-64 glass border-r border-slate-700/50 p-4 overflow-y-auto">
+      <nav class="space-y-1">
+        <a href="#overview" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">home</span>
+            Uebersicht
+          </span>
+        </a>
+        <a href="#paradigm-shift" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">compare_arrows</span>
+            Paradigmenwechsel
+          </span>
+        </a>
+        <a href="#comparison" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">difference</span>
+            HTML/CSS vs Shader
+          </span>
+        </a>
+        <a href="#architecture" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">architecture</span>
+            Architektur
+          </span>
+        </a>
+
+        <div class="pt-4 pb-2">
+          <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kern-Konzepte</p>
+        </div>
+
+        <a href="#gltf-basis" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded bg-orange-500/20 text-orange-400 text-xs flex items-center justify-center font-bold">G</span>
+            glTF statt CSS
+          </span>
+        </a>
+        <a href="#ecs" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded bg-purple-500/20 text-purple-400 text-xs flex items-center justify-center font-bold">E</span>
+            Entity-Components
+          </span>
+        </a>
+        <a href="#shaders" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="w-5 h-5 rounded bg-red-500/20 text-red-400 text-xs flex items-center justify-center font-bold">S</span>
+            Fragment/Vertex Shader
+          </span>
+        </a>
+
+        <div class="pt-4 pb-2">
+          <p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Integration</p>
+        </div>
+
+        <a href="#mcp-server" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">dns</span>
+            MCP Server
+          </span>
+        </a>
+        <a href="#grpc" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">stream</span>
+            gRPC Streams
+          </span>
+        </a>
+        <a href="#vulkan" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">memory</span>
+            C++ Vulkan
+          </span>
+        </a>
+        <a href="#use-cases" class="nav-link block px-3 py-2 rounded-lg text-sm text-slate-300 border-l-2 border-transparent hover:text-white">
+          <span class="flex items-center gap-2">
+            <span class="material-icons-outlined text-base">sports_esports</span>
+            Game Use-Cases
+          </span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="ml-64 flex-1 p-8">
+      <div class="max-w-4xl mx-auto space-y-16">
+
+        <!-- Overview Section -->
+        <section id="overview" class="scroll-mt-24">
+          <div class="glass rounded-2xl p-8 border border-slate-700/50">
+            <h2 class="text-3xl font-bold gradient-text mb-6">AI-gesteuerte 3D Szenen mit Shader-Pipeline</h2>
+            <p class="text-lg text-slate-300 mb-8 leading-relaxed">
+              Im Gegensatz zur klassischen HTML/CSS-Manipulation ueber MCP-Server arbeitet diese Pipeline
+              direkt mit <strong class="text-white">Fragment- und Vertex-Shadern</strong>, um 3D-Szenen per KI anzupassen.
+              Die Basis bilden <strong class="text-white">glTF statt CSS</strong> und <strong class="text-white">Entity-Components statt HTML-DOM</strong>.
+            </p>
+
+            <!-- Key Benefits -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="glass rounded-xl p-4 border border-red-500/20">
+                <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-red-400">brush</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Shader-First</h3>
+                <p class="text-sm text-slate-400">Fragment/Vertex Shader als primaere Manipulationsebene</p>
+              </div>
+              <div class="glass rounded-xl p-4 border border-cyan-500/20">
+                <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-cyan-400">stream</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">gRPC Streaming</h3>
+                <p class="text-sm text-slate-400">Echtzeit-Kommunikation mit C++ Vulkan Engine</p>
+              </div>
+              <div class="glass rounded-xl p-4 border border-orange-500/20">
+                <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-3">
+                  <span class="material-icons-outlined text-orange-400">view_in_ar</span>
+                </div>
+                <h3 class="font-semibold text-white mb-1">glTF Native</h3>
+                <p class="text-sm text-slate-400">3D-Assets als Datengrundlage statt CSS Styles</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Paradigm Shift -->
+        <section id="paradigm-shift" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-cyan-400">compare_arrows</span>
+            Der Paradigmenwechsel
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-cyan-500/20 mb-6">
+            <h3 class="text-lg font-semibold text-cyan-400 mb-4">Warum nicht HTML/CSS per MCP manipulieren?</h3>
+            <p class="text-slate-300 mb-6">
+              Bei der klassischen Figma-to-Angular Pipeline wird HTML/CSS direkt per MCP-Server modifiziert.
+              Fuer 3D-Szenen und Games ist dieser Ansatz fundamental ungeeignet:
+            </p>
+
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Left: Traditional -->
+              <div class="glass rounded-xl p-5 border border-slate-700/50">
+                <h4 class="font-semibold text-slate-400 mb-3 flex items-center gap-2">
+                  <span class="material-icons-outlined text-slate-500">web</span>
+                  Traditionell: HTML/CSS
+                </h4>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-500">-</span>
+                    <span class="text-slate-400">DOM-basierte Darstellung</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-500">-</span>
+                    <span class="text-slate-400">CSS fuer Styling (2D-fokussiert)</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-500">-</span>
+                    <span class="text-slate-400">JavaScript Event Loop</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-500">-</span>
+                    <span class="text-slate-400">Browser Rendering Engine</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-500">-</span>
+                    <span class="text-slate-400">60 FPS max (vsync limited)</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Right: New Approach -->
+              <div class="glass rounded-xl p-5 border border-red-500/30 bg-red-500/5">
+                <h4 class="font-semibold text-red-400 mb-3 flex items-center gap-2">
+                  <span class="material-icons-outlined text-red-500">view_in_ar</span>
+                  Neu: Shader Pipeline
+                </h4>
+                <ul class="space-y-2 text-sm">
+                  <li class="flex items-start gap-2">
+                    <span class="text-green-400">+</span>
+                    <span class="text-slate-300">Entity-Component System</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-green-400">+</span>
+                    <span class="text-slate-300">glTF fuer 3D Assets (native)</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-green-400">+</span>
+                    <span class="text-slate-300">Vulkan Render Pipeline</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-green-400">+</span>
+                    <span class="text-slate-300">GPU-native Shader Execution</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-green-400">+</span>
+                    <span class="text-slate-300">Unlimitierte Framerate</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Runtime vs Authoring -->
+          <div class="glass rounded-2xl p-6 border border-yellow-500/20 mt-6">
+            <h3 class="text-lg font-semibold text-yellow-400 mb-4 flex items-center gap-2">
+              <span class="material-icons-outlined">build</span>
+              Authoring-Pipeline vs. Runtime-Output
+            </h3>
+            <p class="text-slate-300 mb-4">
+              Wichtige Unterscheidung: <strong class="text-white">HTML/CSS ist Runtime-Output</strong> fuer den Browser.
+              Der MCP-Server in der Shader-Pipeline dient hingegen der <strong class="text-white">Erstellung dieser Daten</strong>.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="glass rounded-lg p-4 border border-blue-500/30">
+                <h5 class="font-medium text-blue-400 mb-2">Web: MCP -> HTML/CSS</h5>
+                <p class="text-xs text-slate-400">MCP generiert HTML/CSS, Browser fuehrt aus</p>
+                <div class="mt-2 flex items-center gap-2 text-xs">
+                  <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-400">MCP</span>
+                  <span class="text-slate-500">-></span>
+                  <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400">HTML/CSS</span>
+                  <span class="text-slate-500">-></span>
+                  <span class="px-2 py-1 rounded bg-slate-500/20 text-slate-400">Browser</span>
+                </div>
+              </div>
+              <div class="glass rounded-lg p-4 border border-red-500/30">
+                <h5 class="font-medium text-red-400 mb-2">3D: MCP -> glTF/Shader</h5>
+                <p class="text-xs text-slate-400">MCP generiert Scene-Data, Vulkan fuehrt aus</p>
+                <div class="mt-2 flex items-center gap-2 text-xs">
+                  <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-400">MCP</span>
+                  <span class="text-slate-500">-></span>
+                  <span class="px-2 py-1 rounded bg-orange-500/20 text-orange-400">glTF/ECS</span>
+                  <span class="text-slate-500">-></span>
+                  <span class="px-2 py-1 rounded bg-red-500/20 text-red-400">Vulkan</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm text-slate-400 mt-4">
+              <span class="text-yellow-400">Kern:</span> Die MCP-Pipeline ist ein <strong class="text-white">Authoring-Tool</strong> -
+              sie erstellt/modifiziert die Daten, die dann von der jeweiligen Runtime (Browser oder Vulkan) konsumiert werden.
+            </p>
+          </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-purple-400">difference</span>
+            HTML/CSS Browser vs. Shader Pipeline
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-purple-500/20 mb-6">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700/50">
+                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Aspekt</th>
+                    <th class="text-left py-3 px-4 text-blue-400 font-medium">HTML/CSS (Browser)</th>
+                    <th class="text-left py-3 px-4 text-red-400 font-medium">Shader Pipeline (Vulkan)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700/30">
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Struktur-Basis</td>
+                    <td class="py-3 px-4 text-slate-400">HTML DOM Tree</td>
+                    <td class="py-3 px-4 text-slate-300">Entity-Component System</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Style-Definition</td>
+                    <td class="py-3 px-4 text-slate-400">CSS Stylesheets</td>
+                    <td class="py-3 px-4 text-slate-300">glTF Materials + Shader</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Asset-Format</td>
+                    <td class="py-3 px-4 text-slate-400">PNG, SVG, WebP</td>
+                    <td class="py-3 px-4 text-slate-300">glTF, KTX2, SPIR-V</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Rendering</td>
+                    <td class="py-3 px-4 text-slate-400">Browser Engine (Blink/Gecko)</td>
+                    <td class="py-3 px-4 text-slate-300">Vulkan Render Pass</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Manipulation</td>
+                    <td class="py-3 px-4 text-slate-400">DOM API / CSSOM</td>
+                    <td class="py-3 px-4 text-slate-300">Shader Uniforms / Push Constants</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Kommunikation</td>
+                    <td class="py-3 px-4 text-slate-400">HTTP/REST, WebSocket</td>
+                    <td class="py-3 px-4 text-slate-300">gRPC Bidirectional Streams</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">AI Tooling</td>
+                    <td class="py-3 px-4 text-slate-400">MCP modifiziert HTML/CSS direkt</td>
+                    <td class="py-3 px-4 text-slate-300">MCP sendet Shader-Parameter via gRPC</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Visual Comparison -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="glass rounded-2xl p-6 border border-blue-500/20">
+              <h4 class="font-semibold text-blue-400 mb-4 flex items-center gap-2">
+                <span class="material-icons-outlined">web</span>
+                Browser: CSS als "Shader"
+              </h4>
+              <div class="code-block rounded-xl p-4 font-mono text-xs">
+                <pre class="text-slate-300"><span class="text-purple-400">.button</span> {
+  <span class="text-blue-400">background</span>: <span class="text-green-400">linear-gradient</span>(...);
+  <span class="text-blue-400">box-shadow</span>: <span class="text-orange-400">0 4px 6px</span> rgba(...);
+  <span class="text-blue-400">transform</span>: <span class="text-green-400">rotate</span>(<span class="text-orange-400">45deg</span>);
+  <span class="text-blue-400">transition</span>: all <span class="text-orange-400">0.3s</span> ease;
+}
+
+<span class="text-slate-500">/* 2D-fokussiert, CPU-basiert */</span></pre>
+              </div>
+            </div>
+
+            <div class="glass rounded-2xl p-6 border border-red-500/20">
+              <h4 class="font-semibold text-red-400 mb-4 flex items-center gap-2">
+                <span class="material-icons-outlined">brush</span>
+                Vulkan: GLSL Fragment Shader
+              </h4>
+              <div class="code-block rounded-xl p-4 font-mono text-xs">
+                <pre class="text-slate-300"><span class="text-purple-400">#version</span> 450
+
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">in</span> vec3 fragNormal;
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">out</span> vec4 outColor;
+
+<span class="text-purple-400">layout</span>(push_constant) <span class="text-blue-400">uniform</span> AI_Params {
+  vec4 tint;      <span class="text-slate-500">// AI-controlled</span>
+  float emission; <span class="text-slate-500">// AI-controlled</span>
+};
+
+<span class="text-blue-400">void</span> main() {
+  outColor = tint * emission;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Architecture -->
+        <section id="architecture" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-red-400">architecture</span>
+            Pipeline-Architektur
+          </h2>
+
+          <div class="glass rounded-2xl p-8 border border-slate-700/50 mb-8">
+            <div class="flex items-center justify-between mb-8">
+
+              <!-- Stage 1: AI/MCP -->
+              <div class="flex-1 text-center">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-3 shadow-lg shadow-purple-500/30">
+                  <span class="material-icons-outlined text-white text-2xl">psychology</span>
+                </div>
+                <h4 class="font-semibold text-white">Claude AI</h4>
+                <p class="text-xs text-slate-400">MCP Server</p>
+              </div>
+
+              <!-- Arrow -->
+              <div class="w-12 flex items-center justify-center">
+                <svg width="40" height="20" class="text-slate-600">
+                  <path d="M0 10 L30 10 M25 5 L30 10 L25 15" stroke="currentColor" fill="none" stroke-width="2" class="flow-line"/>
+                </svg>
+              </div>
+
+              <!-- Stage 2: gRPC -->
+              <div class="flex-1 text-center">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center mb-3 shadow-lg shadow-cyan-500/30">
+                  <span class="material-icons-outlined text-white text-2xl">stream</span>
+                </div>
+                <h4 class="font-semibold text-white">gRPC Stream</h4>
+                <p class="text-xs text-slate-400">Bidirectional</p>
+              </div>
+
+              <!-- Arrow -->
+              <div class="w-12 flex items-center justify-center">
+                <svg width="40" height="20" class="text-slate-600">
+                  <path d="M0 10 L30 10 M25 5 L30 10 L25 15" stroke="currentColor" fill="none" stroke-width="2" class="flow-line"/>
+                </svg>
+              </div>
+
+              <!-- Stage 3: C++ Engine -->
+              <div class="flex-1 text-center">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mb-3 shadow-lg shadow-green-500/30">
+                  <span class="material-icons-outlined text-white text-2xl">memory</span>
+                </div>
+                <h4 class="font-semibold text-white">C++ Engine</h4>
+                <p class="text-xs text-slate-400">ECS + Vulkan</p>
+              </div>
+
+              <!-- Arrow -->
+              <div class="w-12 flex items-center justify-center">
+                <svg width="40" height="20" class="text-slate-600">
+                  <path d="M0 10 L30 10 M25 5 L30 10 L25 15" stroke="currentColor" fill="none" stroke-width="2" class="flow-line"/>
+                </svg>
+              </div>
+
+              <!-- Stage 4: GPU -->
+              <div class="flex-1 text-center">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-3 shadow-lg shadow-red-500/30 shader-glow">
+                  <span class="material-icons-outlined text-white text-2xl">bolt</span>
+                </div>
+                <h4 class="font-semibold text-white">GPU</h4>
+                <p class="text-xs text-slate-400">Shader Execution</p>
+              </div>
+            </div>
+
+            <!-- Data Flow Description -->
+            <div class="border-t border-slate-700/50 pt-6">
+              <div class="grid grid-cols-4 gap-4 text-sm">
+                <div class="text-center">
+                  <p class="text-purple-400 font-medium">Scene Intent</p>
+                  <p class="text-slate-500 text-xs mt-1">AI Prompt / Decision</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-cyan-400 font-medium">Protobuf Messages</p>
+                  <p class="text-slate-500 text-xs mt-1">Shader Parameters</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-green-400 font-medium">Entity Updates</p>
+                  <p class="text-slate-500 text-xs mt-1">Component Data</p>
+                </div>
+                <div class="text-center">
+                  <p class="text-red-400 font-medium">Render Output</p>
+                  <p class="text-slate-500 text-xs mt-1">Frame Buffer</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- glTF as Basis -->
+        <section id="gltf-basis" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold gradient-orange mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-sm font-bold text-orange-400">G</span>
+            glTF statt CSS: Die neue Styling-Basis
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-orange-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Waehrend CSS fuer 2D-Webseiten Farben, Layouts und Animationen definiert,
+              uebernimmt <strong class="text-white">glTF (GL Transmission Format)</strong> diese Rolle fuer 3D-Szenen.
+              glTF ist das "JPEG der 3D" - ein standardisiertes Format fuer 3D-Assets.
+            </p>
+
+            <div class="grid grid-cols-2 gap-6 mb-6">
+              <div>
+                <h4 class="font-semibold text-slate-400 mb-3">CSS definiert:</h4>
+                <ul class="space-y-1 text-sm text-slate-400">
+                  <li>- Farben, Gradienten</li>
+                  <li>- Box Model, Layouts</li>
+                  <li>- Transforms (2D/3D begrenzt)</li>
+                  <li>- Transitions, Animations</li>
+                  <li>- Schatten, Filter</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-semibold text-orange-400 mb-3">glTF definiert:</h4>
+                <ul class="space-y-1 text-sm text-slate-300">
+                  <li>+ Meshes, Geometrien</li>
+                  <li>+ Materials (PBR-basiert)</li>
+                  <li>+ Texturen, Normal Maps</li>
+                  <li>+ Skeletal Animations</li>
+                  <li>+ Scene Hierarchy</li>
+                </ul>
+              </div>
+            </div>
+
+            <h4 class="font-semibold text-white mb-3">glTF Material Definition (PBR):</h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300">{
+  <span class="text-blue-400">"materials"</span>: [{
+    <span class="text-blue-400">"name"</span>: <span class="text-green-400">"AI_Controlled_Material"</span>,
+    <span class="text-blue-400">"pbrMetallicRoughness"</span>: {
+      <span class="text-blue-400">"baseColorFactor"</span>: [<span class="text-orange-400">1.0</span>, <span class="text-orange-400">0.2</span>, <span class="text-orange-400">0.2</span>, <span class="text-orange-400">1.0</span>],  <span class="text-slate-500">// AI kann aendern</span>
+      <span class="text-blue-400">"metallicFactor"</span>: <span class="text-orange-400">0.8</span>,                         <span class="text-slate-500">// AI kann aendern</span>
+      <span class="text-blue-400">"roughnessFactor"</span>: <span class="text-orange-400">0.3</span>                          <span class="text-slate-500">// AI kann aendern</span>
+    },
+    <span class="text-blue-400">"emissiveFactor"</span>: [<span class="text-orange-400">0.5</span>, <span class="text-orange-400">0.0</span>, <span class="text-orange-400">0.0</span>],               <span class="text-slate-500">// Glow-Effekt</span>
+    <span class="text-blue-400">"extensions"</span>: {
+      <span class="text-blue-400">"KHR_materials_unlit"</span>: {},                      <span class="text-slate-500">// Fuer UI-Elemente</span>
+      <span class="text-blue-400">"CUSTOM_ai_parameters"</span>: {                       <span class="text-slate-500">// Custom Extension</span>
+        <span class="text-blue-400">"mood"</span>: <span class="text-green-400">"aggressive"</span>,
+        <span class="text-blue-400">"intensity"</span>: <span class="text-orange-400">0.7</span>
+      }
+    }
+  }]
+}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Entity-Component System -->
+        <section id="ecs" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold gradient-purple mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-sm font-bold text-purple-400">E</span>
+            Entity-Components statt HTML DOM
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-purple-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Statt HTML-Elementen mit verschachteltem DOM-Tree verwendet die 3D-Pipeline ein
+              <strong class="text-white">Entity-Component-System (ECS)</strong>. Entities sind IDs, Components sind Daten,
+              Systems verarbeiten sie.
+            </p>
+
+            <div class="grid grid-cols-2 gap-6 mb-6">
+              <div class="glass rounded-xl p-4 border border-blue-500/20">
+                <h4 class="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                  <span class="material-icons-outlined text-sm">code</span>
+                  HTML DOM Hierarchie
+                </h4>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-400"><span class="text-blue-400">&lt;div</span> class="character"<span class="text-blue-400">&gt;</span>
+  <span class="text-blue-400">&lt;div</span> class="body"<span class="text-blue-400">&gt;</span>
+    <span class="text-blue-400">&lt;img</span> src="texture.png"<span class="text-blue-400">/&gt;</span>
+  <span class="text-blue-400">&lt;/div&gt;</span>
+  <span class="text-blue-400">&lt;div</span> class="health-bar"<span class="text-blue-400">&gt;</span>
+    <span class="text-blue-400">&lt;span&gt;</span>100<span class="text-blue-400">&lt;/span&gt;</span>
+  <span class="text-blue-400">&lt;/div&gt;</span>
+<span class="text-blue-400">&lt;/div&gt;</span></pre>
+                </div>
+              </div>
+
+              <div class="glass rounded-xl p-4 border border-purple-500/20">
+                <h4 class="font-semibold text-purple-400 mb-3 flex items-center gap-2">
+                  <span class="material-icons-outlined text-sm">view_in_ar</span>
+                  ECS Composition
+                </h4>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300"><span class="text-slate-500">// Entity = ID</span>
+Entity character = <span class="text-orange-400">42</span>;
+
+<span class="text-slate-500">// Components = Daten</span>
+world.add(character, Transform{...});
+world.add(character, MeshRenderer{...});
+world.add(character, Health{<span class="text-orange-400">100</span>});
+world.add(character, AIControlled{});</pre>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="font-semibold text-white mb-3">ECS Vorteile fuer AI-Steuerung:</h4>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-purple-400 font-medium text-sm">Data-Oriented</span>
+                <p class="text-xs text-slate-400 mt-1">Components sind reine Daten - ideal fuer AI Manipulation</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-purple-400 font-medium text-sm">Cache-Friendly</span>
+                <p class="text-xs text-slate-400 mt-1">Kontiguierlicher Speicher fuer schnelle Iteration</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-purple-400 font-medium text-sm">Decoupled</span>
+                <p class="text-xs text-slate-400 mt-1">AI Component unabhaengig von Rendering Component</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- C++ ECS Example -->
+          <div class="glass rounded-2xl p-6 border border-slate-700/50">
+            <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
+              <span class="material-icons-outlined text-purple-400">code</span>
+              C++ Component Definitionen
+            </h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-slate-500">// Components fuer AI-gesteuerte Szene</span>
+
+<span class="text-purple-400">struct</span> <span class="text-blue-400">AIControlled</span> {
+    <span class="text-blue-400">bool</span> active = <span class="text-orange-400">true</span>;
+    <span class="text-blue-400">float</span> responsiveness = <span class="text-orange-400">1.0f</span>;
+};
+
+<span class="text-purple-400">struct</span> <span class="text-blue-400">ShaderParameters</span> {
+    glm::vec4 tint_color;
+    <span class="text-blue-400">float</span> emission_strength;
+    <span class="text-blue-400">float</span> distortion_amount;
+    <span class="text-blue-400">float</span> time_scale;
+};
+
+<span class="text-purple-400">struct</span> <span class="text-blue-400">Transform</span> {
+    glm::vec3 position;
+    glm::quat rotation;
+    glm::vec3 scale;
+};
+
+<span class="text-purple-400">struct</span> <span class="text-blue-400">MeshRenderer</span> {
+    <span class="text-blue-400">uint32_t</span> mesh_id;
+    <span class="text-blue-400">uint32_t</span> material_id;
+    <span class="text-blue-400">uint32_t</span> shader_pipeline_id;
+};
+
+<span class="text-slate-500">// System das AI-Updates verarbeitet</span>
+<span class="text-purple-400">class</span> <span class="text-blue-400">AIUpdateSystem</span> {
+<span class="text-purple-400">public</span>:
+    <span class="text-blue-400">void</span> update(entt::registry& world, <span class="text-purple-400">const</span> AICommand& cmd) {
+        <span class="text-purple-400">auto</span> view = world.view<AIControlled, ShaderParameters>();
+        <span class="text-purple-400">for</span> (<span class="text-purple-400">auto</span> [entity, ai, params] : view.each()) {
+            <span class="text-purple-400">if</span> (ai.active) {
+                params.tint_color = cmd.tint;
+                params.emission_strength = cmd.emission;
+            }
+        }
+    }
+};</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Shaders -->
+        <section id="shaders" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold gradient-text mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-sm font-bold text-red-400">S</span>
+            Fragment und Vertex Shader
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-red-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Die AI manipuliert nicht HTML/CSS, sondern <strong class="text-white">Shader-Parameter</strong>.
+              Shader sind Programme die auf der GPU laufen und jeden Pixel (Fragment) bzw. jeden Vertex berechnen.
+            </p>
+
+            <div class="grid grid-cols-2 gap-6 mb-6">
+              <div>
+                <h4 class="font-semibold text-cyan-400 mb-3">Vertex Shader</h4>
+                <p class="text-sm text-slate-400">Transformiert Positionen, deformiert Geometry, berechnet Normals</p>
+                <ul class="mt-2 space-y-1 text-xs text-slate-500">
+                  <li>- Input: Vertex Position, Normal, UV</li>
+                  <li>- Output: Transformed Position</li>
+                  <li>- AI kann: Deformation, Animation</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-semibold text-red-400 mb-3">Fragment Shader</h4>
+                <p class="text-sm text-slate-400">Berechnet Farbe jedes Pixels, Lighting, Effects</p>
+                <ul class="mt-2 space-y-1 text-xs text-slate-500">
+                  <li>- Input: Interpolated Data</li>
+                  <li>- Output: Final Color (RGBA)</li>
+                  <li>- AI kann: Farben, Glow, Mood</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vertex Shader Example -->
+          <div class="glass rounded-2xl p-6 border border-cyan-500/20 mb-6">
+            <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
+              <span class="material-icons-outlined text-cyan-400">change_history</span>
+              Vertex Shader mit AI-Kontrolle
+            </h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-purple-400">#version</span> 450
+
+<span class="text-slate-500">// Vertex Inputs</span>
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">in</span> vec3 inPosition;
+<span class="text-purple-400">layout</span>(location = 1) <span class="text-blue-400">in</span> vec3 inNormal;
+<span class="text-purple-400">layout</span>(location = 2) <span class="text-blue-400">in</span> vec2 inUV;
+
+<span class="text-slate-500">// Outputs to Fragment Shader</span>
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">out</span> vec3 fragNormal;
+<span class="text-purple-400">layout</span>(location = 1) <span class="text-blue-400">out</span> vec2 fragUV;
+<span class="text-purple-400">layout</span>(location = 2) <span class="text-blue-400">out</span> vec3 fragWorldPos;
+
+<span class="text-slate-500">// Uniforms - Standard Matrices</span>
+<span class="text-purple-400">layout</span>(set = 0, binding = 0) <span class="text-blue-400">uniform</span> CameraUBO {
+    mat4 view;
+    mat4 projection;
+};
+
+<span class="text-purple-400">layout</span>(set = 1, binding = 0) <span class="text-blue-400">uniform</span> ObjectUBO {
+    mat4 model;
+};
+
+<span class="text-slate-500">// ===== AI-CONTROLLED PARAMETERS =====</span>
+<span class="text-purple-400">layout</span>(push_constant) <span class="text-blue-400">uniform</span> AIParams {
+    <span class="text-blue-400">float</span> deformation_amount;   <span class="text-slate-500">// AI: 0.0 - 1.0</span>
+    <span class="text-blue-400">float</span> wave_frequency;       <span class="text-slate-500">// AI: Wellenbewegung</span>
+    <span class="text-blue-400">float</span> time;                 <span class="text-slate-500">// System: Animation Zeit</span>
+    <span class="text-blue-400">float</span> scale_pulse;          <span class="text-slate-500">// AI: Pulsieren</span>
+} ai;
+
+<span class="text-blue-400">void</span> main() {
+    <span class="text-slate-500">// AI-gesteuerte Deformation</span>
+    vec3 pos = inPosition;
+
+    <span class="text-slate-500">// Wellen-Effekt (AI steuert Frequenz)</span>
+    <span class="text-blue-400">float</span> wave = sin(pos.x * ai.wave_frequency + ai.time) * ai.deformation_amount;
+    pos.y += wave;
+
+    <span class="text-slate-500">// Pulsierender Scale (AI steuert Intensitaet)</span>
+    <span class="text-blue-400">float</span> pulse = <span class="text-orange-400">1.0</span> + sin(ai.time * <span class="text-orange-400">2.0</span>) * ai.scale_pulse;
+    pos *= pulse;
+
+    <span class="text-slate-500">// Standard Transform</span>
+    vec4 worldPos = model * vec4(pos, <span class="text-orange-400">1.0</span>);
+    gl_Position = projection * view * worldPos;
+
+    <span class="text-slate-500">// Pass to Fragment</span>
+    fragNormal = mat3(model) * inNormal;
+    fragUV = inUV;
+    fragWorldPos = worldPos.xyz;
+}</pre>
+            </div>
+          </div>
+
+          <!-- Fragment Shader Example -->
+          <div class="glass rounded-2xl p-6 border border-red-500/20">
+            <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
+              <span class="material-icons-outlined text-red-400">palette</span>
+              Fragment Shader mit AI-Kontrolle
+            </h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-purple-400">#version</span> 450
+
+<span class="text-slate-500">// Inputs from Vertex Shader</span>
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">in</span> vec3 fragNormal;
+<span class="text-purple-400">layout</span>(location = 1) <span class="text-blue-400">in</span> vec2 fragUV;
+<span class="text-purple-400">layout</span>(location = 2) <span class="text-blue-400">in</span> vec3 fragWorldPos;
+
+<span class="text-slate-500">// Output</span>
+<span class="text-purple-400">layout</span>(location = 0) <span class="text-blue-400">out</span> vec4 outColor;
+
+<span class="text-slate-500">// Textures</span>
+<span class="text-purple-400">layout</span>(set = 2, binding = 0) <span class="text-blue-400">uniform</span> sampler2D albedoMap;
+<span class="text-purple-400">layout</span>(set = 2, binding = 1) <span class="text-blue-400">uniform</span> sampler2D normalMap;
+
+<span class="text-slate-500">// ===== AI-CONTROLLED PARAMETERS =====</span>
+<span class="text-purple-400">layout</span>(push_constant) <span class="text-blue-400">uniform</span> AIParams {
+    vec4 tint_color;            <span class="text-slate-500">// AI: Farbton der Szene</span>
+    <span class="text-blue-400">float</span> emission_strength;    <span class="text-slate-500">// AI: Glow-Intensitaet</span>
+    <span class="text-blue-400">float</span> saturation;           <span class="text-slate-500">// AI: Farbsaettigung</span>
+    <span class="text-blue-400">float</span> contrast;             <span class="text-slate-500">// AI: Kontrast</span>
+    <span class="text-blue-400">float</span> mood_dark;            <span class="text-slate-500">// AI: Stimmung (0=hell, 1=dunkel)</span>
+} ai;
+
+<span class="text-slate-500">// Lighting</span>
+<span class="text-purple-400">layout</span>(set = 0, binding = 1) <span class="text-blue-400">uniform</span> LightUBO {
+    vec3 lightDir;
+    vec3 lightColor;
+    vec3 ambientColor;
+};
+
+<span class="text-blue-400">vec3</span> adjustSaturation(vec3 color, <span class="text-blue-400">float</span> sat) {
+    <span class="text-blue-400">float</span> gray = dot(color, vec3(<span class="text-orange-400">0.299</span>, <span class="text-orange-400">0.587</span>, <span class="text-orange-400">0.114</span>));
+    <span class="text-purple-400">return</span> mix(vec3(gray), color, sat);
+}
+
+<span class="text-blue-400">vec3</span> adjustContrast(vec3 color, <span class="text-blue-400">float</span> c) {
+    <span class="text-purple-400">return</span> (color - <span class="text-orange-400">0.5</span>) * c + <span class="text-orange-400">0.5</span>;
+}
+
+<span class="text-blue-400">void</span> main() {
+    <span class="text-slate-500">// Sample base texture</span>
+    vec4 albedo = texture(albedoMap, fragUV);
+
+    <span class="text-slate-500">// Simple diffuse lighting</span>
+    vec3 N = normalize(fragNormal);
+    <span class="text-blue-400">float</span> NdotL = max(dot(N, -lightDir), <span class="text-orange-400">0.0</span>);
+    vec3 diffuse = albedo.rgb * lightColor * NdotL;
+    vec3 ambient = albedo.rgb * ambientColor;
+
+    vec3 color = diffuse + ambient;
+
+    <span class="text-slate-500">// ===== AI EFFECTS =====</span>
+
+    <span class="text-slate-500">// 1. Tint (AI-controlled color overlay)</span>
+    color = mix(color, color * ai.tint_color.rgb, ai.tint_color.a);
+
+    <span class="text-slate-500">// 2. Emission/Glow (AI can make things glow)</span>
+    vec3 emissive = albedo.rgb * ai.emission_strength;
+    color += emissive;
+
+    <span class="text-slate-500">// 3. Saturation adjustment (AI mood)</span>
+    color = adjustSaturation(color, ai.saturation);
+
+    <span class="text-slate-500">// 4. Contrast (AI dramatic effect)</span>
+    color = adjustContrast(color, ai.contrast);
+
+    <span class="text-slate-500">// 5. Mood darkening (AI atmosphere)</span>
+    color = mix(color, color * vec3(<span class="text-orange-400">0.3</span>, <span class="text-orange-400">0.3</span>, <span class="text-orange-400">0.4</span>), ai.mood_dark);
+
+    outColor = vec4(color, albedo.a);
+}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- MCP Server -->
+        <section id="mcp-server" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-purple-400">dns</span>
+            MCP Server fuer Shader-Kontrolle
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-purple-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Der MCP-Server stellt Tools bereit, mit denen Claude die 3D-Szene manipulieren kann.
+              Statt HTML/CSS zu aendern, sendet er <strong class="text-white">Shader-Parameter via gRPC</strong> an die C++ Engine.
+            </p>
+
+            <h4 class="font-semibold text-white mb-4">MCP Tools fuer 3D Scene Control:</h4>
+
+            <div class="space-y-4">
+              <!-- Tool 1 -->
+              <div class="glass rounded-xl p-4 border border-slate-700/50">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="material-icons-outlined text-red-400">palette</span>
+                  <code class="text-red-400 font-semibold">set_scene_mood</code>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">Setzt die Stimmung der gesamten Szene ueber Shader-Parameter</p>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300">{
+  "mood": "aggressive" | "calm" | "mysterious" | "joyful",
+  "intensity": 0.0 - 1.0,
+  "transition_time": 2.0  <span class="text-slate-500">// Sekunden</span>
+}</pre>
+                </div>
+              </div>
+
+              <!-- Tool 2 -->
+              <div class="glass rounded-xl p-4 border border-slate-700/50">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="material-icons-outlined text-cyan-400">auto_fix_high</span>
+                  <code class="text-cyan-400 font-semibold">modify_entity_shader</code>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">Modifiziert Shader-Parameter einer spezifischen Entity</p>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300">{
+  "entity_id": 42,
+  "shader_params": {
+    "tint_color": [1.0, 0.2, 0.2, 0.5],
+    "emission_strength": 2.0,
+    "deformation": 0.3
+  }
+}</pre>
+                </div>
+              </div>
+
+              <!-- Tool 3 -->
+              <div class="glass rounded-xl p-4 border border-slate-700/50">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="material-icons-outlined text-green-400">animation</span>
+                  <code class="text-green-400 font-semibold">trigger_shader_animation</code>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">Startet vordefinierte Shader-Animationen</p>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300">{
+  "animation": "pulse" | "dissolve" | "wave" | "glitch",
+  "target": "all" | [entity_ids],
+  "duration": 3.0,
+  "loop": false
+}</pre>
+                </div>
+              </div>
+
+              <!-- Tool 4 -->
+              <div class="glass rounded-xl p-4 border border-slate-700/50">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="material-icons-outlined text-orange-400">view_in_ar</span>
+                  <code class="text-orange-400 font-semibold">spawn_entity</code>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">Erstellt neue Entity mit glTF-Mesh und Shadern</p>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300">{
+  "gltf_asset": "assets/enemy_robot.glb",
+  "position": [0.0, 1.0, -5.0],
+  "shader_preset": "metallic_glow",
+  "ai_controlled": true
+}</pre>
+                </div>
+              </div>
+
+              <!-- Tool 5 -->
+              <div class="glass rounded-xl p-4 border border-slate-700/50">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="material-icons-outlined text-purple-400">visibility</span>
+                  <code class="text-purple-400 font-semibold">query_scene_state</code>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">Fragt aktuellen Szenen-Status ab (fuer AI Entscheidungen)</p>
+                <div class="code-block rounded-lg p-3 text-xs">
+                  <pre class="text-slate-300">{
+  "query": "entities" | "materials" | "active_shaders",
+  "filter": {
+    "has_component": ["AIControlled", "Health"]
+  }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- gRPC Streams -->
+        <section id="grpc" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold gradient-cyan mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-cyan-400">stream</span>
+            gRPC Bidirectional Streams
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-cyan-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Die Kommunikation zwischen MCP-Server und C++ Vulkan Engine laeuft ueber
+              <strong class="text-white">gRPC Bidirectional Streams</strong>. Dies ermoeglicht:
+            </p>
+
+            <div class="grid grid-cols-3 gap-4 mb-6">
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-cyan-400 font-medium text-sm">Echtzeit-Updates</span>
+                <p class="text-xs text-slate-400 mt-1">Kontinuierlicher Datenstrom ohne Polling</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-cyan-400 font-medium text-sm">Bidirektional</span>
+                <p class="text-xs text-slate-400 mt-1">AI sendet Commands, Engine sendet State</p>
+              </div>
+              <div class="glass rounded-lg p-3 border border-slate-700/50">
+                <span class="text-cyan-400 font-medium text-sm">Low Latency</span>
+                <p class="text-xs text-slate-400 mt-1">HTTP/2, Binary Protobuf, Multiplexing</p>
+              </div>
+            </div>
+
+            <h4 class="font-semibold text-white mb-3">Protocol Buffer Definition:</h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-purple-400">syntax</span> = <span class="text-green-400">"proto3"</span>;
+
+<span class="text-purple-400">package</span> shader_pipeline;
+
+<span class="text-slate-500">// ===== AI -> Engine Commands =====</span>
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">ShaderCommand</span> {
+  <span class="text-purple-400">oneof</span> command {
+    SetMood set_mood = <span class="text-orange-400">1</span>;
+    ModifyEntity modify_entity = <span class="text-orange-400">2</span>;
+    TriggerAnimation trigger_animation = <span class="text-orange-400">3</span>;
+    SpawnEntity spawn_entity = <span class="text-orange-400">4</span>;
+  }
+}
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">SetMood</span> {
+  <span class="text-purple-400">enum</span> Mood {
+    CALM = <span class="text-orange-400">0</span>;
+    AGGRESSIVE = <span class="text-orange-400">1</span>;
+    MYSTERIOUS = <span class="text-orange-400">2</span>;
+    JOYFUL = <span class="text-orange-400">3</span>;
+  }
+  Mood mood = <span class="text-orange-400">1</span>;
+  <span class="text-blue-400">float</span> intensity = <span class="text-orange-400">2</span>;
+  <span class="text-blue-400">float</span> transition_seconds = <span class="text-orange-400">3</span>;
+}
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">ModifyEntity</span> {
+  <span class="text-blue-400">uint64</span> entity_id = <span class="text-orange-400">1</span>;
+  ShaderParams params = <span class="text-orange-400">2</span>;
+}
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">ShaderParams</span> {
+  <span class="text-purple-400">repeated</span> <span class="text-blue-400">float</span> tint_color = <span class="text-orange-400">1</span>;  <span class="text-slate-500">// RGBA</span>
+  <span class="text-blue-400">float</span> emission = <span class="text-orange-400">2</span>;
+  <span class="text-blue-400">float</span> deformation = <span class="text-orange-400">3</span>;
+  <span class="text-blue-400">float</span> saturation = <span class="text-orange-400">4</span>;
+  <span class="text-blue-400">float</span> contrast = <span class="text-orange-400">5</span>;
+}
+
+<span class="text-slate-500">// ===== Engine -> AI State Updates =====</span>
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">SceneState</span> {
+  <span class="text-purple-400">repeated</span> EntityState entities = <span class="text-orange-400">1</span>;
+  <span class="text-blue-400">float</span> current_time = <span class="text-orange-400">2</span>;
+  <span class="text-blue-400">uint32</span> frame_number = <span class="text-orange-400">3</span>;
+}
+
+<span class="text-purple-400">message</span> <span class="text-blue-400">EntityState</span> {
+  <span class="text-blue-400">uint64</span> id = <span class="text-orange-400">1</span>;
+  <span class="text-purple-400">repeated</span> <span class="text-blue-400">float</span> position = <span class="text-orange-400">2</span>;  <span class="text-slate-500">// xyz</span>
+  <span class="text-blue-400">float</span> health = <span class="text-orange-400">3</span>;
+  <span class="text-blue-400">bool</span> visible = <span class="text-orange-400">4</span>;
+  <span class="text-blue-400">string</span> current_animation = <span class="text-orange-400">5</span>;
+}
+
+<span class="text-slate-500">// ===== Service Definition =====</span>
+
+<span class="text-purple-400">service</span> <span class="text-blue-400">ShaderPipeline</span> {
+  <span class="text-slate-500">// Bidirectional Stream fuer Echtzeit-Kommunikation</span>
+  <span class="text-purple-400">rpc</span> StreamControl(<span class="text-purple-400">stream</span> ShaderCommand) <span class="text-purple-400">returns</span> (<span class="text-purple-400">stream</span> SceneState);
+
+  <span class="text-slate-500">// Einmalige Abfragen</span>
+  <span class="text-purple-400">rpc</span> QueryEntities(EntityQuery) <span class="text-purple-400">returns</span> (EntityList);
+  <span class="text-purple-400">rpc</span> LoadAsset(AssetRequest) <span class="text-purple-400">returns</span> (AssetResponse);
+}</pre>
+            </div>
+          </div>
+
+          <!-- Flow Diagram -->
+          <div class="glass rounded-2xl p-6 border border-slate-700/50">
+            <h4 class="font-semibold text-white mb-4">Kommunikationsfluss:</h4>
+            <div class="flex items-center justify-between text-sm">
+              <div class="text-center">
+                <div class="w-24 h-16 rounded-xl bg-purple-500/20 border border-purple-500/50 flex items-center justify-center mb-2">
+                  <span class="text-purple-400">Claude AI</span>
+                </div>
+                <p class="text-xs text-slate-500">MCP Server</p>
+              </div>
+              <div class="flex-1 px-4">
+                <div class="relative">
+                  <div class="h-0.5 bg-gradient-to-r from-purple-500 to-cyan-500"></div>
+                  <div class="absolute top-2 left-0 right-0 flex justify-between text-xs">
+                    <span class="text-purple-400">ShaderCommand</span>
+                    <span class="text-cyan-400">SceneState</span>
+                  </div>
+                  <div class="absolute -top-1 left-1/2 transform -translate-x-1/2">
+                    <span class="text-cyan-400 text-xs">gRPC Stream</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="w-24 h-16 rounded-xl bg-green-500/20 border border-green-500/50 flex items-center justify-center mb-2">
+                  <span class="text-green-400">C++ Engine</span>
+                </div>
+                <p class="text-xs text-slate-500">Vulkan Renderer</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- C++ Vulkan Integration -->
+        <section id="vulkan" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-red-400">memory</span>
+            C++ Vulkan Engine
+          </h2>
+
+          <div class="glass rounded-2xl p-6 border border-red-500/20 mb-6">
+            <p class="text-slate-300 mb-6">
+              Die C++ Engine empfaengt AI-Commands via gRPC und setzt sie in Vulkan-Befehle um.
+              <strong class="text-white">Push Constants</strong> und <strong class="text-white">Uniform Buffers</strong>
+              uebertragen die Shader-Parameter zur GPU.
+            </p>
+
+            <h4 class="font-semibold text-white mb-4">Vulkan Push Constants fuer AI-Parameter:</h4>
+            <div class="code-block rounded-xl p-4 font-mono text-xs overflow-x-auto">
+              <pre class="text-slate-300"><span class="text-slate-500">// ai_shader_params.hpp</span>
+
+<span class="text-purple-400">#pragma once</span>
+<span class="text-purple-400">#include</span> <span class="text-green-400">&lt;glm/glm.hpp&gt;</span>
+<span class="text-purple-400">#include</span> <span class="text-green-400">&lt;vulkan/vulkan.h&gt;</span>
+
+<span class="text-slate-500">// Muss mit GLSL layout uebereinstimmen!</span>
+<span class="text-purple-400">struct</span> <span class="text-blue-400">AIShaderParams</span> {
+    glm::vec4 tint_color{<span class="text-orange-400">1.0f</span>};
+    <span class="text-blue-400">float</span> emission_strength = <span class="text-orange-400">0.0f</span>;
+    <span class="text-blue-400">float</span> saturation = <span class="text-orange-400">1.0f</span>;
+    <span class="text-blue-400">float</span> contrast = <span class="text-orange-400">1.0f</span>;
+    <span class="text-blue-400">float</span> mood_dark = <span class="text-orange-400">0.0f</span>;
+
+    <span class="text-slate-500">// Vertex shader params</span>
+    <span class="text-blue-400">float</span> deformation_amount = <span class="text-orange-400">0.0f</span>;
+    <span class="text-blue-400">float</span> wave_frequency = <span class="text-orange-400">1.0f</span>;
+    <span class="text-blue-400">float</span> time = <span class="text-orange-400">0.0f</span>;
+    <span class="text-blue-400">float</span> scale_pulse = <span class="text-orange-400">0.0f</span>;
+};
+
+<span class="text-purple-400">static_assert</span>(<span class="text-purple-400">sizeof</span>(AIShaderParams) <= <span class="text-orange-400">128</span>,
+    <span class="text-green-400">"Push constants limited to 128 bytes"</span>);
+
+<span class="text-slate-500">// vulkan_renderer.cpp</span>
+
+<span class="text-blue-400">void</span> VulkanRenderer::updateAIParams(
+    VkCommandBuffer cmd,
+    <span class="text-purple-400">const</span> AIShaderParams& params
+) {
+    vkCmdPushConstants(
+        cmd,
+        m_pipelineLayout,
+        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+        <span class="text-orange-400">0</span>,
+        <span class="text-purple-400">sizeof</span>(AIShaderParams),
+        &params
+    );
+}
+
+<span class="text-slate-500">// Render Loop mit AI-Updates</span>
+<span class="text-blue-400">void</span> VulkanRenderer::renderFrame() {
+    <span class="text-slate-500">// 1. Process pending AI commands from gRPC</span>
+    <span class="text-purple-400">while</span> (<span class="text-purple-400">auto</span> cmd = m_grpcClient->pollCommand()) {
+        applyAICommand(*cmd);
+    }
+
+    <span class="text-slate-500">// 2. Update time-based animations</span>
+    m_aiParams.time = m_timer.elapsed();
+
+    <span class="text-slate-500">// 3. Begin render pass</span>
+    VkCommandBuffer cmd = beginFrame();
+
+    <span class="text-slate-500">// 4. For each entity with AI control</span>
+    <span class="text-purple-400">auto</span> view = m_world.view<AIControlled, MeshRenderer, ShaderParameters>();
+    <span class="text-purple-400">for</span> (<span class="text-purple-400">auto</span> [entity, ai, mesh, params] : view.each()) {
+        <span class="text-purple-400">if</span> (!ai.active) <span class="text-purple-400">continue</span>;
+
+        <span class="text-slate-500">// 5. Push AI params to GPU</span>
+        AIShaderParams gpu_params = convertToGPU(params);
+        updateAIParams(cmd, gpu_params);
+
+        <span class="text-slate-500">// 6. Draw</span>
+        drawMesh(cmd, mesh);
+    }
+
+    endFrame();
+
+    <span class="text-slate-500">// 7. Send scene state back to AI</span>
+    m_grpcClient->sendSceneState(captureSceneState());
+}</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Game Use Cases -->
+        <section id="use-cases" class="scroll-mt-24">
+          <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-icons-outlined text-orange-400">sports_esports</span>
+            Game Development Use-Cases
+          </h2>
+
+          <div class="space-y-6">
+            <!-- Use Case 1 -->
+            <div class="glass rounded-2xl p-6 border border-orange-500/20">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-white">mood</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-white mb-2">Dynamische Atmosphaere</h3>
+                  <p class="text-slate-400 text-sm mb-4">
+                    AI passt Shader-Parameter basierend auf Spielsituation an. Kampfszenen werden roetlich,
+                    sichere Bereiche gruen, Horror-Momente dunkel mit hohem Kontrast.
+                  </p>
+                  <div class="code-block rounded-lg p-3 text-xs">
+                    <pre class="text-slate-300"><span class="text-slate-500">// AI Entscheidung:</span>
+<span class="text-purple-400">if</span> (player.health < <span class="text-orange-400">20</span>) {
+  mcp.set_scene_mood({
+    mood: <span class="text-green-400">"aggressive"</span>,
+    intensity: <span class="text-orange-400">0.8</span>,
+    <span class="text-slate-500">// Shader macht: rote Toene, hohe Emission, Vignette</span>
+  });
+}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Case 2 -->
+            <div class="glass rounded-2xl p-6 border border-purple-500/20">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-white">auto_awesome</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-white mb-2">Procedural Effects</h3>
+                  <p class="text-slate-400 text-sm mb-4">
+                    AI generiert Shader-Parameter fuer einzigartige Effekte. Magische Artefakte bekommen
+                    individuelle Glow-Muster, Waffen-Enchantments sehen jedes Mal anders aus.
+                  </p>
+                  <div class="code-block rounded-lg p-3 text-xs">
+                    <pre class="text-slate-300"><span class="text-slate-500">// AI generiert unique Enchantment</span>
+mcp.modify_entity_shader({
+  entity_id: weapon.id,
+  shader_params: {
+    tint_color: ai.generate_magic_color(),
+    emission: ai.random_range(<span class="text-orange-400">1.5</span>, <span class="text-orange-400">3.0</span>),
+    wave_frequency: ai.random_range(<span class="text-orange-400">2.0</span>, <span class="text-orange-400">8.0</span>),
+  }
+});</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Case 3 -->
+            <div class="glass rounded-2xl p-6 border border-cyan-500/20">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-green-500 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-white">psychology</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-white mb-2">NPC Emotional States</h3>
+                  <p class="text-slate-400 text-sm mb-4">
+                    NPCs bekommen visuelle Indikatoren ihres AI-Zustands. Wuetende NPCs gluehen rot,
+                    freundliche haben warme Toene, misstrauische zeigen Kontrast-Effekte.
+                  </p>
+                  <div class="code-block rounded-lg p-3 text-xs">
+                    <pre class="text-slate-300"><span class="text-slate-500">// NPC reagiert auf Spieler-Aktion</span>
+<span class="text-purple-400">switch</span>(npc.emotional_state) {
+  <span class="text-purple-400">case</span> <span class="text-green-400">"friendly"</span>:
+    params.tint = vec4(<span class="text-orange-400">0.9</span>, <span class="text-orange-400">1.0</span>, <span class="text-orange-400">0.8</span>, <span class="text-orange-400">0.3</span>);
+    <span class="text-purple-400">break</span>;
+  <span class="text-purple-400">case</span> <span class="text-green-400">"hostile"</span>:
+    params.tint = vec4(<span class="text-orange-400">1.0</span>, <span class="text-orange-400">0.2</span>, <span class="text-orange-400">0.1</span>, <span class="text-orange-400">0.5</span>);
+    params.emission = <span class="text-orange-400">1.5</span>;
+    <span class="text-purple-400">break</span>;
+}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Case 4 -->
+            <div class="glass rounded-2xl p-6 border border-green-500/20">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center flex-shrink-0">
+                  <span class="material-icons-outlined text-white">bug_report</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-white mb-2">AI-Assisted Level Design</h3>
+                  <p class="text-slate-400 text-sm mb-4">
+                    Designer beschreibt Stimmung, AI setzt Shader-Parameter. "Mach diesen Raum unheimlich"
+                    wird automatisch in Farb-, Kontrast- und Effekt-Werte uebersetzt.
+                  </p>
+                  <div class="code-block rounded-lg p-3 text-xs">
+                    <pre class="text-slate-300"><span class="text-slate-500">// Natural Language -> Shader Params</span>
+prompt: <span class="text-green-400">"Make this room feel abandoned and creepy"</span>
+
+<span class="text-slate-500">// AI generiert:</span>
+{
+  saturation: <span class="text-orange-400">0.4</span>,       <span class="text-slate-500">// Entsaettigt</span>
+  contrast: <span class="text-orange-400">1.4</span>,         <span class="text-slate-500">// Dramatisch</span>
+  mood_dark: <span class="text-orange-400">0.6</span>,        <span class="text-slate-500">// Dunkel</span>
+  tint: [<span class="text-orange-400">0.7</span>, <span class="text-orange-400">0.8</span>, <span class="text-orange-400">0.9</span>, <span class="text-orange-400">0.3</span>]  <span class="text-slate-500">// Kalt-blaeulich</span>
+}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="scroll-mt-24 pb-16">
+          <div class="glass rounded-2xl p-8 border border-slate-700/50 bg-gradient-to-br from-red-500/5 to-orange-500/5">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span class="material-icons-outlined text-red-400">lightbulb</span>
+              Zusammenfassung: Paradigmenwechsel
+            </h2>
+
+            <div class="overflow-x-auto mb-8">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-slate-700/50">
+                    <th class="text-left py-3 px-4 text-slate-400 font-medium">Konzept</th>
+                    <th class="text-left py-3 px-4 text-blue-400 font-medium">Browser/Web</th>
+                    <th class="text-left py-3 px-4 text-red-400 font-medium">Shader Pipeline</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700/30">
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Struktur</td>
+                    <td class="py-3 px-4 text-slate-400">HTML DOM</td>
+                    <td class="py-3 px-4 text-slate-300">Entity-Components</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Styling</td>
+                    <td class="py-3 px-4 text-slate-400">CSS</td>
+                    <td class="py-3 px-4 text-slate-300">glTF Materials + Shader</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">AI Manipulation</td>
+                    <td class="py-3 px-4 text-slate-400">DOM API / CSS Changes</td>
+                    <td class="py-3 px-4 text-slate-300">Shader Push Constants</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Kommunikation</td>
+                    <td class="py-3 px-4 text-slate-400">REST / WebSocket</td>
+                    <td class="py-3 px-4 text-slate-300">gRPC Bidirectional Stream</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-4 text-slate-300 font-medium">Runtime</td>
+                    <td class="py-3 px-4 text-slate-400">Browser Engine</td>
+                    <td class="py-3 px-4 text-slate-300">C++ Vulkan Engine</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold text-white mb-3">Dieser Ansatz ermoeglicht:</h4>
+                <ul class="space-y-2 text-sm text-slate-300">
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-400 text-base mt-0.5">check_circle</span>
+                    <span>Echtzeit AI-Kontrolle ueber 3D Visuals</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-400 text-base mt-0.5">check_circle</span>
+                    <span>GPU-native Performance statt CPU-limitiert</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-400 text-base mt-0.5">check_circle</span>
+                    <span>Dynamische Atmosphaere in Games</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-400 text-base mt-0.5">check_circle</span>
+                    <span>Natural Language Level Design</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-semibold text-white mb-3">Stack-Komponenten:</h4>
+                <ul class="space-y-2 text-sm text-slate-300">
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-purple-400 text-base mt-0.5">arrow_right</span>
+                    <span>MCP Server (TypeScript/Python)</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-cyan-400 text-base mt-0.5">arrow_right</span>
+                    <span>gRPC mit Protobuf</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-green-400 text-base mt-0.5">arrow_right</span>
+                    <span>C++ Engine mit ECS (EnTT)</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="material-icons-outlined text-red-400 text-base mt-0.5">arrow_right</span>
+                    <span>Vulkan Renderer mit SPIR-V Shader</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-700/50">
+              <p class="text-sm text-slate-400">
+                <strong class="text-white">Naechster Schritt:</strong>
+                Implementiere einen minimalen Prototypen mit einem MCP-Server, der via gRPC
+                Push-Constants an eine Vulkan-Demo sendet. Teste mit einfachen Mood-Switches.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="ml-64 border-t border-slate-700/50 py-6 px-8">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <p class="text-sm text-slate-500">
+        Shader MCP Pipeline - 3D Scene AI
+      </p>
+      <p class="text-sm text-slate-500">
+        chevp Development
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
