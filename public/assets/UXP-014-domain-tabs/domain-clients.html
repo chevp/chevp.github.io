@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – Klienten</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* Page-specific overrides */
+    .med-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+    .med-table th {
+      text-align: left; font-size: 10px; font-weight: 500;
+      color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 8px 10px; border-bottom: 1px solid var(--border);
+    }
+    .med-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .med-table .med-name { font-weight: 600; color: var(--text); }
+    .med-table .med-hint { font-size: 11px; color: var(--text-muted); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.2s ease forwards; }
+
+    .diagnose-tag {
+      font-size: 11px; padding: 4px 12px; border-radius: 16px;
+      background: var(--surface-3); color: var(--text); display: inline-block;
+    }
+
+    .pflegestufe-bar {
+      display: flex; gap: 3px; align-items: center; margin-top: 4px;
+    }
+    .pflegestufe-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--surface-4);
+    }
+    .pflegestufe-dot.filled { background: var(--accent-light); }
+
+    /* === AI EXPANDABLE DETAIL CARDS === */
+    .ai-suggestion.expandable { cursor: pointer; }
+    .ai-suggestion.expandable .ai-suggestion-action { pointer-events: none; }
+
+    .ai-detail {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(108,92,231,0.15);
+      animation: fadeIn 0.25s ease;
+    }
+    .ai-detail.visible { display: block; }
+
+    /* Mini bar chart */
+    .ai-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin: 10px 0; }
+    .ai-chart-bar {
+      flex: 1; border-radius: 4px 4px 0 0; position: relative;
+      transition: height 0.3s ease; min-width: 0;
+    }
+    .ai-chart-bar .bar-value {
+      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+      font-size: 9px; font-weight: 600; color: var(--text-muted); white-space: nowrap;
+    }
+    .ai-chart-bar .bar-label {
+      position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
+      font-size: 9px; color: var(--text-dim); white-space: nowrap;
+    }
+
+    /* Mini timeline in AI */
+    .ai-timeline { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+    .ai-timeline-item {
+      display: flex; align-items: flex-start; gap: 8px; font-size: 11px;
+      padding: 6px 8px; border-radius: 6px; background: rgba(255,255,255,0.03);
+    }
+    .ai-timeline-dot {
+      width: 8px; height: 8px; border-radius: 50%; margin-top: 3px; flex-shrink: 0;
+    }
+    .ai-timeline-item .atl-date { color: var(--text-dim); min-width: 52px; flex-shrink: 0; font-size: 10px; }
+    .ai-timeline-item .atl-text { color: var(--text); line-height: 1.4; }
+
+    /* Data table in AI detail */
+    .ai-data-table { width: 100%; font-size: 11px; border-collapse: collapse; margin: 8px 0; }
+    .ai-data-table th {
+      text-align: left; font-size: 9px; font-weight: 600; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 8px;
+      border-bottom: 1px solid rgba(108,92,231,0.1);
+    }
+    .ai-data-table td { padding: 5px 8px; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.02); }
+    .ai-data-table .val-good { color: var(--green); font-weight: 600; }
+    .ai-data-table .val-warn { color: var(--orange); font-weight: 600; }
+    .ai-data-table .val-bad { color: var(--red); font-weight: 600; }
+
+    /* Score indicator */
+    .ai-score-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+    .ai-score-track {
+      flex: 1; height: 6px; border-radius: 3px; background: var(--surface-4); position: relative;
+    }
+    .ai-score-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+    .ai-score-label { font-size: 10px; color: var(--text-dim); min-width: 30px; }
+    .ai-score-value { font-size: 12px; font-weight: 700; min-width: 30px; text-align: right; }
+
+    /* Recommendation box */
+    .ai-recommendation {
+      margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+      background: rgba(0,184,148,0.06); border: 1px solid rgba(0,184,148,0.15);
+      font-size: 11px; line-height: 1.5; color: var(--text);
+    }
+    .ai-recommendation-title {
+      font-size: 10px; font-weight: 700; color: var(--green);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+    }
+
+    .ai-warning-box {
+      margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+      background: rgba(253,203,110,0.06); border: 1px solid rgba(253,203,110,0.15);
+      font-size: 11px; line-height: 1.5; color: var(--text);
+    }
+    .ai-warning-box-title {
+      font-size: 10px; font-weight: 700; color: var(--orange);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+    }
+
+    .ai-error-box {
+      margin-top: 10px; padding: 10px 12px; border-radius: 8px;
+      background: rgba(255,118,117,0.06); border: 1px solid rgba(255,118,117,0.15);
+      font-size: 11px; line-height: 1.5; color: var(--text);
+    }
+    .ai-error-box-title {
+      font-size: 10px; font-weight: 700; color: var(--red);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+    }
+
+    .ai-detail-footer {
+      margin-top: 10px; display: flex; gap: 6px;
+    }
+    .ai-detail-btn {
+      font-size: 10px; font-weight: 600; padding: 5px 12px;
+      border-radius: 6px; cursor: pointer; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); transition: all 0.15s;
+    }
+    .ai-detail-btn:hover { background: var(--surface-3); color: var(--text); }
+    .ai-detail-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .ai-detail-btn.primary:hover { background: #7c6df0; }
+  </style>
+</head>
+<body>
+
+<div class="domain-page with-ai" id="domainPage">
+
+  <!-- === LIST PANE === -->
+  <div class="list-pane">
+    <div class="list-header">
+      <div class="list-header-top">
+        <div class="list-header-icon" style="background:var(--accent);">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div class="list-title">Klienten</div>
+        <div class="list-count" id="listCount">5</div>
+      </div>
+      <div class="list-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" id="searchInput" placeholder="Klient suchen…">
+      </div>
+    </div>
+    <div class="list-body" id="listBody"></div>
+    <button class="new-record-btn" onclick="showToast('Neuer Klient wird angelegt…')">
+      <span class="material-symbols-outlined">add</span>
+      Neuer Klient
+    </button>
+  </div>
+
+  <!-- === WORKSPACE PANE === -->
+  <div class="workspace-pane">
+    <div class="workspace-header">
+      <div class="workspace-header-info">
+        <div class="workspace-header-title" id="wsTitle">Klient auswählen</div>
+        <div class="workspace-header-sub" id="wsSub">Wählen Sie einen Klienten aus der Liste</div>
+      </div>
+      <div class="workspace-actions">
+        <button class="btn" onclick="showToast('Klientendaten werden exportiert…')">
+          <span class="material-symbols-outlined">download</span> Export
+        </button>
+        <button class="btn" onclick="showToast('Bearbeitungsmodus aktiviert')">
+          <span class="material-symbols-outlined">edit</span> Bearbeiten
+        </button>
+        <button class="btn ai" id="aiToggleBtn" onclick="toggleAI()">
+          <span class="material-symbols-outlined">auto_awesome</span> AI
+        </button>
+      </div>
+    </div>
+    <div class="workspace-body" id="wsBody">
+      <div class="empty-state">
+        <span class="material-symbols-outlined">person_search</span>
+        <p>Wählen Sie einen Klienten aus der Liste,<br>um Details anzuzeigen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- === AI PANEL === -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-icon">
+        <span class="material-symbols-outlined">auto_awesome</span>
+      </div>
+      <div>
+        <div class="ai-panel-title">AI-Assistent</div>
+        <div class="ai-panel-subtitle" id="aiContextLabel">Kein Klient ausgewählt</div>
+      </div>
+    </div>
+    <div class="ai-panel-body" id="aiPanelBody">
+      <div class="empty-state">
+        <span class="material-symbols-outlined">psychology</span>
+        <p>Wählen Sie einen Klienten, um kontextbezogene Vorschläge zu erhalten.</p>
+      </div>
+    </div>
+    <div class="ai-panel-input">
+      <div class="ai-input-wrap">
+        <span class="material-symbols-outlined" style="font-size:16px;color:var(--text-dim);">chat</span>
+        <input type="text" id="aiInput" placeholder="Frage zum Klienten stellen…" onkeydown="if(event.key==='Enter')handleAIInput()">
+        <button class="ai-send" onclick="handleAIInput()">
+          <span class="material-symbols-outlined">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+// =====================================================
+// CLIENT DATA
+// =====================================================
+const clients = [
+  {
+    id: 'c1', name: 'Gerda Kaufmann',
+    subtitle: 'Wohngruppe A · Pflegestufe 3',
+    status: 'Aktiv', statusType: 'green',
+    timestamp: '10.03.2026, 14:30',
+    details: {
+      geburtsdatum: '12.04.1938', zimmer: 'A-204',
+      diagnosen: ['Demenz (Alzheimer)', 'Diabetes Typ 2', 'Arterielle Hypertonie'],
+      kontakt: 'S. Kaufmann (Tochter) · 079 312 45 67',
+      pflegestufe: 3,
+      hausarzt: 'Dr. med. P. Weber',
+      eintrittsdatum: '15.08.2023',
+      krankenkasse: 'CSS Versicherung',
+      ahv: '756.1234.5678.90'
+    },
+    documents: [
+      { name: 'Pflegeplanung Q1 2026', type: 'Pflegeplan', date: '05.01.2026', entityId: 'd1' },
+      { name: 'Arztbericht Dr. Weber', type: 'Bericht', date: '28.02.2026', entityId: 'd1' },
+      { name: 'Sturzprotokoll', type: 'Protokoll', date: '02.03.2026', entityId: 'd2' }
+    ],
+    timeline: [
+      { icon: 'medication', title: 'Medikation angepasst', desc: 'Metformin-Dosis erhöht auf 2x 500mg', time: '10.03.2026' },
+      { icon: 'assignment', title: 'Pflegebericht erstellt', desc: 'Wöchentlicher Bericht KW 10', time: '08.03.2026' },
+      { icon: 'report', title: 'Sturzprotokoll', desc: 'Leichter Sturz im Badezimmer, keine Verletzungen', time: '02.03.2026' },
+      { icon: 'vaccines', title: 'Arztbesuch', desc: 'Routinekontrolle bei Dr. Weber', time: '28.02.2026' }
+    ],
+    medications: [
+      { name: 'Metformin 500mg', dosierung: '2x täglich', hinweis: 'Zu den Mahlzeiten' },
+      { name: 'Lisinopril 10mg', dosierung: '1x morgens', hinweis: 'Blutdruck messen' },
+      { name: 'Donepezil 5mg', dosierung: '1x abends', hinweis: 'Vor dem Schlafengehen' }
+    ]
+  },
+  {
+    id: 'c2', name: 'Hans-Peter Brunner',
+    subtitle: 'Wohngruppe B · Pflegestufe 4',
+    status: 'Aktiv', statusType: 'green',
+    timestamp: '10.03.2026, 09:15',
+    details: {
+      geburtsdatum: '03.11.1935', zimmer: 'B-112',
+      diagnosen: ['Morbus Parkinson', 'Chronische Herzinsuffizienz'],
+      kontakt: 'M. Brunner (Sohn) · 078 456 78 90',
+      pflegestufe: 4,
+      hausarzt: 'Dr. med. A. Fischer',
+      eintrittsdatum: '22.03.2022',
+      krankenkasse: 'Helsana',
+      ahv: '756.9876.5432.10'
+    },
+    documents: [
+      { name: 'Pflegeplanung Q1 2026', type: 'Pflegeplan', date: '08.01.2026', entityId: 'd1' },
+      { name: 'Physiotherapie-Bericht', type: 'Therapie', date: '06.03.2026', entityId: 'd1' }
+    ],
+    timeline: [
+      { icon: 'physical_therapy', title: 'Physiotherapie', desc: 'Gleichgewichtstraining, gute Fortschritte', time: '09.03.2026' },
+      { icon: 'assignment', title: 'Pflegebericht erstellt', desc: 'Wöchentlicher Bericht KW 10', time: '08.03.2026' },
+      { icon: 'vaccines', title: 'Neurologe-Besuch', desc: 'Parkinson-Kontrolle, Medikation stabil', time: '01.03.2026' }
+    ],
+    medications: [
+      { name: 'Levodopa/Carbidopa 100/25mg', dosierung: '3x täglich', hinweis: '30 Min. vor Mahlzeit' },
+      { name: 'Bisoprolol 5mg', dosierung: '1x morgens', hinweis: 'Puls kontrollieren' },
+      { name: 'Torasemid 10mg', dosierung: '1x morgens', hinweis: 'Gewicht dokumentieren' }
+    ]
+  },
+  {
+    id: 'c3', name: 'Elisabeth Meier',
+    subtitle: 'Wohngruppe A · Pflegestufe 2',
+    status: 'Aktiv', statusType: 'green',
+    timestamp: '09.03.2026, 16:45',
+    details: {
+      geburtsdatum: '28.07.1942', zimmer: 'A-108',
+      diagnosen: ['Arthrose (Knie bilateral)', 'Depression'],
+      kontakt: 'R. Meier (Ehemann) · 044 789 12 34',
+      pflegestufe: 2,
+      hausarzt: 'Dr. med. S. Zimmermann',
+      eintrittsdatum: '10.11.2024',
+      krankenkasse: 'Swica',
+      ahv: '756.5555.6666.70'
+    },
+    documents: [
+      { name: 'Therapieplan Physiotherapie', type: 'Therapie', date: '15.01.2026', entityId: 'd1' },
+      { name: 'Psychiatrische Konsultation', type: 'Bericht', date: '20.02.2026', entityId: 'd1' }
+    ],
+    timeline: [
+      { icon: 'self_improvement', title: 'Gruppentherapie', desc: 'Kreativwerkstatt teilgenommen', time: '09.03.2026' },
+      { icon: 'medication', title: 'Medikation überprüft', desc: 'Sertralin-Dosis beibehalten', time: '05.03.2026' },
+      { icon: 'assignment', title: 'Pflegebericht erstellt', desc: 'Wöchentlicher Bericht KW 9', time: '02.03.2026' }
+    ],
+    medications: [
+      { name: 'Sertralin 50mg', dosierung: '1x morgens', hinweis: '' },
+      { name: 'Paracetamol 500mg', dosierung: 'Bei Bedarf, max. 4x', hinweis: 'Max. 2g/Tag' },
+      { name: 'Vitamin D3 1000 IE', dosierung: '1x täglich', hinweis: '' }
+    ]
+  },
+  {
+    id: 'c4', name: 'Werner Huber',
+    subtitle: 'Wohngruppe C · Pflegestufe 5',
+    status: 'Palliativ', statusType: 'purple',
+    timestamp: '10.03.2026, 11:00',
+    details: {
+      geburtsdatum: '19.01.1930', zimmer: 'C-301',
+      diagnosen: ['Bronchialkarzinom (Stadium IV)', 'COPD', 'Kachexie'],
+      kontakt: 'K. Huber-Steiner (Tochter) · 076 234 56 78',
+      pflegestufe: 5,
+      hausarzt: 'Dr. med. P. Weber',
+      eintrittsdatum: '05.06.2021',
+      krankenkasse: 'Concordia',
+      ahv: '756.3333.4444.50'
+    },
+    documents: [
+      { name: 'Palliativkonzept', type: 'Pflegeplan', date: '01.02.2026', entityId: 'd1' },
+      { name: 'Patientenverfügung', type: 'Rechtlich', date: '12.06.2021', entityId: 'd1' },
+      { name: 'Schmerzprotokoll KW 10', type: 'Protokoll', date: '08.03.2026', entityId: 'd2' }
+    ],
+    timeline: [
+      { icon: 'monitor_heart', title: 'Vitalzeichen-Check', desc: 'Sauerstoffsättigung: 91%, stabil', time: '10.03.2026' },
+      { icon: 'medication', title: 'Schmerzmedikation', desc: 'Morphin-Tropfen auf 4x angepasst', time: '09.03.2026' },
+      { icon: 'group', title: 'Angehörigengespräch', desc: 'Tochter und Sohn informiert', time: '07.03.2026' }
+    ],
+    medications: [
+      { name: 'Morphin Tropfen 2%', dosierung: '4x täglich', hinweis: 'Schmerzskala dokumentieren' },
+      { name: 'Dexamethason 4mg', dosierung: '1x morgens', hinweis: 'Appetitanregend' },
+      { name: 'Sauerstoff', dosierung: '2L/min bei Bedarf', hinweis: 'SpO2 > 90% halten' }
+    ]
+  },
+  {
+    id: 'c5', name: 'Ruth Steffen',
+    subtitle: 'Wohngruppe B · Pflegestufe 2',
+    status: 'Urlaub', statusType: 'blue',
+    timestamp: '07.03.2026, 10:00',
+    details: {
+      geburtsdatum: '05.09.1940', zimmer: 'B-205',
+      diagnosen: ['Osteoporose', 'Leichte kognitive Beeinträchtigung'],
+      kontakt: 'T. Steffen (Sohn) · 079 876 54 32',
+      pflegestufe: 2,
+      hausarzt: 'Dr. med. A. Fischer',
+      eintrittsdatum: '03.04.2025',
+      krankenkasse: 'Groupe Mutuel',
+      ahv: '756.7777.8888.90'
+    },
+    documents: [
+      { name: 'Pflegeplanung Q1 2026', type: 'Pflegeplan', date: '10.01.2026', entityId: 'd1' },
+      { name: 'Urlaubsantrag', type: 'Administrativ', date: '01.03.2026', entityId: 'd1' }
+    ],
+    timeline: [
+      { icon: 'flight', title: 'Urlaub begonnen', desc: 'Bei Familie in Bern bis 14.03.2026', time: '07.03.2026' },
+      { icon: 'assignment', title: 'Pflegebericht erstellt', desc: 'Wöchentlicher Bericht KW 9', time: '02.03.2026' }
+    ],
+    medications: [
+      { name: 'Alendronat 70mg', dosierung: '1x wöchentlich (Mo)', hinweis: 'Nüchtern, 30 Min. aufrecht' },
+      { name: 'Calcium/Vitamin D3', dosierung: '1x täglich', hinweis: '' }
+    ]
+  }
+];
+
+// =====================================================
+// AI SUGGESTIONS PER CLIENT
+// =====================================================
+const aiSuggestions = {
+  c1: [
+    { icon: 'schedule', iconType: 'info', title: 'Pflegestufe-Review fällig', desc: 'Letzte Bewertung: August 2025. Ein Review ist nach 6 Monaten empfohlen.', action: 'Details anzeigen', expandable: true,
+      detail: `
+        <div class="ai-score-row">
+          <span class="ai-score-label">Stufe</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:60%;background:var(--orange)"></div></div>
+          <span class="ai-score-value" style="color:var(--orange)">3/5</span>
+        </div>
+        <table class="ai-data-table">
+          <tr><th>Kriterium</th><th>Bewertung</th><th>Trend</th></tr>
+          <tr><td>Mobilität</td><td>Rollator, Begleitung</td><td class="val-warn">→ stabil</td></tr>
+          <tr><td>Kognition</td><td>MMSE 18/30</td><td class="val-warn">↓ leicht</td></tr>
+          <tr><td>Selbstpflege</td><td>Teilweise selbständig</td><td class="val-good">→ stabil</td></tr>
+          <tr><td>Ernährung</td><td>Diabetiker-Kost, selbständig</td><td class="val-good">↑ verbessert</td></tr>
+        </table>
+        <div class="ai-warning-box">
+          <div class="ai-warning-box-title">Empfehlung</div>
+          Kognition zeigt leichte Verschlechterung (MMSE 20→18 in 6 Monaten). Pflegestufe-Review bis KW 14 empfohlen. Evtl. Anpassung auf Stufe 4 prüfen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="showToast('Review-Formular wird vorbereitet...')">Review starten</button>
+          <button class="ai-detail-btn primary" onclick="showToast('Termin KW 14 wird geplant.')">Termin planen</button>
+        </div>`
+    },
+    { icon: 'warning', iconType: 'warning', title: 'Medikationsinteraktion', desc: 'Donepezil + Metformin: Erhöhtes Hypoglykämie-Risiko.', action: 'Analyse anzeigen', expandable: true,
+      detail: `
+        <table class="ai-data-table">
+          <tr><th>Medikament</th><th>Wirkung</th><th>Risiko</th></tr>
+          <tr><td>Donepezil 5mg</td><td>Cholinesterase-Hemmer</td><td class="val-warn">Moderate</td></tr>
+          <tr><td>Metformin 2x500mg</td><td>Antidiabetikum</td><td class="val-warn">BZ-Senkung</td></tr>
+          <tr><td>Lisinopril 10mg</td><td>ACE-Hemmer</td><td class="val-good">Gering</td></tr>
+        </table>
+        <div class="ai-chart" style="height:60px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:45%;background:var(--green)"><span class="bar-value">5.8</span><span class="bar-label">Mo</span></div>
+          <div class="ai-chart-bar" style="height:35%;background:var(--green)"><span class="bar-value">5.2</span><span class="bar-label">Di</span></div>
+          <div class="ai-chart-bar" style="height:25%;background:var(--orange)"><span class="bar-value">4.1</span><span class="bar-label">Mi</span></div>
+          <div class="ai-chart-bar" style="height:40%;background:var(--green)"><span class="bar-value">5.5</span><span class="bar-label">Do</span></div>
+          <div class="ai-chart-bar" style="height:30%;background:var(--orange)"><span class="bar-value">4.6</span><span class="bar-label">Fr</span></div>
+          <div class="ai-chart-bar" style="height:50%;background:var(--green)"><span class="bar-value">6.1</span><span class="bar-label">Sa</span></div>
+          <div class="ai-chart-bar" style="height:38%;background:var(--green)"><span class="bar-value">5.3</span><span class="bar-label">So</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">BZ-Werte (mmol/l) – letzte 7 Tage, Nüchtern-Messung</div>
+        <div class="ai-warning-box">
+          <div class="ai-warning-box-title">Handlungsempfehlung</div>
+          2 von 7 Tagen unter Zielwert (4.5 mmol/l). BZ-Kontrolle auf 3x täglich erhöhen. Donepezil-Einnahme auf 1h nach Mahlzeit verlegen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="navigateFromAI('medication','m2','Donepezil Details')">Medikation öffnen</button>
+          <button class="ai-detail-btn primary" onclick="showToast('Monitoring-Plan angepasst: BZ 3x täglich.')">Monitoring anpassen</button>
+        </div>`
+    },
+    { icon: 'summarize', iconType: 'action', title: '7-Tage-Zusammenfassung', desc: '3 Ereignisse erfasst. Status: Stabil mit Einschränkungen.', action: 'Zusammenfassung öffnen', expandable: true,
+      detail: `
+        <div class="ai-timeline">
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--red)"></div>
+            <span class="atl-date">02.03.</span>
+            <span class="atl-text"><strong>Sturz im Badezimmer</strong> – Keine Verletzungen. Antirutschmatte bestellt, Nachtlicht installiert.</span>
+          </div>
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--green)"></div>
+            <span class="atl-date">08.03.</span>
+            <span class="atl-text"><strong>Pflegebericht KW 10</strong> – Stabiler Verlauf. Frühstück selbständig, Morgenrunde aktiv.</span>
+          </div>
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--orange)"></div>
+            <span class="atl-date">10.03.</span>
+            <span class="atl-text"><strong>Medikationsanpassung</strong> – Metformin von 1x auf 2x 500mg erhöht (HbA1c 7.8%).</span>
+          </div>
+        </div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:80px">Gesamtstatus</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:65%;background:var(--orange)"></div></div>
+          <span class="ai-score-value" style="color:var(--orange)">Stabil</span>
+        </div>
+        <div class="ai-recommendation">
+          <div class="ai-recommendation-title">KI-Einschätzung</div>
+          Frau Kaufmann ist insgesamt stabil, aber das Sturzrisiko bleibt erhöht. Die Metformin-Anpassung sollte in 2 Wochen reevaluiert werden (BZ-Kontrolle). Kognitive Fähigkeiten: leicht rückläufig, nächster MMSE empfohlen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="navigateFromAI('documentation','d2','Sturzprotokoll')">Sturzprotokoll</button>
+          <button class="ai-detail-btn" onclick="switchTab('aktivitaet')">Alle Aktivitäten</button>
+        </div>`
+    },
+    { icon: 'trending_down', iconType: 'info', title: 'Sturzrisiko erhöht', desc: 'Sturzprävention aktiv. Antirutschmatte + Nachtlicht installiert.', action: 'Sturzprotokoll', actionType: 'navigate', domain: 'documentation', entity: 'd2', label: 'Sturzprotokoll' }
+  ],
+  c2: [
+    { icon: 'fitness_center', iconType: 'action', title: 'Physiotherapie-Fortschritt', desc: 'Gleichgewichtstraining zeigt positive Entwicklung.', action: 'Verlauf anzeigen', expandable: true,
+      detail: `
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">Gehstrecke (Meter) – letzte 6 Wochen</div>
+        <div class="ai-chart" style="height:70px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:30%;background:var(--surface-4)"><span class="bar-value">12m</span><span class="bar-label">KW5</span></div>
+          <div class="ai-chart-bar" style="height:40%;background:var(--surface-4)"><span class="bar-value">16m</span><span class="bar-label">KW6</span></div>
+          <div class="ai-chart-bar" style="height:45%;background:var(--blue)"><span class="bar-value">18m</span><span class="bar-label">KW7</span></div>
+          <div class="ai-chart-bar" style="height:55%;background:var(--blue)"><span class="bar-value">22m</span><span class="bar-label">KW8</span></div>
+          <div class="ai-chart-bar" style="height:65%;background:var(--green)"><span class="bar-value">26m</span><span class="bar-label">KW9</span></div>
+          <div class="ai-chart-bar" style="height:75%;background:var(--green)"><span class="bar-value">30m</span><span class="bar-label">KW10</span></div>
+        </div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:80px">Fortschritt</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:75%;background:var(--green)"></div></div>
+          <span class="ai-score-value" style="color:var(--green)">+150%</span>
+        </div>
+        <table class="ai-data-table">
+          <tr><th>Übung</th><th>Status</th><th>Nächster Termin</th></tr>
+          <tr><td>Gleichgewichtstraining</td><td class="val-good">Gut</td><td>12.03.2026</td></tr>
+          <tr><td>Gehtraining</td><td class="val-good">Fortschritt</td><td>12.03.2026</td></tr>
+          <tr><td>Feinmotorik</td><td class="val-warn">Moderat</td><td>14.03.2026</td></tr>
+        </table>
+        <div class="ai-recommendation">
+          <div class="ai-recommendation-title">Physiotherapie-Empfehlung</div>
+          Gehstrecke hat sich in 6 Wochen von 12m auf 30m verbessert (+150%). Gleichgewicht deutlich stabiler. Empfehlung: Gehtraining auf Outdoor-Übungen ausweiten (Garten).
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="navigateFromAI('documentation','d1','Physiotherapie-Bericht')">Bericht öffnen</button>
+        </div>`
+    },
+    { icon: 'medication', iconType: 'info', title: 'Parkinson-Medikation stabil', desc: 'Levodopa stabil. Keine On-Off-Phänomene.', action: 'Medikationsplan', actionType: 'navigate', domain: 'medication', entity: 'm3', label: 'Medikationsplan Brunner' },
+    { icon: 'warning', iconType: 'warning', title: 'Herzinsuffizienz-Monitoring', desc: 'Gewichtszunahme +0.8kg in 5 Tagen.', action: 'Gewichtsverlauf anzeigen', expandable: true,
+      detail: `
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">Körpergewicht (kg) – letzte 7 Tage</div>
+        <div class="ai-chart" style="height:60px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:50%;background:var(--green)"><span class="bar-value">72.1</span><span class="bar-label">Mo</span></div>
+          <div class="ai-chart-bar" style="height:55%;background:var(--green)"><span class="bar-value">72.3</span><span class="bar-label">Di</span></div>
+          <div class="ai-chart-bar" style="height:60%;background:var(--orange)"><span class="bar-value">72.5</span><span class="bar-label">Mi</span></div>
+          <div class="ai-chart-bar" style="height:65%;background:var(--orange)"><span class="bar-value">72.6</span><span class="bar-label">Do</span></div>
+          <div class="ai-chart-bar" style="height:70%;background:var(--orange)"><span class="bar-value">72.7</span><span class="bar-label">Fr</span></div>
+          <div class="ai-chart-bar" style="height:78%;background:var(--red)"><span class="bar-value">72.9</span><span class="bar-label">Sa</span></div>
+          <div class="ai-chart-bar" style="height:80%;background:var(--red)"><span class="bar-value">72.9</span><span class="bar-label">So</span></div>
+        </div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:70px">Grenzwert</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:80%;background:var(--orange)"></div></div>
+          <span class="ai-score-value" style="color:var(--orange)">+0.8kg</span>
+        </div>
+        <div class="ai-warning-box">
+          <div class="ai-warning-box-title">Wassereinlagerung möglich</div>
+          Gewichtszunahme >0.5kg in 3 Tagen kann auf Flüssigkeitsretention hindeuten. Torasemid-Dosis (aktuell 10mg) reevaluieren. Empfehlung: Trinkmenge dokumentieren, Knöchelödeme prüfen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="showToast('Benachrichtigung an Dr. med. A. Fischer gesendet.')">Arzt informieren</button>
+          <button class="ai-detail-btn primary" onclick="navigateFromAI('medication','m3','Torasemid')">Medikation prüfen</button>
+        </div>`
+    }
+  ],
+  c3: [
+    { icon: 'mood', iconType: 'action', title: 'Stimmungsmonitoring positiv', desc: 'Soziale Interaktion zugenommen. Sertralin angemessen.', action: 'Verlauf anzeigen', expandable: true,
+      detail: `
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">GDS-Score (Geriatrische Depressionsskala, 0-15) – Monatlich</div>
+        <div class="ai-chart" style="height:70px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:80%;background:var(--red)"><span class="bar-value">12</span><span class="bar-label">Nov</span></div>
+          <div class="ai-chart-bar" style="height:67%;background:var(--orange)"><span class="bar-value">10</span><span class="bar-label">Dez</span></div>
+          <div class="ai-chart-bar" style="height:53%;background:var(--orange)"><span class="bar-value">8</span><span class="bar-label">Jan</span></div>
+          <div class="ai-chart-bar" style="height:47%;background:var(--blue)"><span class="bar-value">7</span><span class="bar-label">Feb</span></div>
+          <div class="ai-chart-bar" style="height:40%;background:var(--green)"><span class="bar-value">6</span><span class="bar-label">Mär</span></div>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">Skala: 0-5 normal · 6-10 leichte Depression · 11-15 schwere Depression</div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:50px">GDS</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:40%;background:var(--green)"></div></div>
+          <span class="ai-score-value" style="color:var(--green)">6/15</span>
+        </div>
+        <div class="ai-timeline">
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--green)"></div>
+            <span class="atl-date">09.03.</span>
+            <span class="atl-text">Kreativwerkstatt besucht — Aquarell gemalt, positive Interaktion mit Tischnachbarin</span>
+          </div>
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--green)"></div>
+            <span class="atl-date">07.03.</span>
+            <span class="atl-text">Gruppentherapie — Aktive Teilnahme, zum ersten Mal eigene Erfahrung geteilt</span>
+          </div>
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--blue)"></div>
+            <span class="atl-date">05.03.</span>
+            <span class="atl-text">Psychiatrische Visite — Sertralin 50mg beibehalten, Stimmung deutlich gebessert</span>
+          </div>
+          <div class="ai-timeline-item">
+            <div class="ai-timeline-dot" style="background:var(--blue)"></div>
+            <span class="atl-date">01.03.</span>
+            <span class="atl-text">Spaziergang im Garten (30 Min.) — Selbstinitiiert, ohne Aufforderung</span>
+          </div>
+        </div>
+        <div class="ai-recommendation">
+          <div class="ai-recommendation-title">KI-Einschätzung: Positive Entwicklung</div>
+          GDS-Score von 12 (schwer) auf 6 (leicht) in 4 Monaten gesunken. Die Kombination aus Sertralin und sozialer Aktivierung zeigt Wirkung. Nächste Evaluation: April 2026. Empfehlung: Gruppentherapie beibehalten, Kreativwerkstatt auf 2x/Woche erhöhen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="navigateFromAI('medication','m5','Sertralin')">Sertralin öffnen</button>
+          <button class="ai-detail-btn" onclick="showToast('PHQ-9 Fragebogen vorbereitet.')">PHQ-9 starten</button>
+          <button class="ai-detail-btn primary" onclick="showToast('Evaluation für April 2026 geplant.')">Evaluation planen</button>
+        </div>`
+    },
+    { icon: 'self_improvement', iconType: 'info', title: 'Therapieplan-Update', desc: 'Physiotherapie-Ziele für Q2 2026 sollten neu definiert werden.', action: 'Details anzeigen', expandable: true,
+      detail: `
+        <table class="ai-data-table">
+          <tr><th>Bereich</th><th>Aktuell</th><th>Ziel Q2</th><th>Status</th></tr>
+          <tr><td>Knie-Mobilität</td><td>Flexion 95°</td><td>Flexion 110°</td><td class="val-warn">Moderat</td></tr>
+          <tr><td>Schmerzlevel</td><td>NRS 3-4</td><td>NRS 2-3</td><td class="val-warn">Offen</td></tr>
+          <tr><td>Gehstrecke</td><td>200m</td><td>350m</td><td class="val-good">Auf Kurs</td></tr>
+          <tr><td>Treppengehen</td><td>Mit Geländer</td><td>Selbständig</td><td class="val-warn">Offen</td></tr>
+        </table>
+        <div class="ai-recommendation">
+          <div class="ai-recommendation-title">Vorschlag</div>
+          Therapieplan-Review mit Physiotherapie vereinbaren. Schwerpunkt: Knie-Mobilität und Treppengehen. Schmerz-Management mit Paracetamol-Einnahme zeitlich auf vor Physio abstimmen.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn primary" onclick="showToast('Therapieplan-Review angefragt. Physiotherapie wird informiert.')">Review anfragen</button>
+        </div>`
+    }
+  ],
+  c4: [
+    { icon: 'priority_high', iconType: 'error', title: 'Schmerzmanagement kritisch', desc: 'NRS 4-5 — Ziel ≤3 nicht erreicht. Morphin 4x erhöht.', action: 'Schmerzverlauf anzeigen', expandable: true,
+      detail: `
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">NRS-Schmerzskala (0-10) – letzte 7 Tage, 4x täglich</div>
+        <div class="ai-chart" style="height:70px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:40%;background:var(--orange)"><span class="bar-value">4</span><span class="bar-label">Mo</span></div>
+          <div class="ai-chart-bar" style="height:50%;background:var(--red)"><span class="bar-value">5</span><span class="bar-label">Di</span></div>
+          <div class="ai-chart-bar" style="height:50%;background:var(--red)"><span class="bar-value">5</span><span class="bar-label">Mi</span></div>
+          <div class="ai-chart-bar" style="height:40%;background:var(--orange)"><span class="bar-value">4</span><span class="bar-label">Do</span></div>
+          <div class="ai-chart-bar" style="height:50%;background:var(--red)"><span class="bar-value">5</span><span class="bar-label">Fr</span></div>
+          <div class="ai-chart-bar" style="height:50%;background:var(--red)"><span class="bar-value">5</span><span class="bar-label">Sa</span></div>
+          <div class="ai-chart-bar" style="height:40%;background:var(--orange)"><span class="bar-value">4</span><span class="bar-label">So</span></div>
+        </div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:50px">NRS</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:50%;background:var(--red)"></div></div>
+          <span class="ai-score-value" style="color:var(--red)">4-5/10</span>
+        </div>
+        <div class="ai-score-row">
+          <span class="ai-score-label" style="min-width:50px">Ziel</span>
+          <div class="ai-score-track"><div class="ai-score-fill" style="width:30%;background:var(--green)"></div></div>
+          <span class="ai-score-value" style="color:var(--green)">≤ 3</span>
+        </div>
+        <table class="ai-data-table">
+          <tr><th>Medikation</th><th>Dosis</th><th>Letzte Anpassung</th></tr>
+          <tr><td>Morphin Tropfen 2%</td><td>4x 10 Tropfen</td><td class="val-bad">09.03. (erhöht)</td></tr>
+          <tr><td>Dexamethason 4mg</td><td>1x morgens</td><td>Unverändert</td></tr>
+          <tr><td>Metamizol (Reserve)</td><td>Bei Bedarf</td><td>2x verwendet (Sa/So)</td></tr>
+        </table>
+        <div class="ai-error-box">
+          <div class="ai-error-box-title">Eskalation empfohlen</div>
+          Trotz Morphin-Erhöhung auf 4x bleibt NRS bei 4-5. Schmerzursache reevaluieren. Mögliche Optionen: Morphin-Dosis weiter erhöhen, kontinuierliche s.c. Gabe erwägen, oder Nervenblockade prüfen. Dringend: Palliativkonsil.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn" onclick="navigateFromAI('medication','m4','Morphin Details')">Morphin öffnen</button>
+          <button class="ai-detail-btn primary" onclick="showToast('Palliativkonsil bei Dr. Weber angefragt. Dringend.')">Palliativkonsil anfragen</button>
+        </div>`
+    },
+    { icon: 'group', iconType: 'info', title: 'Angehörigengespräch dokumentiert', desc: 'Letztes Gespräch: 07.03. Nächstes empfohlen: KW 12.', action: 'Protokoll öffnen', actionType: 'navigate', domain: 'documentation', entity: 'd4', label: 'Angehörigengespräch' },
+    { icon: 'monitor_heart', iconType: 'warning', title: 'Vitalzeichen-Trend', desc: 'SpO2: 89-93%, Tendenz sinkend.', action: 'Trend anzeigen', expandable: true,
+      detail: `
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">SpO2 (%) – letzte 7 Tage</div>
+        <div class="ai-chart" style="height:60px;margin-bottom:20px;">
+          <div class="ai-chart-bar" style="height:90%;background:var(--green)"><span class="bar-value">93%</span><span class="bar-label">Mo</span></div>
+          <div class="ai-chart-bar" style="height:85%;background:var(--green)"><span class="bar-value">92%</span><span class="bar-label">Di</span></div>
+          <div class="ai-chart-bar" style="height:80%;background:var(--orange)"><span class="bar-value">91%</span><span class="bar-label">Mi</span></div>
+          <div class="ai-chart-bar" style="height:75%;background:var(--orange)"><span class="bar-value">90%</span><span class="bar-label">Do</span></div>
+          <div class="ai-chart-bar" style="height:70%;background:var(--orange)"><span class="bar-value">90%</span><span class="bar-label">Fr</span></div>
+          <div class="ai-chart-bar" style="height:60%;background:var(--red)"><span class="bar-value">89%</span><span class="bar-label">Sa</span></div>
+          <div class="ai-chart-bar" style="height:65%;background:var(--red)"><span class="bar-value">89%</span><span class="bar-label">So</span></div>
+        </div>
+        <div class="ai-warning-box">
+          <div class="ai-warning-box-title">Sauerstofftherapie anpassen</div>
+          SpO2 unter 90%-Grenzwert an 2 von 7 Tagen. Aktuell: O₂ 2L/min bei Bedarf. Empfehlung: Dauerflow auf 2L/min umstellen, nächtliche Überwachung verstärken.
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn primary" onclick="showToast('O₂-Anpassung an Dr. Weber gemeldet.')">Arzt informieren</button>
+        </div>`
+    }
+  ],
+  c5: [
+    { icon: 'flight', iconType: 'info', title: 'Urlaub bis 14.03.2026', desc: 'Bei Familie in Bern. Alendronat pausiert.', action: 'Details anzeigen', expandable: true,
+      detail: `
+        <table class="ai-data-table">
+          <tr><th>Detail</th><th>Information</th></tr>
+          <tr><td>Aufenthalt</td><td>Bei Familie T. Steffen, Bern</td></tr>
+          <tr><td>Abreise</td><td>07.03.2026</td></tr>
+          <tr><td>Rückkehr</td><td>14.03.2026 (in 1 Tag)</td></tr>
+          <tr><td>Medikation mitgegeben</td><td>Calcium/Vitamin D3 (7 Tage)</td></tr>
+          <tr><td>Pausiert</td><td>Alendronat 70mg (wöchentlich Mo)</td></tr>
+          <tr><td>Notfallkontakt</td><td>T. Steffen: 079 876 54 32</td></tr>
+        </table>
+        <div class="ai-recommendation">
+          <div class="ai-recommendation-title">Rückkehr-Checkliste</div>
+          ☐ Zimmer B-205 vorbereiten (Bettwäsche, Blumen)<br>
+          ☐ Alendronat ab 16.03. (Mo) wieder aufnehmen<br>
+          ☐ Calcium-Einnahmezeiten abstimmen (30 Min. Abstand)<br>
+          ☐ Rückkehr-Gespräch: Befinden während Urlaub erfragen
+        </div>
+        <div class="ai-detail-footer">
+          <button class="ai-detail-btn primary" onclick="showToast('Aufgaben für Rückkehr am 14.03. erstellt.')">Aufgaben erstellen</button>
+        </div>`
+    },
+    { icon: 'event', iconType: 'action', title: 'Rückkehr vorbereiten', desc: 'Zimmer B-205 vorbereiten. Alendronat ab 16.03.', action: 'Aufgabe erstellen', actionType: 'toast', actionMessage: 'Aufgabe erstellt: Zimmer B-205 vorbereiten und Alendronat ab 16.03. wieder aufnehmen.' }
+  ]
+};
+
+// =====================================================
+// STATE
+// =====================================================
+let activeClientId = null;
+let activeDetailTab = 'uebersicht';
+let aiVisible = true;
+
+// =====================================================
+// URL PARAMS — auto-select entity
+// =====================================================
+(function initFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const entity = params.get('entity');
+  if (entity) {
+    activeClientId = entity;
+  }
+})();
+
+// =====================================================
+// RENDER LIST
+// =====================================================
+function renderList(filter) {
+  const body = document.getElementById('listBody');
+  const q = (filter || '').toLowerCase();
+  const filtered = clients.filter(c =>
+    !q || c.name.toLowerCase().includes(q) || c.subtitle.toLowerCase().includes(q)
+  );
+
+  document.getElementById('listCount').textContent = filtered.length;
+
+  body.innerHTML = filtered.map(c => `
+    <div class="record-card ${c.id === activeClientId ? 'active' : ''}" onclick="selectClient('${c.id}')">
+      <div class="record-card-name">${c.name}</div>
+      <div class="record-card-sub">${c.subtitle}</div>
+      <div class="record-card-footer">
+        <span class="badge ${c.statusType}">${c.status}</span>
+        <span class="record-card-time">${c.timestamp}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =====================================================
+// SELECT CLIENT
+// =====================================================
+function selectClient(id) {
+  activeClientId = id;
+  activeDetailTab = 'uebersicht';
+  renderList(document.getElementById('searchInput').value);
+  renderWorkspace();
+  renderAIPanel();
+
+  // Notify parent shell about label update
+  const client = clients.find(c => c.id === id);
+  if (client && window.parent !== window) {
+    window.parent.postMessage({ type: 'update-tab-label', label: client.name }, '*');
+  }
+}
+
+// =====================================================
+// RENDER WORKSPACE
+// =====================================================
+function renderWorkspace() {
+  const client = clients.find(c => c.id === activeClientId);
+  if (!client) return;
+
+  document.getElementById('wsTitle').textContent = client.name;
+  document.getElementById('wsSub').textContent = client.subtitle + ' · ' + client.status;
+
+  const body = document.getElementById('wsBody');
+  const d = client.details;
+
+  const pflegestufeDots = Array.from({ length: 5 }, (_, i) =>
+    `<div class="pflegestufe-dot ${i < d.pflegestufe ? 'filled' : ''}"></div>`
+  ).join('');
+
+  body.innerHTML = `
+    <div class="detail-header fade-in">
+      <div class="detail-avatar" style="background:${client.statusType === 'purple' ? 'var(--accent)' : client.statusType === 'blue' ? 'var(--blue)' : 'var(--green)'};">
+        <span class="material-symbols-outlined">person</span>
+      </div>
+      <div class="detail-header-info">
+        <h2>${client.name}</h2>
+        <p>${client.subtitle} · <span class="badge ${client.statusType}">${client.status}</span></p>
+        <div class="pflegestufe-bar">${pflegestufeDots}<span style="font-size:10px;color:var(--text-dim);margin-left:6px;">Stufe ${d.pflegestufe}</span></div>
+      </div>
+    </div>
+
+    <div class="detail-tabs">
+      <button class="detail-tab ${activeDetailTab === 'uebersicht' ? 'active' : ''}" onclick="switchTab('uebersicht')">Übersicht</button>
+      <button class="detail-tab ${activeDetailTab === 'pflege' ? 'active' : ''}" onclick="switchTab('pflege')">Pflege</button>
+      <button class="detail-tab ${activeDetailTab === 'dokumente' ? 'active' : ''}" onclick="switchTab('dokumente')">Dokumente</button>
+      <button class="detail-tab ${activeDetailTab === 'aktivitaet' ? 'active' : ''}" onclick="switchTab('aktivitaet')">Aktivität</button>
+    </div>
+
+    <!-- TAB: Übersicht -->
+    <div class="tab-content ${activeDetailTab === 'uebersicht' ? 'active' : ''}" id="tabUebersicht">
+      <div class="section">
+        <div class="section-title">
+          <span class="material-symbols-outlined">badge</span> Stammdaten
+        </div>
+        <div class="info-grid">
+          <div class="info-field"><span class="info-label">Geburtsdatum</span><span class="info-value">${d.geburtsdatum}</span></div>
+          <div class="info-field"><span class="info-label">Zimmer</span><span class="info-value">${d.zimmer}</span></div>
+          <div class="info-field"><span class="info-label">AHV-Nr.</span><span class="info-value">${d.ahv}</span></div>
+          <div class="info-field"><span class="info-label">Eintritt</span><span class="info-value">${d.eintrittsdatum}</span></div>
+          <div class="info-field"><span class="info-label">Hausarzt</span><span class="info-value">${d.hausarzt}</span></div>
+          <div class="info-field"><span class="info-label">Kontaktperson</span><span class="info-value">${d.kontakt}</span></div>
+          <div class="info-field"><span class="info-label">Krankenkasse</span><span class="info-value">${d.krankenkasse}</span></div>
+          <div class="info-field"><span class="info-label">Pflegestufe</span><span class="info-value">${d.pflegestufe}</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="material-symbols-outlined">medical_information</span> Diagnosen
+        </div>
+        <div class="tag-list">
+          ${d.diagnosen.map(diag => `<span class="diagnose-tag">${diag}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Pflege (Medikation) -->
+    <div class="tab-content ${activeDetailTab === 'pflege' ? 'active' : ''}" id="tabPflege">
+      <div class="section">
+        <div class="section-title">
+          <span class="material-symbols-outlined">medication</span> Aktuelle Medikation
+        </div>
+        <table class="med-table">
+          <thead>
+            <tr><th>Medikament</th><th>Dosierung</th><th>Hinweis</th></tr>
+          </thead>
+          <tbody>
+            ${client.medications.map(m => `
+              <tr>
+                <td class="med-name"><span class="entity-link" onclick="navigateMedication('${m.name}')">${m.name}</span></td>
+                <td>${m.dosierung}</td>
+                <td class="med-hint">${m.hinweis || '—'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section" style="margin-top:20px;">
+        <div class="section-title">
+          <span class="material-symbols-outlined">monitor_heart</span> Pflegestufe & Bewertung
+        </div>
+        <div class="info-grid">
+          <div class="info-field"><span class="info-label">Aktuelle Pflegestufe</span><span class="info-value">${d.pflegestufe}</span></div>
+          <div class="info-field"><span class="info-label">Hausarzt</span><span class="info-value">${d.hausarzt}</span></div>
+          <div class="info-field"><span class="info-label">Kontaktperson</span><span class="info-value">${d.kontakt}</span></div>
+          <div class="info-field"><span class="info-label">Krankenkasse</span><span class="info-value">${d.krankenkasse}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Dokumente -->
+    <div class="tab-content ${activeDetailTab === 'dokumente' ? 'active' : ''}" id="tabDokumente">
+      <div class="section">
+        <div class="section-title">
+          <span class="material-symbols-outlined">description</span> Verknüpfte Dokumente
+        </div>
+        ${client.documents.map(doc => `
+          <div class="doc-item" onclick="navigateDocument('${doc.entityId}', '${doc.name}')">
+            <div class="doc-item-icon">
+              <span class="material-symbols-outlined">description</span>
+            </div>
+            <div class="doc-item-info">
+              <div class="doc-item-name entity-link">${doc.name}</div>
+              <div class="doc-item-meta">${doc.type} · ${doc.date}</div>
+            </div>
+            <span class="material-symbols-outlined" style="font-size:16px;color:var(--text-dim);">open_in_new</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- TAB: Aktivität (Timeline) -->
+    <div class="tab-content ${activeDetailTab === 'aktivitaet' ? 'active' : ''}" id="tabAktivitaet">
+      <div class="section">
+        <div class="section-title">
+          <span class="material-symbols-outlined">timeline</span> Letzte Aktivitäten
+        </div>
+        <div class="timeline">
+          ${client.timeline.map(t => `
+            <div class="timeline-item">
+              <div class="timeline-icon">
+                <span class="material-symbols-outlined">${t.icon}</span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-title">${t.title}</div>
+                <div class="timeline-desc">${t.desc}</div>
+              </div>
+              <div class="timeline-time">${t.time}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// =====================================================
+// DETAIL TAB SWITCHING
+// =====================================================
+function switchTab(tab) {
+  activeDetailTab = tab;
+  renderWorkspace();
+}
+
+// =====================================================
+// CROSS-DOMAIN NAVIGATION
+// =====================================================
+function navigateDocument(entityId, label) {
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: 'open-tab', domain: 'documentation', label: label, entity: entityId }, '*');
+  } else {
+    window.open('domain-documentation.html?entity=' + encodeURIComponent(entityId), '_blank');
+  }
+}
+
+function navigateMedication(medName) {
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: 'open-tab', domain: 'medication', label: medName, entity: 'm1' }, '*');
+  } else {
+    window.open('domain-medication.html?entity=m1', '_blank');
+  }
+}
+
+// =====================================================
+// AI PANEL
+// =====================================================
+function renderAIPanel() {
+  const client = clients.find(c => c.id === activeClientId);
+  const contextLabel = document.getElementById('aiContextLabel');
+  const panelBody = document.getElementById('aiPanelBody');
+
+  if (!client) {
+    contextLabel.textContent = 'Kein Klient ausgewählt';
+    panelBody.innerHTML = `
+      <div class="empty-state">
+        <span class="material-symbols-outlined">psychology</span>
+        <p>Wählen Sie einen Klienten, um kontextbezogene Vorschläge zu erhalten.</p>
+      </div>
+    `;
+    return;
+  }
+
+  contextLabel.textContent = 'Kontext: ' + client.name;
+  const suggestions = aiSuggestions[client.id] || [];
+
+  panelBody.innerHTML = suggestions.map((s, idx) => {
+    const iconClass = 'ai-icon-' + s.iconType;
+    let actionHTML = '';
+
+    if (s.action) {
+      if (s.expandable) {
+        actionHTML = `<button class="ai-suggestion-action" data-expand="${idx}">
+          ${s.action} <span class="material-symbols-outlined">expand_more</span>
+        </button>`;
+      } else if (s.actionType === 'navigate') {
+        actionHTML = `<button class="ai-suggestion-action" onclick="navigateFromAI('${s.domain}', '${s.entity}', '${s.label}')">
+          ${s.action} <span class="material-symbols-outlined">open_in_new</span>
+        </button>`;
+      } else {
+        actionHTML = `<button class="ai-suggestion-action" onclick="showToast('${escapeQuotes(s.actionMessage)}')">
+          ${s.action} <span class="material-symbols-outlined">arrow_forward</span>
+        </button>`;
+      }
+    }
+
+    const detailHTML = s.detail
+      ? `<div class="ai-detail" id="aiDetail-${idx}">${s.detail}</div>`
+      : '';
+
+    return `
+      <div class="ai-suggestion fade-in ${s.expandable ? 'expandable' : ''}" data-idx="${idx}">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ${iconClass}">${s.icon}</span>
+          <span class="ai-suggestion-title">${s.title}</span>
+        </div>
+        <div class="ai-suggestion-desc">${s.desc}</div>
+        ${actionHTML}
+        ${detailHTML}
+      </div>
+    `;
+  }).join('');
+
+  // Attach expand handlers
+  panelBody.querySelectorAll('[data-expand]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = btn.dataset.expand;
+      const detail = document.getElementById('aiDetail-' + idx);
+      if (detail) {
+        const isVisible = detail.classList.contains('visible');
+        detail.classList.toggle('visible');
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (icon) icon.textContent = isVisible ? 'expand_more' : 'expand_less';
+        btn.childNodes[0].textContent = isVisible ? suggestions[idx].action + ' ' : 'Einklappen ';
+      }
+    });
+  });
+}
+
+function navigateFromAI(domain, entity, label) {
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: 'open-tab', domain: domain, label: label, entity: entity }, '*');
+  } else {
+    const domainFiles = {
+      documentation: 'domain-documentation.html',
+      medication: 'domain-medication.html',
+      staff: 'domain-staff.html'
+    };
+    const file = domainFiles[domain] || 'domain-documentation.html';
+    window.open(file + '?entity=' + encodeURIComponent(entity), '_blank');
+  }
+}
+
+function escapeQuotes(str) {
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// =====================================================
+// AI TOGGLE
+// =====================================================
+function toggleAI() {
+  aiVisible = !aiVisible;
+  const page = document.getElementById('domainPage');
+  const panel = document.getElementById('aiPanel');
+  const btn = document.getElementById('aiToggleBtn');
+
+  if (aiVisible) {
+    page.classList.add('with-ai');
+    panel.classList.remove('hidden');
+    btn.classList.add('active');
+  } else {
+    page.classList.remove('with-ai');
+    panel.classList.add('hidden');
+    btn.classList.remove('active');
+  }
+}
+
+// =====================================================
+// AI INPUT
+// =====================================================
+function handleAIInput() {
+  const input = document.getElementById('aiInput');
+  const val = input.value.trim();
+  if (!val) return;
+
+  const client = clients.find(c => c.id === activeClientId);
+  const name = client ? client.name : 'dem Klienten';
+  showToast('AI verarbeitet Ihre Frage zu ' + name + '…');
+  input.value = '';
+}
+
+// =====================================================
+// TOAST
+// =====================================================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  toastMsg.textContent = msg;
+  toast.classList.add('visible');
+  clearTimeout(window._toastTimeout);
+  window._toastTimeout = setTimeout(() => toast.classList.remove('visible'), 3000);
+}
+
+// =====================================================
+// SEARCH / FILTER
+// =====================================================
+document.getElementById('searchInput').addEventListener('input', function() {
+  renderList(this.value);
+});
+
+// =====================================================
+// INIT
+// =====================================================
+renderList();
+if (activeClientId) {
+  selectClient(activeClientId);
+} else {
+  // Default: select first client
+  selectClient(clients[0].id);
+}
+
+// Set AI toggle button initial state
+document.getElementById('aiToggleBtn').classList.add('active');
+</script>
+
+</body>
+</html>

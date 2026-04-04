@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – AI Workspace</title>
+  <link rel="stylesheet" href="shared.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    .ai-workspace {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background: var(--ai-bg);
+    }
+
+    /* Header */
+    .ai-workspace-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--ai-border);
+    }
+    .ai-workspace-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-workspace-icon .material-symbols-outlined {
+      font-size: 22px;
+      color: #fff;
+    }
+    .ai-workspace-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .ai-workspace-subtitle {
+      font-size: 12px;
+      color: var(--accent-light);
+      margin-top: 2px;
+    }
+
+    /* Dashboard */
+    .ai-dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 20px;
+    }
+    .dashboard-card {
+      background: rgba(108, 92, 231, 0.06);
+      border: 1px solid var(--ai-border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: background 0.15s;
+    }
+    .dashboard-card:hover {
+      background: rgba(108, 92, 231, 0.1);
+    }
+    .dashboard-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .dashboard-card-header .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--accent-light);
+    }
+    .dashboard-card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dashboard-card-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .dashboard-card-detail {
+      font-size: 12px;
+      color: var(--accent-light);
+    }
+    .dashboard-card-detail .highlight-red {
+      color: var(--red);
+      font-weight: 600;
+    }
+    .dashboard-card-detail .highlight-orange {
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* Insights */
+    .ai-insights {
+      padding: 0 20px 16px;
+    }
+    .ai-insights-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .ai-insights-title .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--accent-light);
+    }
+    .ai-insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .ai-insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(108, 92, 231, 0.06);
+      border: 1px solid rgba(108, 92, 231, 0.12);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .ai-insight-item:hover {
+      background: rgba(108, 92, 231, 0.12);
+      border-color: rgba(108, 92, 231, 0.2);
+    }
+    .ai-insight-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ai-insight-icon.error {
+      background: var(--red-bg);
+    }
+    .ai-insight-icon.error .material-symbols-outlined {
+      color: var(--red);
+    }
+    .ai-insight-icon.warning {
+      background: var(--orange-bg);
+    }
+    .ai-insight-icon.warning .material-symbols-outlined {
+      color: var(--orange);
+    }
+    .ai-insight-icon.info {
+      background: var(--blue-bg);
+    }
+    .ai-insight-icon.info .material-symbols-outlined {
+      color: var(--blue);
+    }
+    .ai-insight-icon.action {
+      background: var(--green-bg);
+    }
+    .ai-insight-icon.action .material-symbols-outlined {
+      color: var(--green);
+    }
+    .ai-insight-icon .material-symbols-outlined {
+      font-size: 15px;
+    }
+    .ai-insight-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .ai-insight-text {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .ai-insight-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .ai-insight-arrow {
+      flex-shrink: 0;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+    }
+    .ai-insight-arrow .material-symbols-outlined {
+      font-size: 16px;
+    }
+    .ai-insight-item:hover .ai-insight-arrow {
+      color: var(--accent-light);
+    }
+
+    /* Chat */
+    .ai-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+    .ai-chat-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .ai-chat-title .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--accent-light);
+    }
+    .ai-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 12px;
+    }
+    .ai-chat-messages::-webkit-scrollbar {
+      width: 4px;
+    }
+    .ai-chat-messages::-webkit-scrollbar-thumb {
+      background: var(--ai-border);
+      border-radius: 2px;
+    }
+    .chat-message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      animation: fadeIn 0.25s ease forwards;
+    }
+    .chat-message.ai {
+      align-self: flex-start;
+      background: rgba(108, 92, 231, 0.1);
+      border: 1px solid rgba(108, 92, 231, 0.15);
+      color: var(--text);
+    }
+    .chat-message.user {
+      align-self: flex-end;
+      background: var(--accent);
+      color: #fff;
+    }
+    .chat-message-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .chat-message.user .chat-message-header {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .chat-message-header .material-symbols-outlined {
+      font-size: 13px;
+    }
+    .chat-typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+    }
+    .chat-typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      animation: typingDot 1.2s infinite;
+    }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot {
+      0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+      30% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Chat input */
+    .ai-chat-input-area {
+      padding: 12px 0;
+    }
+    .ai-chat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--ai-border);
+      background: rgba(255, 255, 255, 0.02);
+      transition: border-color 0.2s;
+    }
+    .ai-chat-input-wrap:focus-within {
+      border-color: var(--accent-light);
+    }
+    .ai-chat-input-wrap input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+    }
+    .ai-chat-input-wrap input::placeholder {
+      color: var(--text-dim);
+    }
+    .ai-chat-send {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--accent);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .ai-chat-send:hover {
+      background: #7c6df0;
+    }
+    .ai-chat-send .material-symbols-outlined {
+      font-size: 16px;
+      color: #fff;
+    }
+
+    /* Welcome message */
+    .chat-welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      gap: 8px;
+    }
+    .chat-welcome .material-symbols-outlined {
+      font-size: 32px;
+      color: var(--accent-light);
+      opacity: 0.5;
+    }
+    .chat-welcome p {
+      font-size: 12px;
+      color: var(--text-dim);
+      max-width: 320px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ai-workspace">
+
+  <!-- Header -->
+  <div class="ai-workspace-header">
+    <div class="ai-workspace-icon">
+      <span class="material-symbols-outlined">auto_awesome</span>
+    </div>
+    <div>
+      <div class="ai-workspace-title">AI Workspace</div>
+      <div class="ai-workspace-subtitle">Cross-Domain Analyse & Assistenz</div>
+    </div>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="ai-dashboard">
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <span class="material-symbols-outlined">person</span>
+        <span class="dashboard-card-label">Klienten-Übersicht</span>
+      </div>
+      <div class="dashboard-card-value">5</div>
+      <div class="dashboard-card-detail">
+        <span class="highlight-red">1 Palliativ</span> · 1 Urlaub
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <span class="material-symbols-outlined">task_alt</span>
+        <span class="dashboard-card-label">Offene Aufgaben</span>
+      </div>
+      <div class="dashboard-card-value">4</div>
+      <div class="dashboard-card-detail">
+        <span class="highlight-orange">2 überfällig</span>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="dashboard-card-header">
+        <span class="material-symbols-outlined">medication</span>
+        <span class="dashboard-card-label">Medikations-Alerts</span>
+      </div>
+      <div class="dashboard-card-value">3</div>
+      <div class="dashboard-card-detail">
+        <span class="highlight-red">1 kritisch</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Insights -->
+  <div class="ai-insights">
+    <div class="ai-insights-title">
+      <span class="material-symbols-outlined">neurology</span>
+      AI Insights
+    </div>
+    <div class="ai-insights-list">
+
+      <div class="ai-insight-item" data-domain="medication" data-entity="m4">
+        <div class="ai-insight-icon error">
+          <span class="material-symbols-outlined">error</span>
+        </div>
+        <div class="ai-insight-content">
+          <div class="ai-insight-text">Morphin-Kontrolle W. Huber überfällig</div>
+          <div class="ai-insight-meta">Letzte Kontrolle vor 48h – Grenzwert überschritten</div>
+        </div>
+        <div class="ai-insight-arrow">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="ai-insight-item" data-domain="documentation" data-entity="d2">
+        <div class="ai-insight-icon warning">
+          <span class="material-symbols-outlined">warning</span>
+        </div>
+        <div class="ai-insight-content">
+          <div class="ai-insight-text">Sturzprotokoll G. Kaufmann noch nicht freigegeben</div>
+          <div class="ai-insight-meta">Erstellt am 11.03.2026 – Freigabe ausstehend</div>
+        </div>
+        <div class="ai-insight-arrow">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="ai-insight-item" data-domain="staff" data-entity="s2">
+        <div class="ai-insight-icon warning">
+          <span class="material-symbols-outlined">warning</span>
+        </div>
+        <div class="ai-insight-content">
+          <div class="ai-insight-text">Marco Bianchi: 12h Überstunden – Dienstplan prüfen</div>
+          <div class="ai-insight-meta">Aktuelle Periode – Arbeitszeitgesetz beachten</div>
+        </div>
+        <div class="ai-insight-arrow">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="ai-insight-item" data-domain="clients" data-entity="c5">
+        <div class="ai-insight-icon info">
+          <span class="material-symbols-outlined">info</span>
+        </div>
+        <div class="ai-insight-content">
+          <div class="ai-insight-text">R. Steffen Rückkehr am 14.03. – Medikation wieder aufnehmen</div>
+          <div class="ai-insight-meta">Urlaub endet morgen – Medikationsplan reaktivieren</div>
+        </div>
+        <div class="ai-insight-arrow">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+      <div class="ai-insight-item" data-domain="documentation" data-entity="d6">
+        <div class="ai-insight-icon action">
+          <span class="material-symbols-outlined">check_circle</span>
+        </div>
+        <div class="ai-insight-content">
+          <div class="ai-insight-text">SLE-Bericht DOK-2026-0308-003 qualitätsgeprüft</div>
+          <div class="ai-insight-meta">Automatische Prüfung abgeschlossen – keine Beanstandungen</div>
+        </div>
+        <div class="ai-insight-arrow">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="ai-chat">
+    <div class="ai-chat-title">
+      <span class="material-symbols-outlined">chat</span>
+      Cross-Domain Assistent
+    </div>
+    <div class="ai-chat-messages" id="chatMessages">
+      <div class="chat-welcome">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        <p>Stellen Sie Fragen zu Klienten, Personal, Medikation oder Dokumentation. Die KI analysiert domainübergreifend.</p>
+      </div>
+    </div>
+    <div class="ai-chat-input-area">
+      <div class="ai-chat-input-wrap">
+        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--text-dim);">search</span>
+        <input type="text" id="chatInput" placeholder="Frage stellen – z.B. «Wie geht es Frau Kaufmann?»" autocomplete="off">
+        <button class="ai-chat-send" id="chatSend" title="Absenden">
+          <span class="material-symbols-outlined">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // === Navigation: Insight clicks open domain tabs via postMessage ===
+  document.querySelectorAll('.ai-insight-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const domain = item.dataset.domain;
+      const entity = item.dataset.entity;
+
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: 'open-tab',
+          domain: domain,
+          entity: entity
+        }, '*');
+      } else {
+        const domainFiles = {
+          clients: 'domain-clients.html',
+          documentation: 'domain-documentation.html',
+          staff: 'domain-staff.html',
+          medication: 'domain-medication.html'
+        };
+        const src = domainFiles[domain];
+        if (src) {
+          window.open(src + '?entity=' + encodeURIComponent(entity), '_blank');
+        }
+      }
+    });
+  });
+
+  // === Chat functionality ===
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+
+  const SIMULATED_RESPONSES = {
+    kaufmann: {
+      header: 'Klienten-Zusammenfassung: Gerda Kaufmann',
+      text: `<strong>Gerda Kaufmann</strong> (87 J.) – Pflegestufe 4, Zimmer 204\n\n` +
+            `• Diagnosen: Demenz (mittelgradig), Sturzrisiko erhöht\n` +
+            `• Letzter Vorfall: Sturz am 10.03.2026 – Sturzprotokoll erstellt, noch nicht freigegeben\n` +
+            `• Medikation: Donepezil 10mg, Memantin 20mg – nächste Kontrolle 15.03.\n` +
+            `• Betreuung: Primär M. Bianchi (Pflege), Dr. Hofmann (Arzt)\n` +
+            `• Hinweis: Sturzprotokoll Freigabe ausstehend – bitte zeitnah erledigen.`
+    },
+    bericht: {
+      header: 'Dokumentations-Übersicht',
+      text: `Aktuelle Dokumentationslage (Stand 13.03.2026):\n\n` +
+            `• <strong>6 SLE-Berichte</strong> im System\n` +
+            `• 4 freigegeben, 1 in Prüfung, 1 Entwurf\n` +
+            `• DOK-2026-0308-003 (W. Huber): Qualitätsprüfung bestanden\n` +
+            `• DOK-2026-0310-001 (G. Kaufmann): Sturzprotokoll – Freigabe ausstehend\n` +
+            `• Nächste Fälligkeiten: 2 Monatsberichte bis 15.03.`
+    },
+    dokumentation: {
+      header: 'Dokumentations-Übersicht',
+      text: `Aktuelle Dokumentationslage (Stand 13.03.2026):\n\n` +
+            `• <strong>6 SLE-Berichte</strong> im System\n` +
+            `• 4 freigegeben, 1 in Prüfung, 1 Entwurf\n` +
+            `• DOK-2026-0308-003 (W. Huber): Qualitätsprüfung bestanden\n` +
+            `• DOK-2026-0310-001 (G. Kaufmann): Sturzprotokoll – Freigabe ausstehend\n` +
+            `• Nächste Fälligkeiten: 2 Monatsberichte bis 15.03.`
+    }
+  };
+
+  function addMessage(content, type, headerText) {
+    // Remove welcome message if present
+    const welcome = chatMessages.querySelector('.chat-welcome');
+    if (welcome) welcome.remove();
+
+    const msg = document.createElement('div');
+    msg.classList.add('chat-message', type, 'fade-in');
+
+    let html = '';
+    if (headerText) {
+      const icon = type === 'ai' ? 'auto_awesome' : 'person';
+      html += `<div class="chat-message-header"><span class="material-symbols-outlined">${icon}</span>${headerText}</div>`;
+    }
+    html += `<div>${content.replace(/\n/g, '<br>')}</div>`;
+    msg.innerHTML = html;
+
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return msg;
+  }
+
+  function showTypingIndicator() {
+    const msg = document.createElement('div');
+    msg.classList.add('chat-message', 'ai', 'fade-in');
+    msg.id = 'typingIndicator';
+    msg.innerHTML = `
+      <div class="chat-message-header">
+        <span class="material-symbols-outlined">auto_awesome</span>Cura AI
+      </div>
+      <div class="chat-typing"><span></span><span></span><span></span></div>
+    `;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function removeTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+  }
+
+  function findResponse(question) {
+    const lower = question.toLowerCase();
+
+    for (const [keyword, response] of Object.entries(SIMULATED_RESPONSES)) {
+      if (lower.includes(keyword)) {
+        return response;
+      }
+    }
+
+    return {
+      header: 'Cura AI',
+      text: `Cross-Domain-Analyse wird durchgeführt...\n\n` +
+            `Ihre Anfrage «${question}» wird über alle Domänen hinweg analysiert. ` +
+            `Die Ergebnisse umfassen Klienten, Personal, Medikation und Dokumentation.\n\n` +
+            `<em>Tipp: Fragen Sie nach einem spezifischen Klienten (z.B. «Kaufmann») oder nach Berichten für detailliertere Ergebnisse.</em>`
+    };
+  }
+
+  function handleSend() {
+    const question = chatInput.value.trim();
+    if (!question) return;
+
+    addMessage(question, 'user', 'Sie');
+    chatInput.value = '';
+
+    showTypingIndicator();
+
+    const response = findResponse(question);
+
+    setTimeout(() => {
+      removeTypingIndicator();
+      addMessage(response.text, 'ai', response.header);
+    }, 1200);
+  }
+
+  chatSend.addEventListener('click', handleSend);
+
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+</script>
+
+</body>
+</html>

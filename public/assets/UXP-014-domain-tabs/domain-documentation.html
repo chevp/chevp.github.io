@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cura – Dokumentation</title>
+  <link rel="stylesheet" href="shared.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.visible { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--surface-2); border: 1px solid var(--border-light);
+      border-radius: var(--radius); width: 560px; max-height: 80vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transform: translateY(12px); transition: transform 0.2s;
+    }
+    .modal-overlay.visible .modal { transform: translateY(0); }
+
+    .modal-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+    }
+    .modal-header h3 { flex: 1; font-size: 15px; font-weight: 700; }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: var(--surface-3); color: var(--text); }
+    .modal-close .material-symbols-outlined { font-size: 18px; }
+
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block; font-size: 11px; font-weight: 600;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .form-select, .form-input {
+      width: 100%; padding: 9px 12px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface-3);
+      color: var(--text); font-size: 13px; font-family: inherit;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-select:focus, .form-input:focus { border-color: var(--accent); }
+    .form-textarea {
+      width: 100%; padding: 10px 12px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface-3);
+      color: var(--text); font-size: 13px; font-family: inherit;
+      outline: none; resize: vertical; min-height: 70px;
+      line-height: 1.6; transition: border-color 0.2s;
+    }
+    .form-textarea:focus { border-color: var(--accent); }
+
+    .form-sle-label {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+    }
+    .form-sle-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; color: #fff; flex-shrink: 0;
+    }
+
+    .modal-footer {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 20px; border-top: 1px solid var(--border);
+      justify-content: flex-end;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+    }
+    .filter-chip {
+      font-size: 10px; padding: 3px 10px; border-radius: 12px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+    }
+    .filter-chip:hover { border-color: var(--accent); color: var(--accent-light); }
+    .filter-chip.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-light); }
+
+    /* Generic detail content block */
+    .detail-content-block {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+      font-size: 13px; line-height: 1.7; color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+<div class="domain-page with-ai" id="domainPage">
+  <!-- LIST PANE -->
+  <div class="list-pane">
+    <div class="list-header">
+      <div class="list-header-top">
+        <div class="list-header-icon" style="background:var(--green)">
+          <span class="material-symbols-outlined">description</span>
+        </div>
+        <span class="list-title">Dokumentation</span>
+        <span class="list-count" id="listCount">6</span>
+      </div>
+      <div class="list-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" id="searchInput" placeholder="Dokumente durchsuchen...">
+      </div>
+      <div class="filter-bar">
+        <button class="filter-chip active" data-filter="all">Alle</button>
+        <button class="filter-chip" data-filter="green">Abgeschlossen</button>
+        <button class="filter-chip" data-filter="orange">Review</button>
+        <button class="filter-chip" data-filter="gray">Entwurf</button>
+      </div>
+    </div>
+    <div class="list-body" id="listBody"></div>
+    <button class="new-record-btn" id="newRecordBtn">
+      <span class="material-symbols-outlined">add</span>
+      Neuer Datensatz
+    </button>
+  </div>
+
+  <!-- WORKSPACE PANE -->
+  <div class="workspace-pane">
+    <div class="workspace-header">
+      <div class="workspace-header-info">
+        <div class="workspace-header-title" id="wsTitle">Dokumentation</div>
+        <div class="workspace-header-sub" id="wsSub">Dokument auswählen</div>
+      </div>
+      <div class="workspace-actions">
+        <button class="btn" id="btnPrint" style="display:none">
+          <span class="material-symbols-outlined">print</span>Drucken
+        </button>
+        <button class="btn" id="btnExport" style="display:none">
+          <span class="material-symbols-outlined">download</span>Export
+        </button>
+        <button class="btn ai" id="aiToggleBtn">
+          <span class="material-symbols-outlined">auto_awesome</span>AI
+        </button>
+      </div>
+    </div>
+    <div class="workspace-body" id="wsBody">
+      <div class="empty-state">
+        <span class="material-symbols-outlined">description</span>
+        <p>Dokument aus der Liste auswählen</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-icon">
+        <span class="material-symbols-outlined">auto_awesome</span>
+      </div>
+      <div>
+        <div class="ai-panel-title">Cura AI</div>
+        <div class="ai-panel-subtitle">Dokumentations-Assistent</div>
+      </div>
+    </div>
+    <div class="ai-panel-body" id="aiBody">
+      <div class="ai-suggestion">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ai-icon-info">info</span>
+          <span class="ai-suggestion-title">Bereit</span>
+        </div>
+        <div class="ai-suggestion-desc">Wählen Sie ein Dokument aus der Liste, um kontextbezogene Vorschläge zu erhalten.</div>
+      </div>
+    </div>
+    <div class="ai-panel-input">
+      <div class="ai-input-wrap">
+        <input type="text" placeholder="Frage zur Dokumentation..." id="aiInput">
+        <button class="ai-send" id="aiSend">
+          <span class="material-symbols-outlined">arrow_upward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="material-symbols-outlined" style="font-size:16px">check_circle</span>
+  <span id="toastMsg">Gespeichert</span>
+</div>
+
+<!-- NEW RECORD MODAL -->
+<div class="modal-overlay" id="newRecordModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="material-symbols-outlined" style="color:var(--green);font-size:20px">note_add</span>
+      <h3>Neuer Datensatz (SLE)</h3>
+      <button class="modal-close" id="modalClose">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Klient</label>
+        <select class="form-select" id="formKlient">
+          <option value="">Klient auswählen...</option>
+          <option value="KLI-0301">A. Weber</option>
+          <option value="KLI-0302">E. Fischer</option>
+          <option value="KLI-0305">G. Kaufmann</option>
+          <option value="KLI-0308">H.-P. Brunner</option>
+          <option value="KLI-0310">W. Huber</option>
+          <option value="KLI-0312">M. Schneider</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bereich</label>
+        <select class="form-select" id="formBereich">
+          <option value="">Bereich auswählen...</option>
+          <option value="Pflege">Pflege</option>
+          <option value="Betreuung">Betreuung</option>
+          <option value="Therapie">Therapie</option>
+          <option value="Hauswirtschaft">Hauswirtschaft</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <div class="form-sle-label">
+          <div class="form-sle-icon" style="background:var(--blue)">S</div>
+          <label class="form-label" style="margin-bottom:0">Situation</label>
+        </div>
+        <textarea class="form-textarea" id="formSituation" placeholder="Beschreiben Sie die Ausgangssituation..."></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-sle-label">
+          <div class="form-sle-icon" style="background:var(--green)">L</div>
+          <label class="form-label" style="margin-bottom:0">Leistung</label>
+        </div>
+        <textarea class="form-textarea" id="formLeistung" placeholder="Welche Massnahmen wurden durchgeführt?"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-sle-label">
+          <div class="form-sle-icon" style="background:var(--accent-light)">W</div>
+          <label class="form-label" style="margin-bottom:0">Wirkung</label>
+        </div>
+        <textarea class="form-textarea" id="formWirkung" placeholder="Welche Wirkung wurde beobachtet?"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="aiAssistBtn">
+        <span class="material-symbols-outlined">auto_awesome</span>AI-Vorschlag
+      </button>
+      <button class="btn" id="modalCancel">Abbrechen</button>
+      <button class="btn primary" id="modalSave">
+        <span class="material-symbols-outlined">save</span>Speichern
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== DATA =====
+  const records = [
+    {
+      id: 'd1',
+      title: 'Pflegebericht KW 10 – WG A',
+      sub: 'Wohngruppe A · Kalenderwoche 10',
+      status: 'Abgeschlossen',
+      statusColor: 'green',
+      time: '10.03.2026, 16:00',
+      icon: 'summarize',
+      type: 'generic',
+      detail: {
+        bereich: 'Pflege',
+        typ: 'Wochenbericht',
+        autor: 'M. Keller',
+        datum: '10.03.2026',
+        status: 'Abgeschlossen',
+        wohngruppe: 'WG A',
+        content: 'Zusammenfassung der Pflegeaktivitäten in Wohngruppe A für Kalenderwoche 10. Alle Bewohner stabil, keine besonderen Vorkommnisse. Medikamentenabgabe vollständig dokumentiert. Zwei Arztbesuche (A. Weber, E. Fischer) durchgeführt.'
+      }
+    },
+    {
+      id: 'd2',
+      title: 'Sturzprotokoll G. Kaufmann',
+      sub: 'Klient: G. Kaufmann · Sturzereignis',
+      status: 'Review offen',
+      statusColor: 'orange',
+      time: '09.03.2026, 14:22',
+      icon: 'warning',
+      type: 'generic',
+      detail: {
+        bereich: 'Pflege',
+        typ: 'Sturzprotokoll',
+        autor: 'S. Meier',
+        datum: '09.03.2026',
+        status: 'Review offen',
+        klient: 'G. Kaufmann (KLI-0305)',
+        content: 'Sturz im Flur vor Zimmer 12 um 14:10 Uhr. Klient war auf dem Weg zum Gemeinschaftsraum. Ursache: Stolpern über Türschwelle. Keine sichtbaren Verletzungen, Vitalzeichen stabil. Arzt informiert. Empfehlung: Türschwelle prüfen, Gehhilfe evaluieren.'
+      }
+    },
+    {
+      id: 'd3',
+      title: 'Übergabeprotokoll 09.03.',
+      sub: 'Schichtübergabe Früh → Spät',
+      status: 'Abgeschlossen',
+      statusColor: 'green',
+      time: '09.03.2026, 13:45',
+      icon: 'swap_horiz',
+      type: 'generic',
+      detail: {
+        bereich: 'Organisation',
+        typ: 'Übergabeprotokoll',
+        autor: 'M. Keller → T. Brunner',
+        datum: '09.03.2026',
+        status: 'Abgeschlossen',
+        schicht: 'Früh → Spät (13:30)',
+        content: 'Übergabe aller relevanten Informationen. Besondere Hinweise: G. Kaufmann Sturzprotokoll beachten (Review ausstehend). W. Huber Palliativkonzept aktualisiert. Medikamentenausgabe 12:00 vollständig. Keine offenen Aufgaben aus Frühschicht.'
+      }
+    },
+    {
+      id: 'd4',
+      title: 'Palliativkonzept W. Huber',
+      sub: 'Klient: W. Huber · Konzeptdokument',
+      status: 'Aktiv',
+      statusColor: 'green',
+      time: '08.03.2026, 10:15',
+      icon: 'favorite',
+      type: 'generic',
+      detail: {
+        bereich: 'Pflege / Palliativ',
+        typ: 'Konzeptdokument',
+        autor: 'Dr. R. Steiner / M. Keller',
+        datum: '08.03.2026',
+        status: 'Aktiv',
+        klient: 'W. Huber (KLI-0310)',
+        content: 'Individuelles Palliativkonzept gemäss Absprache mit Hausarzt Dr. Steiner. Fokus auf Schmerzmanagement und Lebensqualität. Wünsche des Klienten und der Angehörigen dokumentiert. Nächste Evaluation: 15.03.2026.'
+      }
+    },
+    {
+      id: 'd5',
+      title: 'Fortbildungsnachweis Demenzpflege',
+      sub: 'Teamfortbildung · Zertifikat',
+      status: 'Entwurf',
+      statusColor: 'gray',
+      time: '07.03.2026, 09:00',
+      icon: 'school',
+      type: 'generic',
+      detail: {
+        bereich: 'Fortbildung',
+        typ: 'Fortbildungsnachweis',
+        autor: 'M. Keller',
+        datum: '07.03.2026',
+        status: 'Entwurf',
+        thema: 'Demenzpflege Grundlagen',
+        content: 'Teilnahmebestätigung für die interne Fortbildung "Demenzpflege – Grundlagen und Praxis" am 06.03.2026. Referentin: Prof. H. Zimmermann. Dauer: 4 Stunden. Entwurf – Unterschrift Leitung ausstehend.'
+      }
+    },
+    {
+      id: 'd6',
+      title: 'Pflege-Bericht H.-P. Brunner',
+      sub: 'SLE-Format · Körperpflege',
+      status: 'Gespeichert',
+      statusColor: 'green',
+      time: '08.03.2026, 08:30',
+      icon: 'clinical_notes',
+      type: 'sle',
+      detail: {
+        dokumentNr: 'DOK-2026-0308-003',
+        klientId: 'KLI-0308',
+        klientName: 'H.-P. Brunner',
+        klientShort: 'H.M.',
+        bereich: 'Pflege',
+        datum: '08.03.2026',
+        autor: 'M. Keller',
+        status: 'Gespeichert',
+        situation: 'Der Klient benötigte Unterstützung bei der Körperpflege und beim Anziehen.',
+        leistung: 'Ich habe den Klienten beim Duschen und Anziehen unterstützt. Der Oberkörper konnte selbstständig gewaschen werden, bei den Socken und Schuhen wurde Hilfe benötigt.',
+        wirkung: 'Der Klient war nach der Körperpflege zufrieden und konnte den Tag gut beginnen.'
+      }
+    }
+  ];
+
+  // AI suggestions per record
+  const aiSuggestions = {
+    d6: [
+      {
+        icon: 'person', iconClass: 'ai-icon-info',
+        title: 'Klient verknüpft: H.-P. Brunner',
+        desc: 'Dieser Bericht ist mit Klient KLI-0308 (Hans-Peter Brunner) verknüpft. Klicken Sie, um das Klientenprofil zu öffnen.',
+        action: 'Klient öffnen', actionFn: () => navigateToClient('c2', 'H.-P. Brunner')
+      },
+      {
+        icon: 'check_circle', iconClass: 'ai-icon-action',
+        title: 'SLE-Struktur erkannt',
+        desc: 'Alle 3 Abschnitte (Situation, Leistung, Wirkung) sind vollständig ausgefüllt. Dokumentationsqualität: gut.',
+        action: null
+      },
+      {
+        icon: 'history', iconClass: 'ai-icon-info',
+        title: 'Vorherige Berichte',
+        desc: 'Diesen Monat wurden 3 weitere Pflege-Berichte für H.-P. Brunner erfasst (05.03., 03.03., 01.03.).',
+        action: 'Berichte anzeigen', actionFn: () => showToast('Berichte-Verlauf wird geladen...')
+      },
+      {
+        icon: 'trending_up', iconClass: 'ai-icon-action',
+        title: 'Pflegetrend-Analyse',
+        desc: 'Oberkörperpflege: stabile Selbstständigkeit. Untere Extremitäten: regelmässiger Unterstützungsbedarf bei Socken/Schuhen.',
+        action: 'Trend ansehen', actionFn: () => showToast('Trendanalyse wird generiert...')
+      },
+      {
+        icon: 'lightbulb', iconClass: 'ai-icon-warning',
+        title: 'Vorschlag: Ergotherapie',
+        desc: 'Basierend auf dem wiederkehrenden Unterstützungsbedarf bei den unteren Extremitäten wird eine ergotherapeutische Abklärung empfohlen.',
+        action: 'Empfehlung erstellen', actionFn: () => showToast('Ergotherapie-Empfehlung erstellt')
+      }
+    ],
+    d1: [
+      {
+        icon: 'summarize', iconClass: 'ai-icon-info',
+        title: 'Wochenbericht vollständig',
+        desc: 'KW 10 wurde abgeschlossen. Keine offenen Punkte erkannt.',
+        action: null
+      }
+    ],
+    d2: [
+      {
+        icon: 'warning', iconClass: 'ai-icon-warning',
+        title: 'Review ausstehend',
+        desc: 'Das Sturzprotokoll muss noch von der Pflegedienstleitung gegengezeichnet werden.',
+        action: 'Review anfordern', actionFn: () => showToast('Review-Anfrage gesendet')
+      },
+      {
+        icon: 'analytics', iconClass: 'ai-icon-info',
+        title: 'Sturzstatistik',
+        desc: 'G. Kaufmann: 2. Sturz in 3 Monaten. Empfehlung: Sturzrisiko-Assessment aktualisieren.',
+        action: null
+      }
+    ],
+    d3: [
+      {
+        icon: 'check_circle', iconClass: 'ai-icon-action',
+        title: 'Übergabe vollständig',
+        desc: 'Alle relevanten Punkte wurden erfasst und abgezeichnet.',
+        action: null
+      }
+    ],
+    d4: [
+      {
+        icon: 'event', iconClass: 'ai-icon-warning',
+        title: 'Evaluation fällig',
+        desc: 'Nächste Konzept-Evaluation am 15.03.2026. In 2 Tagen fällig.',
+        action: 'Erinnerung setzen', actionFn: () => showToast('Erinnerung gesetzt für 15.03.')
+      }
+    ],
+    d5: [
+      {
+        icon: 'edit', iconClass: 'ai-icon-warning',
+        title: 'Entwurf unvollständig',
+        desc: 'Unterschrift der Leitung fehlt noch. Dokument kann nicht finalisiert werden.',
+        action: 'Zur Unterschrift senden', actionFn: () => showToast('Zur Unterschrift gesendet')
+      }
+    ]
+  };
+
+  // ===== STATE =====
+  let selectedId = null;
+  let aiVisible = true;
+  let activeFilter = 'all';
+  let newRecordCounter = 7;
+
+  // ===== RENDER LIST =====
+  function renderList() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const listBody = document.getElementById('listBody');
+
+    const filtered = records.filter(r => {
+      const matchSearch = !search || r.title.toLowerCase().includes(search) || r.sub.toLowerCase().includes(search);
+      const matchFilter = activeFilter === 'all' || r.statusColor === activeFilter;
+      return matchSearch && matchFilter;
+    });
+
+    listBody.innerHTML = filtered.map(r => `
+      <div class="record-card ${r.id === selectedId ? 'active' : ''}" data-id="${r.id}">
+        <div class="record-card-name">${r.title}</div>
+        <div class="record-card-sub">${r.sub}</div>
+        <div class="record-card-footer">
+          <span class="record-card-time">${r.time}</span>
+          <span class="badge ${r.statusColor}">${r.status}</span>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('listCount').textContent = filtered.length;
+
+    listBody.querySelectorAll('.record-card').forEach(card => {
+      card.addEventListener('click', () => selectRecord(card.dataset.id));
+    });
+  }
+
+  // ===== SELECT RECORD =====
+  function selectRecord(id) {
+    selectedId = id;
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+
+    renderList();
+    renderDetail(record);
+    renderAI(record);
+
+    document.getElementById('btnPrint').style.display = '';
+    document.getElementById('btnExport').style.display = '';
+
+    // Update tab label in shell
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'update-tab-label', label: 'Dok: ' + record.title }, '*');
+    }
+  }
+
+  // ===== RENDER DETAIL =====
+  function renderDetail(record) {
+    const wsTitle = document.getElementById('wsTitle');
+    const wsSub = document.getElementById('wsSub');
+    const wsBody = document.getElementById('wsBody');
+
+    wsTitle.textContent = record.title;
+    wsSub.textContent = record.sub + ' · ' + record.time;
+
+    if (record.type === 'sle') {
+      renderSLEDetail(record, wsBody);
+    } else {
+      renderGenericDetail(record, wsBody);
+    }
+  }
+
+  function renderSLEDetail(record, container) {
+    const d = record.detail;
+    container.innerHTML = `
+      <div class="fade-in">
+        <div class="detail-header">
+          <div class="detail-avatar" style="background:var(--green)">
+            <span class="material-symbols-outlined">clinical_notes</span>
+          </div>
+          <div class="detail-header-info">
+            <h2>${record.title}</h2>
+            <p>${d.dokumentNr} · ${d.datum}</p>
+            <div style="display:flex;gap:6px;margin-top:4px">
+              <span class="badge ${record.statusColor}">${record.status}</span>
+              <span class="badge purple">SLE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sle-card">
+          <div class="sle-card-header">
+            <span class="sle-badge">SLE</span>
+            <span>Situation – Leistung – Wirkung</span>
+          </div>
+          <div class="sle-meta">
+            <div class="info-field">
+              <span class="info-label">Dokument Nr.</span>
+              <span class="info-value">${d.dokumentNr}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Datum</span>
+              <span class="info-value">${d.datum}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Klient</span>
+              <span class="info-value">
+                <a class="entity-link" data-navigate="clients" data-entity="c2" data-label="H.-P. Brunner">
+                  ${d.klientId} (${d.klientShort}) → ${d.klientName}
+                </a>
+              </span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Bereich</span>
+              <span class="info-value">${d.bereich}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Autor</span>
+              <span class="info-value">${d.autor}</span>
+            </div>
+            <div class="info-field">
+              <span class="info-label">Status</span>
+              <span class="info-value"><span class="badge ${record.statusColor}">${d.status}</span></span>
+            </div>
+          </div>
+          <div class="sle-section">
+            <div class="sle-section-header">
+              <div class="sle-section-icon situation">S</div>
+              <span>Situation</span>
+            </div>
+            <div class="sle-section-body">${d.situation}</div>
+          </div>
+          <div class="sle-section">
+            <div class="sle-section-header">
+              <div class="sle-section-icon leistung">L</div>
+              <span>Leistung</span>
+            </div>
+            <div class="sle-section-body">${d.leistung}</div>
+          </div>
+          <div class="sle-section">
+            <div class="sle-section-header">
+              <div class="sle-section-icon wirkung">W</div>
+              <span>Wirkung</span>
+            </div>
+            <div class="sle-section-body">${d.wirkung}</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">history</span>
+            Verlauf
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-icon"><span class="material-symbols-outlined">save</span></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Gespeichert</div>
+                <div class="timeline-desc">Dokument erstellt und gespeichert von M. Keller</div>
+              </div>
+              <div class="timeline-time">08.03. 08:30</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon"><span class="material-symbols-outlined">auto_awesome</span></div>
+              <div class="timeline-content">
+                <div class="timeline-title">AI-Prüfung</div>
+                <div class="timeline-desc">SLE-Struktur validiert, alle Abschnitte vollständig</div>
+              </div>
+              <div class="timeline-time">08.03. 08:31</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Bind entity links
+    container.querySelectorAll('.entity-link[data-navigate]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const domain = link.dataset.navigate;
+        const entity = link.dataset.entity;
+        const label = link.dataset.label;
+        navigateToClient(entity, label);
+      });
+    });
+  }
+
+  function renderGenericDetail(record, container) {
+    const d = record.detail;
+    const fields = Object.entries(d).filter(([k]) => k !== 'content');
+
+    container.innerHTML = `
+      <div class="fade-in">
+        <div class="detail-header">
+          <div class="detail-avatar" style="background:var(--surface-3)">
+            <span class="material-symbols-outlined">${record.icon}</span>
+          </div>
+          <div class="detail-header-info">
+            <h2>${record.title}</h2>
+            <p>${record.sub}</p>
+            <div style="display:flex;gap:6px;margin-top:4px">
+              <span class="badge ${record.statusColor}">${record.status}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">info</span>
+            Informationen
+          </div>
+          <div class="info-grid">
+            ${fields.map(([key, val]) => `
+              <div class="info-field">
+                <span class="info-label">${formatLabel(key)}</span>
+                <span class="info-value">${val}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            <span class="material-symbols-outlined">article</span>
+            Inhalt
+          </div>
+          <div class="detail-content-block">${d.content}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function formatLabel(key) {
+    const labels = {
+      bereich: 'Bereich', typ: 'Typ', autor: 'Autor', datum: 'Datum',
+      status: 'Status', wohngruppe: 'Wohngruppe', klient: 'Klient',
+      schicht: 'Schicht', thema: 'Thema'
+    };
+    return labels[key] || key.charAt(0).toUpperCase() + key.slice(1);
+  }
+
+  // ===== RENDER AI SUGGESTIONS =====
+  function renderAI(record) {
+    const aiBody = document.getElementById('aiBody');
+    const suggestions = aiSuggestions[record.id] || [];
+
+    if (suggestions.length === 0) {
+      aiBody.innerHTML = `
+        <div class="ai-suggestion">
+          <div class="ai-suggestion-header">
+            <span class="material-symbols-outlined ai-icon-info">info</span>
+            <span class="ai-suggestion-title">Keine Vorschläge</span>
+          </div>
+          <div class="ai-suggestion-desc">Für dieses Dokument liegen keine AI-Vorschläge vor.</div>
+        </div>
+      `;
+      return;
+    }
+
+    aiBody.innerHTML = suggestions.map((s, i) => `
+      <div class="ai-suggestion fade-in" style="animation-delay:${i * 0.06}s">
+        <div class="ai-suggestion-header">
+          <span class="material-symbols-outlined ${s.iconClass}">${s.icon}</span>
+          <span class="ai-suggestion-title">${s.title}</span>
+        </div>
+        <div class="ai-suggestion-desc">${s.desc}</div>
+        ${s.action ? `<button class="ai-suggestion-action" data-ai-idx="${i}">
+          ${s.action} <span class="material-symbols-outlined">arrow_forward</span>
+        </button>` : ''}
+      </div>
+    `).join('');
+
+    aiBody.querySelectorAll('.ai-suggestion-action').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.aiIdx);
+        if (suggestions[idx] && suggestions[idx].actionFn) {
+          suggestions[idx].actionFn();
+        }
+      });
+    });
+  }
+
+  // ===== CROSS-DOMAIN NAVIGATION =====
+  function navigateToClient(entityId, label) {
+    const msg = { type: 'open-tab', domain: 'clients', entity: entityId, label: label };
+
+    if (window.parent !== window) {
+      window.parent.postMessage(msg, '*');
+    } else {
+      window.open('domain-clients.html?entity=' + encodeURIComponent(entityId), '_blank');
+    }
+  }
+
+  // ===== AI TOGGLE =====
+  document.getElementById('aiToggleBtn').addEventListener('click', () => {
+    aiVisible = !aiVisible;
+    const page = document.getElementById('domainPage');
+    const panel = document.getElementById('aiPanel');
+    const btn = document.getElementById('aiToggleBtn');
+
+    if (aiVisible) {
+      page.classList.add('with-ai');
+      panel.classList.remove('hidden');
+      btn.classList.add('active');
+    } else {
+      page.classList.remove('with-ai');
+      panel.classList.add('hidden');
+      btn.classList.remove('active');
+    }
+  });
+  document.getElementById('aiToggleBtn').classList.add('active');
+
+  // ===== AI INPUT =====
+  function handleAIInput() {
+    const input = document.getElementById('aiInput');
+    const query = input.value.trim();
+    if (!query) return;
+    input.value = '';
+
+    const aiBody = document.getElementById('aiBody');
+    const responseDiv = document.createElement('div');
+    responseDiv.className = 'ai-suggestion fade-in';
+    responseDiv.innerHTML = `
+      <div class="ai-suggestion-header">
+        <span class="material-symbols-outlined ai-icon-info">chat</span>
+        <span class="ai-suggestion-title">Antwort</span>
+      </div>
+      <div class="ai-suggestion-desc">Ihre Frage "${query}" wird verarbeitet. In der vollständigen Anwendung würde hier die AI-Antwort erscheinen.</div>
+    `;
+    aiBody.appendChild(responseDiv);
+    aiBody.scrollTop = aiBody.scrollHeight;
+  }
+
+  document.getElementById('aiSend').addEventListener('click', handleAIInput);
+  document.getElementById('aiInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAIInput();
+  });
+
+  // ===== SEARCH =====
+  document.getElementById('searchInput').addEventListener('input', renderList);
+
+  // ===== FILTER =====
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter;
+      renderList();
+    });
+  });
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  }
+
+  // ===== NEW RECORD MODAL =====
+  const modal = document.getElementById('newRecordModal');
+
+  document.getElementById('newRecordBtn').addEventListener('click', () => {
+    modal.classList.add('visible');
+  });
+
+  document.getElementById('modalClose').addEventListener('click', () => {
+    modal.classList.remove('visible');
+  });
+
+  document.getElementById('modalCancel').addEventListener('click', () => {
+    modal.classList.remove('visible');
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('visible');
+  });
+
+  document.getElementById('aiAssistBtn').addEventListener('click', () => {
+    const situation = document.getElementById('formSituation');
+    const leistung = document.getElementById('formLeistung');
+    const wirkung = document.getElementById('formWirkung');
+
+    if (!situation.value && !leistung.value && !wirkung.value) {
+      situation.value = 'Der Klient benötigte Unterstützung bei...';
+      situation.focus();
+      showToast('AI-Vorlage eingefügt');
+    } else {
+      showToast('AI-Textoptimierung angewendet');
+    }
+  });
+
+  document.getElementById('modalSave').addEventListener('click', () => {
+    const klient = document.getElementById('formKlient');
+    const bereich = document.getElementById('formBereich');
+    const situation = document.getElementById('formSituation').value.trim();
+    const leistung = document.getElementById('formLeistung').value.trim();
+    const wirkung = document.getElementById('formWirkung').value.trim();
+
+    if (!klient.value || !bereich.value || !situation || !leistung || !wirkung) {
+      showToast('Bitte alle Felder ausfüllen');
+      return;
+    }
+
+    const klientText = klient.options[klient.selectedIndex].text;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+    const newId = 'd' + newRecordCounter;
+    newRecordCounter++;
+
+    records.unshift({
+      id: newId,
+      title: `${bereich.value}-Bericht ${klientText}`,
+      sub: `SLE-Format · ${klientText}`,
+      status: 'Gespeichert',
+      statusColor: 'green',
+      time: `${dateStr}, ${timeStr}`,
+      icon: 'clinical_notes',
+      type: 'sle',
+      detail: {
+        dokumentNr: `DOK-${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${String(newRecordCounter).padStart(3,'0')}`,
+        klientId: klient.value,
+        klientName: klientText,
+        klientShort: klientText.split(' ').map(w => w[0]).join('.') + '.',
+        bereich: bereich.value,
+        datum: dateStr,
+        autor: 'M. Keller',
+        status: 'Gespeichert',
+        situation: situation,
+        leistung: leistung,
+        wirkung: wirkung
+      }
+    });
+
+    // Reset form
+    klient.value = '';
+    bereich.value = '';
+    document.getElementById('formSituation').value = '';
+    document.getElementById('formLeistung').value = '';
+    document.getElementById('formWirkung').value = '';
+
+    modal.classList.remove('visible');
+    renderList();
+    selectRecord(newId);
+    showToast('Datensatz gespeichert');
+  });
+
+  // ===== PRINT / EXPORT =====
+  document.getElementById('btnPrint').addEventListener('click', () => showToast('Druckvorschau wird geöffnet...'));
+  document.getElementById('btnExport').addEventListener('click', () => showToast('PDF-Export wird erstellt...'));
+
+  // ===== URL PARAMS =====
+  function checkUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    const entity = params.get('entity');
+    if (entity) {
+      const record = records.find(r => r.id === entity);
+      if (record) {
+        selectRecord(entity);
+        return;
+      }
+    }
+  }
+
+  // ===== INIT =====
+  renderList();
+  checkUrlParams();
+</script>
+
+</body>
+</html>
