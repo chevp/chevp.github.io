@@ -448,7 +448,7 @@
     // Repository Data
     const projectData = {
       "Projects": [
-        { name: "Projects Hub (antarctica.io)", desc: "Explanation pages for all private projects, grouped by state.", url: "https://chevp.github.io/antarctica.io/#/projects", org: "projects" },
+        { name: "Projects Hub (antarctica.io)", desc: "Explanation pages for all private projects, grouped by state.", url: "https://chevp.github.io/antarctica.io/projects", org: "projects" },
         { name: "ECS Configurator", desc: "Visual configuration & structured asset management for ECS systems.", url: "https://chevp.github.io/ecs-configurator-site/", org: "projects" },
         { name: "Vulkan Playground", desc: "Experimentation with Vulkan rendering pipelines and custom shaders.", url: "https://github.com/chevp/vulkan-playground", org: "projects" },
         { name: "Programming Tutorials", desc: "Curated code examples and guides on graphics, tools, and performance topics.", url: "https://chevp.github.io/tutorials/", org: "projects" },
@@ -850,7 +850,7 @@
       // Private repos without a public URL get an antarctica.io explanation page link
       const slug = repo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       const hasPublicUrl = repo.url && repo.url.trim() !== '';
-      const privateUrl = !hasPublicUrl && repo.private ? `https://chevp.github.io/antarctica.io/#/projects/${slug}` : null;
+      const privateUrl = !hasPublicUrl && repo.private ? `https://chevp.github.io/antarctica.io/projects/${slug}` : null;
       const effectiveUrl = hasPublicUrl ? repo.url : privateUrl;
       const opensExternally = hasPublicUrl;
 
