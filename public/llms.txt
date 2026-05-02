@@ -1,0 +1,43 @@
+# chevp
+
+> Hub for chevp's open-source projects: ECS tooling, AI-assisted development frameworks, web components, programming tutorials, prompt guides, and graphics/game-dev experiments. The site at https://chevp.github.io aggregates and links out to all sub-projects hosted under the same GitHub Pages domain.
+
+The main page (`index.html`) is a single-page directory grouping repositories by category (Projects, Development, Engine, Frameworks, Gaming, Graphics, Platform, Tools, Web, Assets, Data). Most listed repositories are private and link to explanation pages on `antarctica.io`; the entries below are the public, browsable resources.
+
+## Featured projects
+
+- [Projects Hub (antarctica.io)](https://chevp.github.io/antarctica.io/projects): Explanation pages for all private projects, grouped by state.
+- [ECS Configurator](https://chevp.github.io/ecs-configurator-site/): Visual configuration and structured asset management for ECS systems.
+- [chevp-ai-framework](https://chevp.github.io/chevp-ai-framework/): A structured lifecycle for AI-assisted software development.
+- [Prompt Guide](https://chevp.github.io/prompt-guide/): Guide for AI prompt engineering in programming and game development.
+- [Programming Tutorials](https://chevp.github.io/tutorials/): Curated code examples and guides on graphics, tools, and performance topics.
+- [chevp-dev](https://chevp.github.io/chevp-dev/): Tools, configs, and setup steps for a Win11 dev environment.
+- [chevp-components](https://chevp.github.io/chevp-components/docs/demo.html): Reusable framework-agnostic vanilla Web Components for workspace-based business applications.
+
+## Tools and demos
+
+- [Cryo Build Lab Tools](https://chevp.github.io/cryo-build-lab-tools/): Angular multi-tool application for the Cryo Build Lab.
+- [Kitty on Screen](https://chevp.github.io/kitty-on-screen/): Desktop pet companion — a nostalgic Screen Mate.
+- [Daily Display](https://chevp.github.io/daily-display/): Rotating content display for an RSS feed, daily menu, and weather forecast.
+- [Lunara Studio Site](https://chevp.github.io/lunara-studio-site/): Visual host for Lunara plugins with preview, hierarchy, and config.
+- [Public Playground Site](https://chevp.github.io/public-playground-site/): Platform for sharing and testing public playground code projects.
+- [Storybook Screenshot Gallery](https://chevp.github.io/storybook-screenshot-gallery/): Storybook snapshot browser.
+- [Veyra Site](https://chevp.github.io/veyra-site/): ERP system with a modern Entity-Component-System architecture.
+
+## Sites and policy
+
+- [Atelier Art Gold](https://chevp.github.io/atelier-art-gold.io/): Creative studio for handcrafted artwork and designs.
+- [Ice Station](https://chevp.github.io/ice-station.io/): Project landing page.
+- [Pengra Site](https://chevp.github.io/pengra-site/): Project landing page.
+- [Site Policy](https://chevp.github.io/site-policy/): Terms, privacy, impressum, and contact for chevp.github.io.
+
+## Tutorials and learning
+
+- [Tutorials index](https://chevp.github.io/tutorials/): Markdown tutorials on graphics, tools, and performance.
+- [LLM Basics Tutorial (baselone 2025 RAG workshop)](https://chevp.github.io/tutorials/data-science-and-analytics/LLM_Basics_Tutorial): Open-source RAG workshop content.
+
+## Reference
+
+- [GitHub: chevp](https://github.com/chevp): Source for all public repositories.
+- [sitemap.xml](https://chevp.github.io/sitemap.xml): Machine-readable site index.
+- [robots.txt](https://chevp.github.io/robots.txt): Crawler policy (allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended, etc.).
