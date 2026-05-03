@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Mira × Eventwerk — Workspace</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #161922;
+    --panel-2: #1d212c;
+    --panel-3: #242836;
+    --border: #262b38;
+    --border-soft: #1f2330;
+    --fg: #e1e4ed;
+    --muted: #8b90a5;
+    --dim: #5c6078;
+    --accent: #6c7bf7;
+    --accent-soft: rgba(108,123,247,.12);
+    --ai: #a78bfa;
+    --ai-soft: rgba(167,139,250,.10);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --user: #2a2f4d;
+    --user-fg: #d9e1ff;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *,*:before,*:after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px; line-height: 1.5;
+
+    display: grid;
+    grid-template-columns: 260px 1fr 340px;
+    grid-template-rows: 48px 1fr auto;
+    grid-template-areas:
+      "sidebar header   inspector"
+      "sidebar feed     inspector"
+      "sidebar composer inspector";
+    height: 100vh;
+  }
+  button { font: inherit; cursor: pointer; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #2a2f3e; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3f4f; }
+
+  /* =========================================================
+     SIDEBAR (left)
+     ========================================================= */
+  aside.sidebar {
+    grid-area: sidebar;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    overflow: hidden;
+  }
+
+  .brand-row {
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .brand-mark {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--ai), var(--accent));
+    display: grid; place-items: center;
+    color: #1a1830; font-weight: 700; font-size: 13px;
+  }
+  .brand-name { font-weight: 600; letter-spacing: .2px; flex: 1; }
+  .brand-name span { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); display: grid; place-items: center;
+  }
+  .icon-btn:hover { color: var(--fg); border-color: var(--ai); }
+
+  .new-session {
+    margin: 10px 12px;
+    background: var(--ai); color: #1a1830;
+    border: none; border-radius: 8px;
+    padding: 9px 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; justify-content: center;
+  }
+  .new-session:hover { background: #c1a8ff; }
+  .new-session .plus { font-size: 16px; line-height: 1; }
+
+  .search {
+    margin: 0 12px 8px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    background: var(--panel-2); color: var(--fg);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 10px 7px 30px;
+    font: inherit; font-size: 13px; outline: none;
+  }
+  .search input:focus { border-color: var(--ai); }
+  .search::before {
+    content: "⌕"; position: absolute; left: 9px; top: 50%;
+    transform: translateY(-50%); color: var(--dim); font-size: 14px;
+  }
+
+  .session-list {
+    overflow-y: auto;
+    padding: 4px 8px 12px;
+  }
+  .group-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .6px;
+    color: var(--dim); padding: 12px 8px 4px;
+    font-family: var(--mono);
+  }
+  .session {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    align-items: start;
+  }
+  .session:hover { background: var(--panel-2); }
+  .session.active { background: var(--ai-soft); }
+  .session.active .title { color: var(--fg); }
+
+  .wf-icon {
+    width: 18px; height: 18px; border-radius: 4px;
+    background: var(--panel-3); color: var(--muted);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+    margin-top: 1px;
+  }
+  .wf-icon.event { background: rgba(167,139,250,.14); color: var(--ai); }
+  .wf-icon.kunde { background: rgba(108,123,247,.14); color: var(--accent); }
+  .wf-icon.equip { background: rgba(52,211,153,.12); color: var(--ok); }
+  .wf-icon.angebot { background: rgba(251,191,36,.12); color: var(--warn); }
+  .wf-icon.rechn { background: rgba(248,113,113,.12); color: var(--bad); }
+
+  .session .title {
+    font-size: 13px; color: var(--fg);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .session .sub {
+    font-size: 11px; color: var(--muted);
+    margin-top: 2px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .session .sub .progress {
+    flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden;
+    max-width: 70px;
+  }
+  .session .sub .progress > div { height: 100%; background: var(--ai); }
+  .session .sub .progress.done > div { background: var(--ok); }
+  .session .sub .progress.aborted > div { background: var(--bad); }
+  .session .sub .time { color: var(--dim); font-family: var(--mono); font-size: 10px; }
+
+  .templates {
+    border-top: 1px solid var(--border-soft);
+    padding: 8px;
+  }
+  .templates .group-label { padding: 4px 8px 4px; }
+  .template {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 13px; color: var(--muted);
+  }
+  .template:hover { background: var(--panel-2); color: var(--fg); }
+
+  .persona-tile {
+    border-top: 1px solid var(--border-soft);
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar-circle {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, #f0a9ad, #a78bfa);
+    color: #1a1830; font-weight: 700; font-size: 12px;
+    display: grid; place-items: center;
+  }
+  .persona-tile .who { flex: 1; }
+  .persona-tile .name { font-size: 13px; }
+  .persona-tile .role { font-size: 11px; color: var(--muted); }
+
+  /* =========================================================
+     HEADER (top center)
+     ========================================================= */
+  header.top {
+    grid-area: header;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 18px;
+  }
+  .session-title { font-weight: 600; flex: 1; display: flex; align-items: center; gap: 10px; }
+  .session-title .pill-mini {
+    background: var(--ai-soft); color: var(--ai);
+    border: 1px solid #4a3d75; border-radius: 4px;
+    padding: 1px 6px; font-size: 11px; font-family: var(--mono);
+  }
+  .header-actions { display: flex; gap: 6px; align-items: center; }
+  .header-actions .icon-btn { width: 30px; height: 30px; }
+
+  /* =========================================================
+     FEED (center)
+     ========================================================= */
+  main.feed {
+    grid-area: feed;
+    overflow-y: auto;
+    padding: 20px 24px 12px;
+  }
+  .feed-inner { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+
+  /* Subtle workflow strip at top of feed */
+  .wf-strip {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 11px; font-family: var(--mono);
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .wf-strip .step {
+    padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border);
+  }
+  .wf-strip .step.done { color: var(--dim); }
+  .wf-strip .step.active { color: var(--ai); border-color: #4a3d75; background: var(--ai-soft); }
+  .wf-strip .step.todo { color: var(--dim); border-style: dashed; }
+  .wf-strip .arrow { color: var(--dim); }
+
+  .turn { display: flex; gap: 10px; }
+  .turn.user { flex-direction: row-reverse; }
+  .turn .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    flex-shrink: 0; display: grid; place-items: center;
+    font-size: 11px; font-weight: 600;
+    background: var(--ai-soft); color: var(--ai);
+  }
+  .turn.user .avatar { background: linear-gradient(135deg, #f0a9ad, #a78bfa); color: #1a1830; }
+
+  .bubble {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 14px;
+    max-width: 620px;
+    flex: 1;
+    font-size: 14px;
+  }
+  .turn.user .bubble {
+    background: var(--user); border-color: #4a4d78;
+    color: var(--user-fg); flex: 0 1 auto;
+    font-size: 13px;
+  }
+
+  .turn.system { padding-left: 36px; }
+  .turn.system .bubble {
+    background: transparent; border: none; padding: 0;
+    color: var(--dim); font-family: var(--mono); font-size: 11px;
+  }
+  .turn.system .bubble::before {
+    content: "·"; margin-right: 6px; color: var(--accent);
+  }
+
+  /* Embedded blocks */
+  .block { margin-top: 10px; }
+  .block:first-child { margin-top: 0; }
+  .block-header {
+    font-size: 11px; color: var(--muted); margin-bottom: 6px;
+    font-family: var(--mono); display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Compact event table — only essential columns */
+  table.events {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    background: var(--panel-2); border-radius: 8px; overflow: hidden;
+  }
+  table.events th, table.events td {
+    padding: 8px 10px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  table.events th {
+    background: #1a1e28; color: var(--muted);
+    font-weight: 500; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .4px;
+  }
+  table.events tr:last-child td { border-bottom: none; }
+  table.events tr.suggested { background: rgba(167,139,250,.05); }
+  table.events tr.suggested td:first-child { border-left: 2px solid var(--ai); }
+  table.events tr:hover { background: var(--panel-3); cursor: pointer; }
+  table.events td.right { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  td .urgent { color: var(--bad); font-weight: 600; }
+  td .warn { color: var(--warn); }
+
+  /* Checklist (compact) */
+  .checklist {
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .check-item {
+    display: flex; gap: 10px; align-items: center;
+    padding: 7px 12px; border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: var(--panel-3); }
+  .check-item.done { opacity: .5; }
+  .check-item.done .label { text-decoration: line-through; }
+  .check-item.suggested { background: rgba(167,139,250,.06); }
+  .check-item.suggested::before {
+    content: ""; width: 3px; align-self: stretch; background: var(--ai);
+    margin: -7px 0; flex-shrink: 0;
+  }
+  .checkbox {
+    width: 14px; height: 14px; border-radius: 3px;
+    border: 1px solid var(--dim); background: transparent;
+    flex-shrink: 0;
+  }
+  .checkbox.checked {
+    background: var(--ok); border-color: var(--ok);
+    background-image: linear-gradient(45deg, transparent 30%, #0f1117 30%, #0f1117 50%, transparent 50%, transparent 60%, #0f1117 60%, #0f1117 80%, transparent 80%);
+  }
+  .check-item .label { flex: 1; font-size: 13px; }
+  .check-item .due { font-size: 11px; font-family: var(--mono); color: var(--muted); }
+  .check-item .due.overdue { color: var(--bad); }
+  .check-item .due.today { color: var(--warn); }
+
+  /* AI draft */
+  .draft {
+    background: #15131f; border: 1px solid #4a3d75;
+    border-left: 3px solid var(--ai); border-radius: 8px;
+    padding: 12px;
+  }
+  .draft .draft-meta {
+    font-size: 11px; color: var(--ai); font-family: var(--mono);
+    margin-bottom: 8px;
+  }
+  .draft .email-head {
+    font-size: 12px; font-family: var(--mono);
+    color: var(--muted); margin-bottom: 8px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 50px 1fr; gap: 4px 8px;
+  }
+  .draft .email-head dt { color: var(--dim); }
+  .draft .email-head dd { color: var(--fg); margin: 0; }
+  .draft textarea {
+    width: 100%; min-height: 160px;
+    background: transparent; color: var(--fg);
+    border: none; outline: none; resize: vertical;
+    font: inherit; font-size: 13px;
+  }
+
+  /* Ask block */
+  .ask {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px dashed var(--border);
+  }
+  .ask .q { font-size: 13px; margin-bottom: 8px; color: var(--fg); }
+  .actions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .action {
+    background: var(--panel-2); color: var(--fg);
+    border: 1px solid var(--border);
+    padding: 5px 11px; border-radius: 999px;
+    font-size: 12px;
+  }
+  .action:hover { border-color: var(--ai); color: var(--ai); }
+  .action.primary { background: var(--ai); color: #1a1830; border-color: var(--ai); }
+  .action.primary:hover { background: #c1a8ff; }
+  .action.danger:hover { color: var(--bad); border-color: var(--bad); }
+
+  /* =========================================================
+     COMPOSER
+     ========================================================= */
+  footer.composer-bar {
+    grid-area: composer;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    padding: 12px 24px 14px;
+  }
+  .composer {
+    max-width: 720px; margin: 0 auto;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px 6px 4px 12px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .composer:focus-within { border-color: var(--ai); }
+  .composer input {
+    flex: 1; background: transparent; color: var(--fg);
+    border: none; outline: none;
+    padding: 8px 0; font: inherit;
+  }
+  .composer .send-btn {
+    background: var(--ai); color: #1a1830;
+    border: none; border-radius: 7px;
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     INSPECTOR (right)
+     ========================================================= */
+  aside.inspector {
+    grid-area: inspector;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+  }
+  .inspector-tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+  }
+  .inspector-tab {
+    flex: 1; background: transparent; border: none;
+    color: var(--muted); padding: 12px 8px;
+    font-size: 12px; font-weight: 500;
+    border-bottom: 2px solid transparent;
+  }
+  .inspector-tab.active { color: var(--fg); border-bottom-color: var(--ai); }
+  .inspector-body { overflow-y: auto; padding: 14px; }
+
+  .insp-section {
+    margin-bottom: 18px;
+  }
+  .insp-section:last-child { margin-bottom: 0; }
+  .insp-label {
+    font-size: 10px; color: var(--dim);
+    text-transform: uppercase; letter-spacing: .6px;
+    font-family: var(--mono); margin-bottom: 6px;
+  }
+  .insp-card {
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px;
+  }
+  .insp-card h4 { font-size: 13px; margin-bottom: 4px; }
+  .insp-card .uri-line {
+    font-size: 10px; font-family: var(--mono); color: var(--dim);
+    margin-bottom: 8px;
+  }
+  .insp-kv {
+    display: grid; grid-template-columns: 90px 1fr;
+    gap: 4px 8px; font-size: 12px;
+  }
+  .insp-kv dt { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+  .insp-kv dd { margin: 0; color: var(--fg); }
+
+  .ref-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 7px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .ref-item:hover { border-color: var(--accent); }
+  .ref-item .ref-icon {
+    width: 22px; height: 22px; border-radius: 5px;
+    background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .ref-item .ref-icon.loc { background: rgba(52,211,153,.12); color: var(--ok); }
+  .ref-item .ref-icon.art { background: rgba(167,139,250,.14); color: var(--ai); }
+  .ref-item .ref-icon.off { background: rgba(251,191,36,.12); color: var(--warn); }
+  .ref-item .ref-name { flex: 1; }
+  .ref-item .ref-meta { color: var(--dim); font-size: 10px; font-family: var(--mono); }
+
+  .status-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    margin-right: 5px; vertical-align: middle;
+    background: var(--ok);
+  }
+  .status-dot.warn { background: var(--warn); }
+  .status-dot.bad { background: var(--bad); }
+  .status-dot.muted { background: var(--muted); }
+
+  .goal-bar {
+    height: 6px; background: var(--border);
+    border-radius: 3px; overflow: hidden;
+    margin: 8px 0 4px;
+  }
+  .goal-bar > div {
+    height: 100%; background: linear-gradient(90deg, var(--ai), var(--ok));
+  }
+
+  .audit-line {
+    font-size: 11px; font-family: var(--mono);
+    color: var(--muted); padding: 6px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .audit-line:last-child { border-bottom: none; }
+  .audit-line .t { color: var(--dim); margin-right: 6px; }
+  .audit-line.event { color: var(--ai); }
+
+  /* Hidden tabs */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- =================== SIDEBAR =================== -->
+<aside class="sidebar">
+  <div class="brand-row">
+    <div class="brand-mark">M</div>
+    <div class="brand-name">Mira <span>· Eventwerk</span></div>
+    <button class="icon-btn" title="Einstellungen">⚙</button>
+  </div>
+
+  <button class="new-session"><span class="plus">+</span>Neue Session</button>
+
+  <div class="search">
+    <input placeholder="Sessions, Events, Kunden…">
+  </div>
+
+  <div class="session-list">
+    <div class="group-label">Aktiv jetzt</div>
+    <div class="session active">
+      <div class="wf-icon event">E</div>
+      <div>
+        <div class="title">Hochzeit Berger &amp; Falk</div>
+        <div class="sub">
+          Event-Vorbereitung
+          <div class="progress"><div style="width:67%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-label">Heute</div>
+    <div class="session">
+      <div class="wf-icon kunde">K</div>
+      <div>
+        <div class="title">Cordova Energy · Renewal</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">11:42</span>
+        </div>
+      </div>
+    </div>
+    <div class="session">
+      <div class="wf-icon equip">R</div>
+      <div>
+        <div class="title">Funkmikro Sennheiser · Wartung</div>
+        <div class="sub">abgebrochen
+          <div class="progress aborted"><div style="width:30%"></div></div>
+          <span class="time">10:18</span>
+        </div>
+      </div>
+    </div>
+    <div class="session">
+      <div class="wf-icon event">E</div>
+      <div>
+        <div class="title">Sommerfest SWU · Final-Check</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">09:05</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-label">Gestern</div>
+    <div class="session">
+      <div class="wf-icon angebot">A</div>
+      <div>
+        <div class="title">Charity-Gala · Angebot v2</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">16:42</span>
+        </div>
+      </div>
+    </div>
+    <div class="session">
+      <div class="wf-icon rechn">F</div>
+      <div>
+        <div class="title">Neon Events · Mahnstufe 1</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">14:18</span>
+        </div>
+      </div>
+    </div>
+    <div class="session">
+      <div class="wf-icon equip">R</div>
+      <div>
+        <div class="title">Beamer Epson · Disposition</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">11:05</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="group-label">Diese Woche</div>
+    <div class="session">
+      <div class="wf-icon kunde">K</div>
+      <div>
+        <div class="title">Acme GmbH · Triage</div>
+        <div class="sub">abgeschlossen
+          <div class="progress done"><div style="width:100%"></div></div>
+          <span class="time">Mi</span>
+        </div>
+      </div>
+    </div>
+    <div class="session">
+      <div class="wf-icon event">E</div>
+      <div>
+        <div class="title">Neon Nights · Headliner-Suche</div>
+        <div class="sub">offen
+          <div class="progress"><div style="width:45%"></div></div>
+          <span class="time">Di</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="templates">
+    <div class="group-label">Workflows starten</div>
+    <div class="template"><span class="wf-icon event">E</span>Event-Vorbereitung</div>
+    <div class="template"><span class="wf-icon kunde">K</span>Kunden-Triage</div>
+    <div class="template"><span class="wf-icon equip">R</span>Equipment-Disposition</div>
+    <div class="template"><span class="wf-icon angebot">A</span>Angebot-Followup</div>
+    <div class="template"><span class="wf-icon rechn">F</span>Rechnung-Mahnen</div>
+  </div>
+
+  <div class="persona-tile">
+    <div class="avatar-circle">LB</div>
+    <div class="who">
+      <div class="name">Lisa Berger</div>
+      <div class="role">Event-Managerin · Eventwerk GmbH</div>
+    </div>
+    <button class="icon-btn" title="Persona wechseln">↻</button>
+  </div>
+</aside>
+
+<!-- =================== HEADER =================== -->
+<header class="top">
+  <div class="session-title">
+    Hochzeit Berger &amp; Falk · Event-Vorbereitung
+    <span class="pill-mini">task</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" title="Audit-Log exportieren">⤓</button>
+    <button class="icon-btn" title="Inspector ein-/ausblenden">⊟</button>
+    <button class="icon-btn" title="Mehr">⋯</button>
+  </div>
+</header>
+
+<!-- =================== FEED =================== -->
+<main class="feed">
+  <div class="feed-inner">
+
+    <div class="wf-strip">
+      <span class="step done">list</span><span class="arrow">›</span>
+      <span class="step done">event</span><span class="arrow">›</span>
+      <span class="step active">task</span><span class="arrow">›</span>
+      <span class="step todo">action</span><span class="arrow">›</span>
+      <span class="step todo">done</span>
+    </div>
+
+    <!-- 1. System -->
+    <div class="turn system">
+      <div class="bubble">Mo 2026-05-04 09:14 · Session gestartet · 4 Events im Active-Set</div>
+    </div>
+
+    <!-- 2. Mira: Liste + Vorschlag -->
+    <div class="turn">
+      <div class="avatar">M</div>
+      <div class="bubble">
+        Guten Morgen Lisa. 4 Events stehen in den nächsten 14 Tagen an. Ich schlage vor, mit der <strong>Hochzeit Berger &amp; Falk</strong> zu starten — Termin in 9 Tagen, Checkliste 60 %, drei Tasks überfällig.
+
+        <div class="block">
+          <table class="events">
+            <thead>
+              <tr><th>Event</th><th>Status</th><th class="right">In</th><th class="right">Check</th></tr>
+            </thead>
+            <tbody>
+              <tr class="suggested">
+                <td>Hochzeit Berger &amp; Falk</td>
+                <td>In Planung</td>
+                <td class="right"><span class="urgent">9 T</span></td>
+                <td class="right">9 / 15</td>
+              </tr>
+              <tr>
+                <td>Sommerfest SWU</td>
+                <td>Bestätigt</td>
+                <td class="right"><span class="warn">11 T</span></td>
+                <td class="right">12 / 12</td>
+              </tr>
+              <tr>
+                <td>Charity-Gala Konstanz</td>
+                <td>Angefragt</td>
+                <td class="right"><span class="warn">12 T</span></td>
+                <td class="right">4 / 14</td>
+              </tr>
+              <tr>
+                <td>Neon Nights Festival</td>
+                <td>Entwurf</td>
+                <td class="right">14 T</td>
+                <td class="right">22 / 38</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ask">
+          <div class="q">Mit welchem Event willst du starten?</div>
+          <div class="actions">
+            <button class="action primary">Hochzeit Berger &amp; Falk</button>
+            <button class="action">Sommerfest SWU</button>
+            <button class="action">Charity-Gala</button>
+            <button class="action">Neon Nights</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. User -->
+    <div class="turn user">
+      <div class="avatar">LB</div>
+      <div class="bubble">Hochzeit Berger &amp; Falk</div>
+    </div>
+
+    <!-- 4. System -->
+    <div class="turn system">
+      <div class="bubble">Event geladen · 1 Kunde, 1 Location, 3 Angebote, 15 Tasks → siehe Inspector</div>
+    </div>
+
+    <!-- 5. Mira: Tasks (NICHT mehr Event-Card — die ist im Inspector) -->
+    <div class="turn">
+      <div class="avatar">M</div>
+      <div class="bubble">
+        9 von 15 Tasks erledigt. Drei sind heute relevant — ich schlage <em>Catering-Paket abstimmen</em> zuerst vor, weil sie zwei nachgelagerte Tasks blockt.
+
+        <div class="block">
+          <div class="checklist">
+            <div class="check-item suggested"><span class="checkbox"></span><span class="label">Catering-Paket abstimmen</span><span class="due overdue">3 T überfällig</span></div>
+            <div class="check-item"><span class="checkbox"></span><span class="label">Final-Tischplan an Julia senden</span><span class="due today">heute</span></div>
+            <div class="check-item"><span class="checkbox"></span><span class="label">Bühnenbau-Termin koordinieren</span><span class="due">in 2 T</span></div>
+            <div class="check-item"><span class="checkbox"></span><span class="label">Equipment-Liste finalisieren</span><span class="due">in 4 T</span></div>
+            <div class="check-item"><span class="checkbox"></span><span class="label">Final-Checkliste mit Brautpaar</span><span class="due">in 5 T</span></div>
+          </div>
+        </div>
+
+        <div class="ask">
+          <div class="q">Welche Aufgabe?</div>
+          <div class="actions">
+            <button class="action primary">Catering-Paket abstimmen</button>
+            <button class="action">Final-Tischplan senden</button>
+            <button class="action">Andere wählen…</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. User -->
+    <div class="turn user">
+      <div class="avatar">LB</div>
+      <div class="bubble">Catering-Paket abstimmen</div>
+    </div>
+
+    <!-- 7. Mira: Draft -->
+    <div class="turn">
+      <div class="avatar">M</div>
+      <div class="bubble">
+        Du hattest am 21.04. drei Catering-Optionen an Julia geschickt — keine Rückmeldung. Ich greife in einer Mail das Catering und den heute fälligen Tischplan zusammen auf.
+
+        <div class="block">
+          <div class="draft">
+            <div class="draft-meta">AI-Draft · template://followup-soft-nudge</div>
+            <dl class="email-head">
+              <dt>An</dt><dd>julia.berger@example.de</dd>
+              <dt>CC</dt><dd>florian.falk@example.de</dd>
+              <dt>Betreff</dt><dd>Hochzeit 13.05. — Catering &amp; Tischplan</dd>
+            </dl>
+            <textarea>Liebe Julia, lieber Florian,
+
+zwei kleine Punkte, bei denen wir auf eine Entscheidung von euch warten — beide brauchen wir bis Ende der Woche, damit wir am Donnerstag den Bühnenbau mit dem Festsaal final machen können:
+
+1. Catering-Paket: Ihr habt am 21.04. drei Varianten bekommen (Bistro / Premium / Premium+vegan). Welche soll's werden? Mischung geht auch — eine kurze Skizze reicht.
+
+2. Tischplan: Den finalen Plan auf Basis der 85 Gäste habe ich euch heute Vormittag separat geschickt. Bitte prüft, ob die Sitzordnung am Brauttisch passt.
+
+Falls Telefonat lieber ist — Mi und Do bin ich gut erreichbar.
+
+Herzlich
+Lisa</textarea>
+          </div>
+        </div>
+
+        <div class="ask">
+          <div class="q">Senden, anpassen oder verwerfen?</div>
+          <div class="actions">
+            <button class="action primary">Senden</button>
+            <button class="action">Editor öffnen</button>
+            <button class="action">Telefonat statt Mail</button>
+            <button class="action danger">Verwerfen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- =================== COMPOSER =================== -->
+<footer class="composer-bar">
+  <div class="composer">
+    <input placeholder="Antwort tippen oder Aktion oben wählen…">
+    <button class="send-btn">↑</button>
+  </div>
+</footer>
+
+<!-- =================== INSPECTOR =================== -->
+<aside class="inspector">
+  <div class="inspector-tabs">
+    <button class="inspector-tab active" data-tab="kontext">Kontext</button>
+    <button class="inspector-tab" data-tab="verlauf">Verlauf</button>
+    <button class="inspector-tab" data-tab="goal">Goal</button>
+  </div>
+  <div class="inspector-body">
+
+    <!-- KONTEXT TAB -->
+    <div class="tab-pane active" data-tab="kontext">
+      <div class="insp-section">
+        <div class="insp-label">Aktuelles Event</div>
+        <div class="insp-card">
+          <h4>Hochzeit Berger &amp; Falk</h4>
+          <div class="uri-line">event://hochzeit-berger-falk</div>
+          <dl class="insp-kv">
+            <dt>typ</dt><dd>Hochzeit · Freie Trauung</dd>
+            <dt>termin</dt><dd>2026-05-13 · in 9 T</dd>
+            <dt>status</dt><dd><span class="status-dot warn"></span>In Planung</dd>
+            <dt>budget</dt><dd>€38.000 brutto</dd>
+            <dt>gäste</dt><dd>85</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="insp-section">
+        <div class="insp-label">Verknüpfungen</div>
+        <div class="ref-item">
+          <div class="ref-icon">K</div>
+          <div class="ref-name">
+            Julia Berger &amp; Florian Falk
+            <div class="ref-meta">customer · letzter Kontakt vor 12 T</div>
+          </div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-icon loc">L</div>
+          <div class="ref-name">
+            Festsaal Frankfurt
+            <div class="ref-meta">location · gebucht seit 08.02.</div>
+          </div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-icon art">A</div>
+          <div class="ref-name">
+            Die Donaufischer
+            <div class="ref-meta">artist · Live-Band gebucht</div>
+          </div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-icon art">A</div>
+          <div class="ref-name">
+            Hannes Gruber
+            <div class="ref-meta">artist · Trauredner gebucht</div>
+          </div>
+        </div>
+        <div class="ref-item">
+          <div class="ref-icon off">€</div>
+          <div class="ref-name">
+            Catering-Anfrage 3 Varianten
+            <div class="ref-meta">offer · versendet 21.04. · offen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERLAUF TAB -->
+    <div class="tab-pane" data-tab="verlauf">
+      <div class="insp-section">
+        <div class="insp-label">Audit-Log</div>
+        <div class="audit-line"><span class="t">09:14</span>session started</div>
+        <div class="audit-line"><span class="t">09:14</span>lens=upcoming-14d activated</div>
+        <div class="audit-line event"><span class="t">09:15</span>row-picked → hochzeit-berger-falk</div>
+        <div class="audit-line"><span class="t">09:15</span>transition list → event</div>
+        <div class="audit-line event"><span class="t">09:16</span>task-picked → catering-paket</div>
+        <div class="audit-line"><span class="t">09:16</span>transition event → task</div>
+        <div class="audit-line"><span class="t">09:17</span>draft generated · template=followup-soft-nudge</div>
+      </div>
+      <div class="insp-section">
+        <div class="insp-label">Event-Historie</div>
+        <div class="audit-line"><span class="t">22.04.</span>last touch: Mail Tischplan-Update</div>
+        <div class="audit-line"><span class="t">21.04.</span>offer sent: 3 Catering-Varianten</div>
+        <div class="audit-line"><span class="t">18.03.</span>task done: Live-Band fixiert</div>
+        <div class="audit-line"><span class="t">04.03.</span>task done: Trauredner gebucht</div>
+        <div class="audit-line"><span class="t">12.02.</span>quote accepted: €38.000</div>
+        <div class="audit-line"><span class="t">08.02.</span>location booked: Festsaal</div>
+      </div>
+    </div>
+
+    <!-- GOAL TAB -->
+    <div class="tab-pane" data-tab="goal">
+      <div class="insp-section">
+        <div class="insp-label">Goal · Event-Ready</div>
+        <div class="insp-card">
+          <h4>9 / 15 Tasks erledigt</h4>
+          <div class="uri-line">goal://event-ready</div>
+          <div class="goal-bar"><div style="width:60%"></div></div>
+          <div style="font-size:11px;color:var(--muted);font-family:var(--mono);">60 % · 5 Tasks heute fällig</div>
+        </div>
+      </div>
+
+      <div class="insp-section">
+        <div class="insp-label">Predicates</div>
+        <div class="audit-line"><span class="status-dot"></span>Location gebucht</div>
+        <div class="audit-line"><span class="status-dot"></span>Angebot angenommen</div>
+        <div class="audit-line"><span class="status-dot"></span>Artists fixiert</div>
+        <div class="audit-line"><span class="status-dot warn"></span>Catering bestätigt</div>
+        <div class="audit-line"><span class="status-dot warn"></span>Tischplan finalisiert</div>
+        <div class="audit-line"><span class="status-dot bad"></span>Bühnenbau koordiniert</div>
+        <div class="audit-line"><span class="status-dot muted"></span>Final-Check mit Brautpaar</div>
+      </div>
+
+      <div class="insp-section">
+        <div class="insp-label">Persona-Pflichten</div>
+        <div class="audit-line"><span class="status-dot"></span>Audit aktiv für jede Aktion</div>
+        <div class="audit-line"><span class="status-dot warn"></span>Bei Status-Wechsel Notiz Pflicht</div>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+  document.querySelectorAll('.inspector-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('.inspector-tab').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === tab));
+    });
+  });
+</script>
+
+</body>
+</html>
