@@ -1,0 +1,3378 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Cura · context/plans — Visualisierung</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161a22;
+    --panel-2: #1d222d;
+    --border: #262c39;
+    --text: #e6e8ee;
+    --muted: #8a93a6;
+    --accent: #6ea8fe;
+
+    --state-context: #8a93a6;
+    --state-exploration: #f0b429;
+    --state-production: #3ddc84;
+    --state-superseded: #5b6577;
+    --state-invalidated: #e5484d;
+
+    --edge-depends_on: #6ea8fe;
+    --edge-refines: #b07cf0;
+    --edge-supersedes: #5b6577;
+    --edge-contradicts: #e5484d;
+    --edge-related_to: #4a5266;
+    --edge-produced_by: #3ddc84;
+    --edge-evidence_for: #3ddc84;
+    --edge-evidence_against: #e5484d;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 380px;
+    grid-template-areas: "header header" "graph side";
+    height: 100vh;
+  }
+  header {
+    grid-area: header;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 14px; font-weight: 600; margin: 0; letter-spacing: 0.2px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    padding: 4px 10px; border-radius: 999px; font-size: 12px; cursor: pointer;
+    user-select: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip[aria-pressed="true"] { background: var(--panel-2); border-color: var(--accent); }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  #graph { grid-area: graph; background: var(--bg); overflow: hidden; position: relative; }
+  #graph svg { width: 100%; height: 100%; display: block; cursor: grab; }
+  #graph svg.dragging { cursor: grabbing; }
+  .node-group { cursor: pointer; }
+  .node-group .label { font: 11px/1.2 system-ui, sans-serif; fill: #0f1115; pointer-events: none; }
+  .node-group .label.outside { fill: var(--text); }
+  .node-group.selected .shape { stroke: #fff; stroke-width: 2.5; }
+  .node-group.dim { opacity: 0.12; }
+  .edge { fill: none; }
+  .edge.dim { opacity: 0.06; }
+  .edge-label {
+    font: 9px system-ui, sans-serif; fill: var(--muted);
+    pointer-events: none; text-anchor: middle;
+  }
+  .edge-label.dim { opacity: 0; }
+  aside {
+    grid-area: side; border-left: 1px solid var(--border); background: var(--panel);
+    overflow: auto; padding: 16px;
+  }
+  aside h2 { font-size: 13px; margin: 0 0 8px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  aside .node-title { font-size: 16px; font-weight: 600; margin: 0 0 6px; }
+  aside .meta { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  aside .meta b { color: var(--text); font-weight: 500; }
+  aside .body { white-space: pre-wrap; font-size: 13px; }
+  aside .edges { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  aside .edges ul { margin: 6px 0 0; padding-left: 18px; }
+  aside .edges li { font-size: 12px; color: var(--muted); }
+  aside .edges li b { color: var(--text); font-weight: 500; }
+  aside .empty { color: var(--muted); font-size: 13px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
+  .legend .group { display: flex; gap: 6px; align-items: center; }
+  .legend .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+  .legend .edge-swatch { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+  .search {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 4px 10px; border-radius: 6px; font-size: 12px; min-width: 160px;
+  }
+  .search:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; grid-template-areas: "header" "graph" "side"; grid-template-rows: auto 1fr auto; }
+    aside { border-left: 0; border-top: 1px solid var(--border); max-height: 40vh; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cura · context/plans</h1>
+  <span class="sub">104 Knoten · 358 Kanten · generiert aus *.md-Frontmatter</span>
+  <input id="search" class="search" type="search" placeholder="Suche § oder Titel…" />
+  <div class="filters" id="state-filters" aria-label="State-Filter"></div>
+  <div class="filters" id="type-filters" aria-label="Type-Filter"></div>
+  <div class="legend" id="legend"></div>
+</header>
+<div id="graph">
+  <svg id="svg" xmlns="http://www.w3.org/2000/svg">
+    <defs id="defs"></defs>
+    <g id="viewport">
+      <g id="edges"></g>
+      <g id="edgeLabels"></g>
+      <g id="nodes"></g>
+    </g>
+  </svg>
+</div>
+<aside id="details">
+  <h2>Details</h2>
+  <p class="empty">Knoten anklicken, um Inhalte zu sehen.</p>
+</aside>
+
+<script id="graph-data" type="application/json">
+{
+  "nodes": [
+    {
+      "id": "§1.1",
+      "type": "spec",
+      "state": "context",
+      "title": "Composable Renderer-Agnostic Design System",
+      "created": "2026-04-04",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Composable Renderer-Agnostic Design System\nfile: §1.1_composable-renderer-agnostic-design-system.prd.md\nstatus: backlog · priority: P2\n\nStatus: Draft  \nDatum: 2026-04-04  \nKontext: Cura UI soll renderer-unabhängig und via JSON konfigurierbar sein, sodass dieselbe Komponentensprache im Angular-Web-App funktioniert und zukünftig weitere Renderer unterstützt werden können.\n\n---\n\n## 1. Ausgangslage: Was die HTML-Prototypen zeigen"
+    },
+    {
+      "id": "§1.2",
+      "type": "spec",
+      "state": "context",
+      "title": "Integration von @chevp/components in Cura Angular App",
+      "created": "2026-04-03",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Integration von @chevp/components in Cura Angular App\nfile: §1.2_chevp-components-integration.prd.md\nstatus: backlog · priority: P2\n\nBezug: chevp-components GitHub Repo (chevp/chevp-components)\nZiel: Die Vanilla Web Components aus @chevp/components (Material Design 3 Varianten) direkt in der Cura Angular App nutzen — für UI-Konsistenz, Wiederverwendung und Entkopplung vom Angular-Ökosystem.\nStatus: ENTWURF\n\n---\n\n## Ausgangslage"
+    },
+    {
+      "id": "§1.3",
+      "type": "spec",
+      "state": "production",
+      "title": "Architektur-Bereinigung — offene Entscheidungen schliessen",
+      "created": "2026-04-04",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Architektur-Bereinigung — offene Entscheidungen schliessen\nfile: §1.3_architektur-bereinigung.prd.md\nstatus: finished\n\nDatum: 2026-04-04  \nStatus: ABGESCHLOSSEN  \nPriorität: Hoch — blockiert alle nachgelagerten Implementierungen  \nBezug: §4.2, §1.2, §3.3, §4.1, ADR-001, ADR-002\n\n---\n\n## Kontext"
+    },
+    {
+      "id": "§1.4",
+      "type": "spec",
+      "state": "context",
+      "title": "Web-Components Shadow-DOM & Style-Piercing-Strategie",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Web-Components Shadow-DOM & Style-Piercing-Strategie\nfile: §1.4_web-components-shadow-dom-strategy.prd.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§1.1](§1.1_composable-renderer-agnostic-design-system.prd.md), [§1.2](§1.2_chevp-components-integration.prd.md)\nKontext: @chevp/components liefert MD3-Web-Components mit eigenem Shadow-DOM. Cura-App besitzt eigene Design-Tokens (aus §1.1). Ohne klare Style-Strategie kollidieren Tokens oder werden nicht geerbt. Die Web-Components müssen sowohl in Angular (cura-app) als auch später in reinen Web-Kontexten identisch aussehen.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§10.0",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Context-Plan — core-service mit Extension-Beans",
+      "created": "2026-04-24",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context-Plan — core-service mit Extension-Beans\nfile: §10.0_context-plan_core-extensions.ctx.md\nstatus: active · priority: P2\n\nStatus: ACTIVE (revidiert 2026-04-26 — Topologie-Pivot von Two-Server auf Single-App)\nPhase: Context (vor erneutem G1-Approval)\nBezug: [§10.1 Problem Statement](§10.1_problem-statement-core-extensions.ctx.md), [§10.2 Modul-Katalog](§10.2_extension-catalog.ctx.md), [ADR-005](../decisions/ADR-005-multi-module-maven-core-extensions.md), [ADR-006](../decisions/ADR-006-core-extension-split.md), [ADR-007](../decisions/ADR-007-deployment-docker-aws.md), [Architektur core+extension](../architecture/core-and-extensions.md), [Migrations-Plan](../research/embabel-migration-plan.md)\n\n> Pivot-Historie\n> - 2026-04-25: Quarkus-Multi-Module-In-Process verworfen → Spring-Boot Greenfield Two-Server.\n> - 2026-04-26: Two-Server verworfen → eine App core-service mit Extensions als @Service-Beans. Begründung in [ADR-005 §Verworfene Alternativen](../decisions/ADR-005-multi-module-maven-core-extensions.md). Frühere G1-Approval ist damit zurückgezogen; neues Approval steht aus."
+    },
+    {
+      "id": "§10.1",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Problem Statement, Hypothesen, Risiken — core-service mit Extension-Beans",
+      "created": "2026-04-24",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Problem Statement, Hypothesen, Risiken — core-service mit Extension-Beans\nfile: §10.1_problem-statement-core-extensions.ctx.md\nstatus: active · priority: P2\n\nStatus: ACTIVE (revidiert 2026-04-26 — Topologie-Pivot zu Single-App)\nPhase: Context (vor erneutem G1-Approval)\nBezug: [§10.0 Context-Plan](§10.0_context-plan_core-extensions.ctx.md), [Migrations-Plan](../research/embabel-migration-plan.md)\n\n> Pivot-Historie\n> - 2026-04-25: Quarkus-Multi-Module verworfen → Spring-Boot Two-Server (H1 Quarkus → historisch).\n> - 2026-04-26: Two-Server verworfen → Single-App mit Extension-Beans. H1' Two-Server wird historisch; neuer H1' Single-App.\n\n---"
+    },
+    {
+      "id": "§10.2",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Modul-Katalog — core-Agents + Extension-Beans in core-service",
+      "created": "2026-04-24",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Modul-Katalog — core-Agents + Extension-Beans in core-service\nfile: §10.2_extension-catalog.ctx.md\nstatus: active · priority: P2\n\nStatus: ACTIVE (revidiert 2026-04-26 — Topologie-Pivot zu Single-App)\nPhase: Context (vor erneutem G1-Approval)\nBezug: [§10.0 Context-Plan](§10.0_context-plan_core-extensions.ctx.md), [§10.1 Problem Statement](§10.1_problem-statement-core-extensions.ctx.md), [ADR-005](../decisions/ADR-005-multi-module-maven-core-extensions.md), [ADR-006](../decisions/ADR-006-core-extension-split.md), [Migrations-Plan](../research/embabel-migration-plan.md)\n\n> Pivot-Historie\n> - 2026-04-25: Pflegeheim-Funktionen verworfen, Katalog auf Kantons-Module umgestellt.\n> - 2026-04-26: Topologie-Pivot — „extension-server-Module\" sind jetzt Extension-Beans im selben Spring-ApplicationContext des core-service. Der Katalog selbst (Module, Agents, Rollen, Tabellen) bleibt unverändert; nur das Laufzeit-Modell und die Verzeichnisstruktur in §5 sind neu."
+    },
+    {
+      "id": "§11.0",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Context-Plan — Dev-Environment Desktop-App (cura-desktop)",
+      "created": "2026-04-25",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context-Plan — Dev-Environment Desktop-App (cura-desktop)\nfile: §11.0_distributable-desktop-app.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — TOP PRIO — G1 PASSED 2026-04-28 (Context → Exploration)\nPhase: Exploration (G1 closed, vor G2)\nBezug: [§10.0 core/extension-Split](§10.0_context-plan_core-extensions.ctx.md), [§10.1 Problem Statement core-extensions](§10.1_problem-statement-core-extensions.ctx.md), [ADR-007 Deployment Docker→AWS](../decisions/ADR-007-deployment-docker-aws.md), [cura-desktop package.json](../../frontend/cura-desktop/package.json), [bundle-server.mjs](../../frontend/cura-desktop/scripts/bundle-server.mjs), [llm-native scripts](../../infrastructure/llm-native/scripts/)\n\n> Scope-Korrektur (2026-04-26). Frühere Versionen dieses Plans framten cura-desktop als „Distributable Desktop-App für externe Tester (Cyon-FTP, Code-Signing, JRE-Tarball)\". Das war falsch: cura-desktop ist Dev-Environment (Single-Installer für Cura-Entwickler — Docker auf Dev-Maschine vorhanden/akzeptabel). Echte Distribution für externe Tester läuft separat über [frontend/cura-remote/](../../frontend/cura-remote/), eigener Plan-Slot (siehe §12-Tracking-Punkt). Damit fällt Cyon-FTP, Code-Signing-ADR, JRE-Tarball-Build und Maven-exe-Packaging weg. Der Docker-Compose-Stack bleibt parallel als reiner Service-Stack ohne E"
+    },
+    {
+      "id": "§11.1",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Problem Statement, Hypothesen, Risiken — Dev-Environment Desktop-App",
+      "created": "2026-04-25",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Problem Statement, Hypothesen, Risiken — Dev-Environment Desktop-App\nfile: §11.1_problem-statement-distributable-desktop-app.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§11.0 Context-Plan](§11.0_distributable-desktop-app.ctx.md)\n\n> Scope-Korrektur (2026-04-26). Frühere Version dieses Dokuments framte cura-desktop als Distribution für externe Tester (Pilotnutzer, kantonale Stellen). Das war falsch: cura-desktop ist Dev-Environment für Cura-Entwickler. Echte Tester-Distribution läuft separat über frontend/cura-remote/. Diese Korrektur dreht die Hypothesen-/Risiko-Liste vollständig — Code-Signing-Hürde, Cyon-FTP-Atomicity, externe-Tester-Trial sind nicht mehr Top-Risks für §11.\n\n---"
+    },
+    {
+      "id": "§11.2",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Image-Registry-Layout (core-service, GHCR)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Image-Registry-Layout (core-service, GHCR)\nfile: §11.2_image-registry-layout.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — Teil §11-Serie, G1-Deliverable\nPhase: Context (vor G1)\nBezug: [§11.0](§11.0_distributable-desktop-app.ctx.md), [§11.4](§11.4_backend-update-flow.ctx.md), [backend/core-service/pom.xml](../../backend/core-service/pom.xml)\n\n---\n\n## 1. Registry-Wahl"
+    },
+    {
+      "id": "§11.3",
+      "type": "decision",
+      "state": "exploration",
+      "title": "First-Run-Wizard + Progress-Modal-Spezifikation (cura-desktop)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] First-Run-Wizard + Progress-Modal-Spezifikation (cura-desktop)\nfile: §11.3_first-run-wizard.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — Teil §11-Serie, G1-Deliverable\nPhase: Context (vor G1)\nBezug: [§11.0](§11.0_distributable-desktop-app.ctx.md), [§11.2 Registry](§11.2_image-registry-layout.ctx.md), [§11.4 Update](§11.4_backend-update-flow.ctx.md), [infrastructure/llm-native/scripts/](../../infrastructure/llm-native/scripts/), [frontend/cura-desktop/](../../frontend/cura-desktop/)\n\n---\n\n## 1. Progress-Modal mit Monaco-Editor-Log-Pane (UI-Shell)"
+    },
+    {
+      "id": "§11.4",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Backend-Update-Flow (core-service-Image-Pull-Lifecycle)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Backend-Update-Flow (core-service-Image-Pull-Lifecycle)\nfile: §11.4_backend-update-flow.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — Teil §11-Serie, G1-Deliverable\nPhase: Context (vor G1)\nBezug: [§11.0](§11.0_distributable-desktop-app.ctx.md), [§11.2 Registry](§11.2_image-registry-layout.ctx.md), [§11.3 Wizard](§11.3_first-run-wizard.ctx.md)\n\n---\n\n## 1. Update-Trigger"
+    },
+    {
+      "id": "§11.5",
+      "type": "spec",
+      "state": "exploration",
+      "title": "Mandatory-Update-Erweiterung electron-updater (cura-desktop)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Mandatory-Update-Erweiterung electron-updater (cura-desktop)\nfile: §11.5_auto-updater-mandatory.prd.md\nstatus: active · priority: high\n\nStatus: ACTIVE — Production\nPhase: Production (G3, Sub-Task aus §11.0-Defaultvorschlag „App-Shell-Updates via electron-updater\")\nBezug: [§11.0 Default-Vorschlag App-Shell-Update](§11.0_distributable-desktop-app.ctx.md#5-geklärte-grundsatzentscheidungen--vorgeschlagen-bestätigung-teil-von-g1), [electron/main.ts](../../frontend/cura-desktop/electron/main.ts), [electron-builder.config.js](../../frontend/cura-desktop/electron-builder.config.js)\n\n> Phase-Sprung-Notiz. §11 ist offiziell in Context (vor G1). Diese PRD dokumentiert einen vom Menschen explizit autorisierten Production-Sprung für genau diesen Sub-Task (User-Approval 2026-04-26: „implementiere alles\"). Der weitere §11-Context bleibt davon unberührt."
+    },
+    {
+      "id": "§11.6",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Context-Plan — Mac Code-Signing + Notarization (cura-desktop)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context-Plan — Mac Code-Signing + Notarization (cura-desktop)\nfile: §11.6_mac-codesigning-notarization.ctx.md\nstatus: active · priority: medium\n\nStatus: ACTIVE — Phase Context (vor G1)\nBezug: [§11.5 Mandatory-Update](§11.5_auto-updater-mandatory.prd.md), [§11.0 Dev-Env](§11.0_distributable-desktop-app.ctx.md), [§12.0 cura-remote](§12.0_cura-remote-distribution.ctx.md), [electron-builder.config.js](../../frontend/cura-desktop/electron-builder.config.js), [build-electron-mac.yml](../../.github/workflows/build-electron-mac.yml)\n\n> Trigger. Beim Live-Test der ad-hoc-signierten 0.1.0 (2026-04-26) hat macOS die App mit errSecCSUnsigned (-67062) gekillt. Mandatory-Update-Modal aus §11.5 muss auf macOS deshalb GitHub-Releases im Browser öffnen statt quitAndInstall() — bewusste, akzeptierte Krücke. Dieser Plan klärt, wann/wie wir das Krücken-Verhalten durch echten Auto-Install ersetzen."
+    },
+    {
+      "id": "§11.7",
+      "type": "decision",
+      "state": "production",
+      "title": "core-service — Maven Docker-Build-Profil + GHCR-CI-Push",
+      "created": "2026-04-27",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] core-service — Maven Docker-Build-Profil + GHCR-CI-Push\nfile: §11.7_core-service-docker-build-profile.ctx.md\nstatus: finished · priority: top\n\nStatus-Update 2026-05-02 (→ finished): Die im Plan vorgesehene jib-Lösung wurde nicht umgesetzt; stattdessen ist zwischen CTX-Approval (2026-04-28) und heute ein Multi-Stage-Dockerfile + die Matrix-Workflow-Datei publish-container-images.yml entstanden, die den §11.7-Outcome liefert. Pflicht-Vorarbeiten §9 #1 (Actuator) und #2 (H2 file-mode) sind erledigt. Details in [§11.7_insights.md](§11.7_insights.md). Folge-Themen (Smoke-Test, :beta-Trigger, arm64) als eigene Pläne.\n\nStatus: FINISHED — Teil §11-Serie, G1-Deliverable (Outcome via abweichender Implementation erreicht)\nPhase: Context (G1 passed; Implementierung ohne EXP/PRD durch organische Code-Evolution)\nBezug: [§11.0](§11.0_distributable-desktop-app.ctx.md), [§11.2 Registry](§11.2_image-registry-layout.ctx.md), [§11.4 Update](§11.4_backend-update-flow.ctx.md), [ADR-010](../decisions/ADR-010-dev-env-distribution.md), [backend/core-service/pom.xml](../../backend/core-service/pom.xml), [backend/core-service/Dockerfile](../../backend/core-service/Dockerfile), [.github/workflows/publish-container-images.yml](../../.github/workflows/publish-container-images.yml)"
+    },
+    {
+      "id": "§11.7.insights",
+      "type": "decision",
+      "state": "context",
+      "title": "Insights — core-service Docker-Build-Profil + GHCR-CI-Push",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[INSIGHTS] Insights — core-service Docker-Build-Profil + GHCR-CI-Push\nfile: §11.7_insights.md\nstatus: backlog\n\nBegleit-Dokument zu [§11.7 CTX-Plan](§11.7_core-service-docker-build-profile.ctx.md). Zweck: dokumentieren, dass die im CTX vorgeschlagene jib-Lösung zwischen Approval (2026-04-28) und Reframing (2026-05-02) durch eine andere, einfachere Lösung überholt wurde, die das gleiche Ergebnis liefert.\n\n---\n\n## 1. Hypothesen-Status"
+    },
+    {
+      "id": "§11.8",
+      "type": "decision",
+      "state": "exploration",
+      "title": "cura-desktop Refactor — Patch-Skizze (bundle-server, electron-builder, Container-Lifecycle)",
+      "created": "2026-04-27",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] cura-desktop Refactor — Patch-Skizze (bundle-server, electron-builder, Container-Lifecycle)\nfile: §11.8_cura-desktop-refactor-patch-sketch.ctx.md\nstatus: active · priority: top\n\nStatus: ACTIVE — Teil §11-Serie, G1-Deliverable (Implementation-Catalog)\nPhase: Context (vor G1)\nBezug: [§11.0](§11.0_distributable-desktop-app.ctx.md), [§11.3 Wizard](§11.3_first-run-wizard.ctx.md), [§11.4 Update](§11.4_backend-update-flow.ctx.md), [§11.5 Mandatory-Update PRD](§11.5_auto-updater-mandatory.prd.md), [§11.6 Mac-Codesigning](§11.6_mac-codesigning-notarization.ctx.md), [§11.7 Maven](§11.7_core-service-docker-build-profile.ctx.md), [ADR-008](../decisions/ADR-008-desktop-localhost-auth.md), [ADR-009](../decisions/ADR-009-llm-native-bundled-scripts.md), [ADR-010](../decisions/ADR-010-dev-env-distribution.md), [frontend/cura-desktop/](../../frontend/cura-desktop/)"
+    },
+    {
+      "id": "§11.9.1",
+      "type": "spec",
+      "state": "context",
+      "title": "Loading-Screen Progress-Feedback (Header-Bar + Monaco-Log) — Implementation",
+      "created": "2026-04-28",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Loading-Screen Progress-Feedback (Header-Bar + Monaco-Log) — Implementation\nfile: §11.9.1_loading-screen-progress-feedback.prd.md\nstatus: approved · priority: top\n\n> Renumbered 2026-04-28 from §11.9 → §11.9.1 to free the §11.9 slot for the Login-Gate Implementation-PRD reserved by [§11.0 §6 G1 list](§11.0_distributable-desktop-app.ctx.md). Content unchanged.\n\nStatus: approved (2026-04-28)\nPhase: Production\nBezug: [§11.3 §1 + §3 S2/S4](§11.3_first-run-wizard.ctx.md), [§11.8 §4 VP4 + VP7](§11.8_cura-desktop-refactor-patch-sketch.ctx.md), [stack-manager.ts](../../frontend/cura-desktop/electron/stack-manager.ts), [loading.html](../../frontend/cura-desktop/loading/loading.html)\n\n---"
+    },
+    {
+      "id": "§11.9",
+      "type": "spec",
+      "state": "context",
+      "title": "Desktop Login-Gate — Shell-Level Firebase Auth (cura-desktop)",
+      "created": "2026-04-28",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Desktop Login-Gate — Shell-Level Firebase Auth (cura-desktop)\nfile: §11.9_desktop-login-gate.prd.md\nstatus: approved · priority: high\n\nStatus: APPROVED 2026-04-28 — Production-Vorlage, G1 von §11.0 closed gleichzeitig\nPhase: Production-PRD (Implementation startet nach §11.0 G1 → Exploration / G2-Approval)\nBezug: [§11.0 §7](§11.0_distributable-desktop-app.ctx.md), [ADR-011](../decisions/ADR-011-desktop-login-gate-shell-level.md), [ADR-008](../decisions/ADR-008-desktop-localhost-auth.md), [§11.3 First-Run-Wizard](§11.3_first-run-wizard.ctx.md), [auth.service.ts](../../frontend/cura-app/src/app/services/auth.service.ts), [auth.interceptor.ts](../../frontend/cura-app/src/app/services/auth.interceptor.ts), [FirebaseAuthFilter](../../backend/cura-server/src/main/java/ch/cura/server/filter/FirebaseAuthFilter.java), [environment.ts](../../frontend/cura-app/src/environments/environment.ts)"
+    },
+    {
+      "id": "§12.0",
+      "type": "decision",
+      "state": "context",
+      "title": "Tracking-Punkt — Distribution für externe Tester (cura-remote)",
+      "created": "2026-04-26",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Tracking-Punkt — Distribution für externe Tester (cura-remote)\nfile: §12.0_cura-remote-distribution.ctx.md\nstatus: tracking · priority: medium\n\nStatus: TRACKING — Plan-Slot eröffnet, kein Inhalt ausgearbeitet\nPhase: vor-Context (placeholder)\nBezug: [§11.0 Dev-Env Desktop-App](§11.0_distributable-desktop-app.ctx.md), [frontend/cura-remote/](../../frontend/cura-remote/)\n\n---\n\n## Zweck dieses Dokuments"
+    },
+    {
+      "id": "§13.0",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Context-Plan — Developer Tooling (cura-cli)",
+      "created": "2026-04-29",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context-Plan — Developer Tooling (cura-cli)\nfile: §13.0_developer-tooling-cli.ctx.md\nstatus: active · priority: medium\n\nStatus: ACTIVE — G1 PASSED 2026-04-29 (Context → Exploration)\nPhase: Exploration (G1 closed, vor G2)\nBezug: [tools/cura-cli/](../../tools/cura-cli/), [tools/cura-cli/SPEC.md](../../tools/cura-cli/SPEC.md), [tools/cura-cli/README.md](../../tools/cura-cli/README.md), [che-cli (Referenz, separater Repo)](../../../../tools/che-cli/), [CLAUDE.md (Cura-Projekt-Regeln)](../../CLAUDE.md)\n\n> Kontext-Anlass. Das bestehende [tools/cura-cli/](../../tools/cura-cli/) ist Bash-only (bin/cura Shebang #!/usr/bin/env bash, [install.sh](../../tools/cura-cli/install.sh) Unix-only). Auf Windows-PowerShell ist cura up nicht auffindbar — cura : Die Benennung \"cura\" wurde nicht als Name eines Cmdlet ... erkannt. Es gibt keinen install.ps1, kein cura.exe, keinen PATH-Eintrag im User-Environment. che-cli (Referenz-Tooling) hat dieses Problem mit install.ps1 für Windows-Bash-Brücke gelöst, ist aber selbst weiter Bash. cura-cli soll diesen Schritt überspringen und direkt nativ werden."
+    },
+    {
+      "id": "§13.1",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Problem Statement, Hypothesen, Risiken — cura-cli Cross-Platform (Rust-Port)",
+      "created": "2026-04-29",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Problem Statement, Hypothesen, Risiken — cura-cli Cross-Platform (Rust-Port)\nfile: §13.1_problem-statement-cura-cli.ctx.md\nstatus: active · priority: medium\n\nStatus: ACTIVE — G1 PASSED 2026-04-29\nPhase: Exploration (vor G2)\nBezug: [§13.0 Context-Plan](§13.0_developer-tooling-cli.ctx.md), [tools/cura-cli/SPEC.md v0.1](../../tools/cura-cli/SPEC.md), [ADR-012 Sprachwahl](../decisions/ADR-012-cura-cli-language.md)\n\n---\n\n## 1. Problem Statement"
+    },
+    {
+      "id": "§13.2",
+      "type": "hypothesis",
+      "state": "exploration",
+      "title": "Exploration — cura-cli Node.js + TypeScript Port",
+      "created": "2026-04-29",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[EXP] Exploration — cura-cli Node.js + TypeScript Port\nfile: §13.2_cura-cli-node-port.exp.md\nstatus: active · priority: medium\n\nStatus: ACTIVE — G2 PASSED 2026-04-29\nPhase: Production (G2 closed, vor G3)\nBezug: [§13.0 Context-Plan](§13.0_developer-tooling-cli.ctx.md), [§13.1 Problem Statement](§13.1_problem-statement-cura-cli.ctx.md), [ADR-012 Sprachwahl](../decisions/ADR-012-cura-cli-language.md), [tools/cura-cli/SPEC.md v0.1](../../tools/cura-cli/SPEC.md)\n\n---\n\n## 1. Vergleichs-Setup"
+    },
+    {
+      "id": "§13.2.insights",
+      "type": "decision",
+      "state": "context",
+      "title": "Exploration Insights — cura-cli Node.js + TypeScript Port",
+      "created": "2026-04-29",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[INSIGHTS] Exploration Insights — cura-cli Node.js + TypeScript Port\nfile: §13.2_insights.md\nstatus: backlog\n\nBegleit-Dokument zu [§13.2 Exploration](§13.2_cura-cli-node-port.exp.md). Zweck: vor G2-Crossing dokumentieren, welche §13.1-Hypothesen die Empirik bestätigt oder widerlegt hat, was überraschend war, welche Annahmen wir aktualisieren.\n\n---\n\n## 1. Hypothesen-Status"
+    },
+    {
+      "id": "§13.3",
+      "type": "spec",
+      "state": "exploration",
+      "title": "PRD — cura-cli Node.js + TypeScript Port",
+      "created": "2026-04-29",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] PRD — cura-cli Node.js + TypeScript Port\nfile: §13.3_cura-cli-node-port.prd.md\nstatus: active · priority: medium\n\nStatus: ACTIVE — G3 PASSED 2026-04-29 (Acceptance-Tests #1–#7 grün)\nPhase: Production\nBezug: [§13.0 Context-Plan](§13.0_developer-tooling-cli.ctx.md), [§13.1 Problem Statement](§13.1_problem-statement-cura-cli.ctx.md), [§13.2 Exploration](§13.2_cura-cli-node-port.exp.md), [§13.2 Insights](§13.2_insights.md), [ADR-012 Sprachwahl](../decisions/ADR-012-cura-cli-language.md), [tools/cura-cli/SPEC.md v0.1](../../tools/cura-cli/SPEC.md)\n\n---\n\n## 1. Scope"
+    },
+    {
+      "id": "§14.0",
+      "type": "decision",
+      "state": "context",
+      "title": "Context-Plan — Server-Driven UI für alle fachlichen Flows",
+      "created": "2026-05-01",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context-Plan — Server-Driven UI für alle fachlichen Flows\nfile: §14.0_server-driven-ui.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO — vor G1\nPhase: Context\nBezug: [ADR-013 SDUI](../decisions/ADR-013-server-driven-ui.md), [§14.8 Context Inventory](§14.8_context-inventory.ctx.md), [feedback_llm_only_via_core](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/feedback_llm_only_via_core.md), [feedback_embabel_greenfield](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/feedback_embabel_greenfield.md), [project_new_servers_architecture](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/project_new_servers_architecture.md), [§4.14 Embabel cura-record-agent](§4.14_embabel-cura-record-agent.ctx.md), [§4.15 Embabel report-agents](§4.15_embabel-report-agents.ctx.md), [§6.10 AI-Chat-Feed-SSE](§6.10_ai-chat-feed-sse.ctx.md), [CLAUDE.md Angular Input/Output-Regel](../../CLAUDE.md)"
+    },
+    {
+      "id": "§14.1",
+      "type": "decision",
+      "state": "context",
+      "title": "Problem Statement, Hypothesen, Risiken — Server-Driven UI",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Problem Statement, Hypothesen, Risiken — Server-Driven UI\nfile: §14.1_problem-statement-server-driven-ui.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0 Context-Plan](§14.0_server-driven-ui.ctx.md), [§14.8 Context Inventory](§14.8_context-inventory.ctx.md), [ADR-013 SDUI](../decisions/ADR-013-server-driven-ui.md)\n\n> Revision 2026-05-02 (nach Code-Inspektion §14.8). Die ursprüngliche Aussage „Frontend spricht direkt mit Ollama\" wurde durch direkte Code-Inspektion widerlegt: ChatStreamService geht über core-service:8090/api/chat/stream, nicht direkt zu Ollama:11434. Direkte Ollama-Aufrufe existieren nur in den Dev-Tool-Pages (llm-lab, llm-runner, debug) — exakt die Memory-Ausnahmen. Das eigentliche Problem ist anders gelagert: core-service ist heute ein dummer Pass-Through-Proxy ohne Embabel-Orchestrierung. Die generische LLM-Antwort im Live-Mode kommt zustande, weil core-service Ollama ohne System-Prompt, ohne RAG, ohne Stage-Modell anspricht — nicht wegen Frontend-Bypass. §14er-Pläne bleiben in der Zielarchitektur richtig, der Akzent verschiebt sich: nicht „Bypass eliminieren\", sondern „core-service vom Proxy zum Orchestrator\"."
+    },
+    {
+      "id": "§14.2",
+      "type": "decision",
+      "state": "context",
+      "title": "Widget-Protocol-Schema — JSON-Schema-Definition + Codegen + Versionierung",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Widget-Protocol-Schema — JSON-Schema-Definition + Codegen + Versionierung\nfile: §14.2_widget-protocol-schema.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md), [ADR-013](../decisions/ADR-013-server-driven-ui.md), [ADR-005 Multi-Module Maven](../decisions/ADR-005-multi-module-maven-core-extensions.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.3",
+      "type": "decision",
+      "state": "context",
+      "title": "Widget-Registry-Frontend — Generic-Renderer, Type→Component-Mapping, Unknown-Fallback",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Widget-Registry-Frontend — Generic-Renderer, Type→Component-Mapping, Unknown-Fallback\nfile: §14.3_widget-registry-frontend.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.2](§14.2_widget-protocol-schema.ctx.md), [§14.4](§14.4_stream-contract.ctx.md), [ADR-013](../decisions/ADR-013-server-driven-ui.md), [CLAUDE.md Angular Input/Output-Regel](../../CLAUDE.md), [§3.3 Component-Loading-Architektur](§3.3_component-loading-architecture.ctx.md), [§3.1 Page-Loader-Frontend](§3.1_page-loader-frontend.ctx.md), [§1.1 Composable Renderer-Agnostic Design-System](§1.1_composable-renderer-agnostic-design-system.prd.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.4",
+      "type": "decision",
+      "state": "context",
+      "title": "Stream-Contract — SSE-Event-Sequenz, Action-Rückkanal, Run-Replay, Re-Connect",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Stream-Contract — SSE-Event-Sequenz, Action-Rückkanal, Run-Replay, Re-Connect\nfile: §14.4_stream-contract.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md), [§14.2](§14.2_widget-protocol-schema.ctx.md), [ADR-013](../decisions/ADR-013-server-driven-ui.md), [ADR-008 Desktop-Auth](../decisions/ADR-008-desktop-localhost-auth.md), [§6.10 AI-Chat-Feed-SSE](§6.10_ai-chat-feed-sse.ctx.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.5",
+      "type": "decision",
+      "state": "context",
+      "title": "Documentation-Flow Pilot — Embabel-Agent, Stage-Sequenz, Run-State, RBAC",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Documentation-Flow Pilot — Embabel-Agent, Stage-Sequenz, Run-State, RBAC\nfile: §14.5_documentation-flow-pilot.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md), [§14.2](§14.2_widget-protocol-schema.ctx.md), [§14.4](§14.4_stream-contract.ctx.md), [ADR-013](../decisions/ADR-013-server-driven-ui.md), [§4.14 cura-record-agent](§4.14_embabel-cura-record-agent.ctx.md), [§4.15 report-agents](§4.15_embabel-report-agents.ctx.md), [§4.16 RAG](§4.16_rag-knowledge-base.exp.md), [§7.2 NLPD-Compliance](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.5 RBAC](§7.5_rbac-und-freigaben.ctx.md), [Memory: Embabel→Spring](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/feedback_embabel_greenfield.md)"
+    },
+    {
+      "id": "§14.6",
+      "type": "decision",
+      "state": "context",
+      "title": "Demo-Mode als JSONL-Fixtures — Format, Speicherort, Replay-Source, Schema-Validation",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Demo-Mode als JSONL-Fixtures — Format, Speicherort, Replay-Source, Schema-Validation\nfile: §14.6_demo-mode-jsonl-fixtures.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md) (H3), [§14.2](§14.2_widget-protocol-schema.ctx.md), [§14.3](§14.3_widget-registry-frontend.ctx.md), [§14.4](§14.4_stream-contract.ctx.md), [§14.5](§14.5_documentation-flow-pilot.ctx.md), [§6.6 Cura-AI Mock-Fixtures](§6.6_cura-ai-mock-fixtures.ctx.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.7.0",
+      "type": "decision",
+      "state": "context",
+      "title": "Demo-Refactor — chat-scenarios.ts → JSONL-Fixtures, 5 Konsumenten synchron",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Demo-Refactor — chat-scenarios.ts → JSONL-Fixtures, 5 Konsumenten synchron\nfile: §14.7.0_demo-refactor-chat-scenarios-to-jsonl.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1) — Vorlauf zu §14.7 Migration #1 (Documentation-Pilot)\nBezug: [§14.6](§14.6_demo-mode-jsonl-fixtures.ctx.md), [§14.7](§14.7_migration-all-flows.ctx.md), [§14.2](§14.2_widget-protocol-schema.ctx.md), [§14.8](§14.8_context-inventory.ctx.md), [data/chat-scenarios.ts](../../frontend/cura-app/src/app/data/chat-scenarios.ts), [models/data.model.ts](../../frontend/cura-app/src/app/models/data.model.ts)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.7",
+      "type": "decision",
+      "state": "context",
+      "title": "Migration aller fachlichen Flows auf SDUI — Reihenfolge, Brücken-Strategie, Bestand-Abschaltung",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Migration aller fachlichen Flows auf SDUI — Reihenfolge, Brücken-Strategie, Bestand-Abschaltung\nfile: §14.7_migration-all-flows.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md) (R3), [§14.5](§14.5_documentation-flow-pilot.ctx.md), [ADR-013](../decisions/ADR-013-server-driven-ui.md), [Memory: feedback_llm_only_via_core](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/feedback_llm_only_via_core.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§14.8",
+      "type": "decision",
+      "state": "context",
+      "title": "Context Inventory — heute betroffene Frontend-Components, Services, LLM-Pfade, Demo-Mode-Quellen",
+      "created": "2026-05-02",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Context Inventory — heute betroffene Frontend-Components, Services, LLM-Pfade, Demo-Mode-Quellen\nfile: §14.8_context-inventory.ctx.md\nstatus: draft · priority: top\n\nStatus: DRAFT — TOP PRIO\nPhase: Context (vor G1)\nBezug: [§14.0](§14.0_server-driven-ui.ctx.md), [§14.1](§14.1_problem-statement-server-driven-ui.ctx.md), [§14.5](§14.5_documentation-flow-pilot.ctx.md), [§14.6](§14.6_demo-mode-jsonl-fixtures.ctx.md), [§14.7](§14.7_migration-all-flows.ctx.md), [§6.10 AI-Chat-Feed-SSE](§6.10_ai-chat-feed-sse.ctx.md)\n\n> Wichtig. Dieses Inventar wurde durch direkte Code-Inspektion erstellt (2026-05-02) und korrigiert eine Annahme in §14.1: Frontend-Code spricht nicht direkt mit Ollama in fachlichen Flows. Direkte Ollama-Aufrufe existieren ausschliesslich in den drei Dev-Tool-Pages (llm-lab, llm-runner, debug) — exakt die [Memory-Ausnahmen](../../.claude/projects/-Users-chevp-workspace-misc-cura/memory/feedback_llm_only_via_core.md). Die §14er-Begründung verschiebt sich daher: nicht „Bypass eliminieren\", sondern „core-service vom Pass-Through-Proxy zum Embabel-Orchestrator\"."
+    },
+    {
+      "id": "§2.1.1",
+      "type": "decision",
+      "state": "context",
+      "title": "datensatz-definition.md auf MariaDB aktualisieren",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] datensatz-definition.md auf MariaDB aktualisieren\nfile: §2.1.1_datensatz-definition-mariadb-update.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.1.2](§2.1.2_mariadb-kv-documents-xml-pages.ctx.md) (Mutterplan, §5.2 letzter Punkt), [ADR-004](../../decisions/ADR-004-datenbank-mariadb-jwt-auth.md), [§2.4.1](§2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md)\nKontext: Teilschritt aus §2.1.2 §5.2 — die Domain-Dokumentation context/domain/datensatz-definition.md beschreibt aktuell das Firestore-Modell. Sie muss auf das MariaDB-KV-Modell (documents + JSON) umgezogen werden.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§2.1.2",
+      "type": "decision",
+      "state": "context",
+      "title": "MariaDB Key-Value + Documents mit XML Page-Composition",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] MariaDB Key-Value + Documents mit XML Page-Composition\nfile: §2.1.2_mariadb-kv-documents-xml-pages.ctx.md\nstatus: backlog · priority: P2\n\nStatus: AKZEPTIERT (2026-04-05) — in Umsetzungs-Pläne aufgeteilt (siehe unten)\nDatum: 2026-04-05\nBezug: ADR-003 (Firestore-Entscheidung), [datensatz-definition.md](../../domain/datensatz-definition.md), [§1.1](§1.1_composable-renderer-agnostic-design-system.prd.md), [§3.3](§3.3_component-loading-architecture.ctx.md)\n\n---\n\n## ⚠ Aufsplittung in Teil-Pläne (2026-04-05)"
+    },
+    {
+      "id": "§2.2.1",
+      "type": "decision",
+      "state": "context",
+      "title": "Page-Configs Backend — Quarkus Repository, Resource, REST-Endpoint",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Page-Configs Backend — Quarkus Repository, Resource, REST-Endpoint\nfile: §2.2.1_page-configs-backend.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06 — aktualisiert für Quarkus statt PHP)\nDatum: 2026-04-06\nBezug: [§4.1](§4.1_openapi-integration.prd.md)\nKontext: Teilschritt für Backend-Seite der XML-Page-Compositions. Jetzt als Quarkus JAX-RS Resource statt PHP Controller. Liefert REST-API, die tenant-spezifische XML-Konfigurationen ausliefert und auf System-Defaults zurückfällt.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§2.2.2",
+      "type": "decision",
+      "state": "context",
+      "title": "Page-Config XSD — Schema-Definition & Validierung",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Page-Config XSD — Schema-Definition & Validierung\nfile: §2.2.2_page-config-xsd-schema.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.1.2](§2.1.2_mariadb-kv-documents-xml-pages.ctx.md), [§2.2.1](§2.2.1_page-configs-backend.ctx.md), [§3.1](§3.1_page-loader-frontend.ctx.md)\nKontext: XML-Page-Configs werden aktuell ohne formales Schema persistiert. Tippfehler in Region-Namen, Komponenten-Types oder Modi bleiben bis zum Frontend-Rendering unentdeckt. Ein XSD-Schema und eine Validierungs-Pipeline sichern die Integrität.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§2.3.1",
+      "type": "decision",
+      "state": "context",
+      "title": "Document JSON-Schema Validation pro doc_type",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Document JSON-Schema Validation pro doc_type\nfile: §2.3.1_document-json-schema-validation.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.1.2](§2.1.2_mariadb-kv-documents-xml-pages.ctx.md) (Mutterplan, §6 \"Schema-Validierung\"), [ADR-004](../../decisions/ADR-004-datenbank-mariadb-jwt-auth.md)\nKontext: Teilschritt aus §2.1.2 §6 — das documents.data-Feld ist JSON ohne strukturelle Garantie. Pro doc_type (resident, record, incident, …) soll ein JSON-Schema die erlaubten Felder definieren und beim Schreiben validieren.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§2.3.2",
+      "type": "decision",
+      "state": "context",
+      "title": "JSON-Schema-Library Auswahl & Validierungs-Pipeline",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] JSON-Schema-Library Auswahl & Validierungs-Pipeline\nfile: §2.3.2_json-schema-library-integration.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.3.1](§2.3.1_document-json-schema-validation.ctx.md), [§4.5](§4.5_api-error-format.ctx.md)\nKontext: §2.3.1 definiert WAS validiert wird (JSON-Schemas pro doc_type). §2.3.2 entscheidet WIE — Library-Auswahl, Lade-/Cache-Strategie, Fehler-Mapping.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§2.4.1",
+      "type": "decision",
+      "state": "production",
+      "title": "Hybrid-Stack — Firebase Auth + MariaDB-Daten",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Hybrid-Stack — Firebase Auth + MariaDB-Daten\nfile: §2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md\nstatus: finished\n\nStatus: AKZEPTIERT (2026-04-05, rückwirkend dokumentiert)\nUpdate 2026-04-06: Backend wechselt von PHP/Lumen auf Java Quarkus. Auth-Flow bleibt konzeptuell identisch (Firebase-Token-Verifikation), Implementierung ändert sich: PDO → JDBC/Panache, PHP Middleware → JAX-RS ContainerRequestFilter, Lumen DI → CDI @RequestScoped. Siehe [§4.1](../§4.1_openapi-integration.prd.md).\nDatum: 2026-04-05\nBezug: [ADR-004](../../decisions/ADR-004-datenbank-mariadb-jwt-auth.md), [§2.1.2](../§2.1.2_mariadb-kv-documents-xml-pages.ctx.md), ADR-002 (verfeinert), [ADR-003](../../decisions/ADR-003-datenbank-firebase-firestore.md) (superseded)\nKontext: Konkreter Migrations-Plan von \"Firestore + Firebase Auth\" (ADR-003) auf einen Hybrid-Stack: Firebase Authentication bleibt, Firestore wird durch MariaDB ersetzt."
+    },
+    {
+      "id": "§2.5",
+      "type": "decision",
+      "state": "context",
+      "title": "Datenbank-Migrations-Framework (Phinx)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Datenbank-Migrations-Framework (Phinx)\nfile: §2.5_database-migrations-phinx.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.1.2](§2.1.2_mariadb-kv-documents-xml-pages.ctx.md), [§5.2](§5.2_cicd-pipeline.prd.md), [§6.1](§6.1_deployment-php-angular.prd.md)\nKontext: Aktuell liegen Schemas als manuelle SQL-Dateien in infrastructure/mariadb/schema/001_baseline.sql. Kein Tracking angewendeter Migrationen, keine Rollback-Pfade, keine Seed-Strategie. Für Multi-Tenant-Produktion auf Cyon ist ein versioniertes Migrations-Framework zwingend.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.1",
+      "type": "decision",
+      "state": "context",
+      "title": "Frontend Page-Loader + Renderer — XML-Parse, Extends-Merge, Rendering",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Frontend Page-Loader + Renderer — XML-Parse, Extends-Merge, Rendering\nfile: §3.1_page-loader-frontend.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.1.2](§2.1.2_mariadb-kv-documents-xml-pages.ctx.md) (Mutterplan), [§2.2.1](§2.2.1_page-configs-backend.ctx.md) (Backend-Gegenstück), [§1.1](§1.1_composable-renderer-agnostic-design-system.prd.md)\nKontext: Teilschritt aus §2.1.2 §4.3 und §5.2 — Frontend lädt XML-Pages über /pages/:key, parst sie, löst extends/mode-Merges auf und übergibt die resultierende PageDefinition an einen Renderer.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.2",
+      "type": "decision",
+      "state": "context",
+      "title": "UXP-020 — Merged Interactive Prototype (UXP-018 ∪ UXP-019)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] UXP-020 — Merged Interactive Prototype (UXP-018 ∪ UXP-019)\nfile: §3.2_uxp-020-merged-interactive-prototype.ctx.md\nstatus: backlog · priority: P2\n\nStatus: UMGESETZT\nDatum: 2026-04-05\nBezug: [UXP-018](../../exploration/ui-prototypes/UXP-018-cura-ux-prototype.html), [UXP-019](../../exploration/ui-prototypes/UXP-019-cura-ux-chat-prototype.html)\nKontext: UXP-018 liefert eine vollständige Navigation mit Dashboard, Klienten, Dokumentation, Medikation, Gesundheit, Anwesenheit, Review, Auswertungen und Dokumenten. UXP-019 ergänzt die chat-basierte Dokumentation mit Demo-Szenarien. UXP-020 führt beide Prototypen zusammen, macht alle Seiten gleichzeitig erreichbar und erweitert sie um zusätzliche Interaktionen — ohne ein neues Design System zu definieren."
+    },
+    {
+      "id": "§3.3",
+      "type": "decision",
+      "state": "superseded",
+      "title": "Component Loading Architecture",
+      "created": "2026-04-04",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Component Loading Architecture\nfile: §3.3_component-loading-architecture.ctx.md\nstatus: deprecated\n\nStatus: ZURÜCKGESTELLT (2026-04-04 — §1.2 / @chevp/components gewinnt; §3.3 kann reaktiviert werden wenn @chevp/components nicht ausreicht)  \nDatum: 2026-04-04  \nBezug: [§1.1](../§1.1_composable-renderer-agnostic-design-system.prd.md) (Composable Renderer-Agnostic Design System)  \nKontext: Das Angular-Haupt-App lädt Vue.js-Komponenten, die als Web Components (Custom Elements) gebaut und per Page-Config eingebunden werden.\n\n---\n\n## 1. Architektur-Überblick"
+    },
+    {
+      "id": "§3.4",
+      "type": "spec",
+      "state": "production",
+      "title": "UXP-023 → Angular-Port (Single-Sidebar, Chat-Feed)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] UXP-023 → Angular-Port (Single-Sidebar, Chat-Feed)\nfile: §3.4_uxp-023-angular-port.prd.md\nstatus: finished\n\nStatus: ERLEDIGT (2026-04-06)\nDatum: 2026-04-06\nBezug: [§3.3](§3.3_angular-routing-state-forms.prd.md), UXP-023 Prototyp (exploration/ui-prototypes/UXP-023-single-nav-bar/)\nKontext: UXP-023 ist als HTML/CSS/JS-Prototyp fertig. Es definiert ein grundlegend neues Layout gegenüber UXP-020: Flat Single-Sidebar (ChatGPT/Codex-Style), Top-Bar mit Kontext-Buttons, Chat-Feed mit Klienten-Suche, Wohnen/Tagesgestaltung-Toggle, Multi-Report-Modal. Die Angular-App muss komplett auf dieses Layout umgestellt werden.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.5",
+      "type": "spec",
+      "state": "context",
+      "title": "Internationalisierung DE/FR/IT (Schweizer Amtssprachen)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Internationalisierung DE/FR/IT (Schweizer Amtssprachen)\nfile: §3.5_i18n-de-fr-it.prd.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§3.3](§3.3_angular-routing-state-forms.prd.md), [§3.4](§3.4_uxp-020-angular-port.prd.md), [§3.6](§3.6_accessibility-wcag-aa.prd.md)\nKontext: Cura richtet sich an Schweizer Sozialinstitutionen in allen Sprachregionen. UXP-020 und cura-app sind rein deutsch. Für Romandie (FR) und Tessin (IT) muss i18n-Infrastruktur vor Feature-Sättigung stehen. Rätoromanisch (RM) ist nicht in Scope v1 (Nachfrage-Evaluation nach Launch).\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.6",
+      "type": "spec",
+      "state": "context",
+      "title": "Accessibility WCAG 2.1 AA — Barrierefreiheit",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Accessibility WCAG 2.1 AA — Barrierefreiheit\nfile: §3.6_accessibility-wcag-aa.prd.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§3.4](§3.4_uxp-020-angular-port.prd.md), [§1.4](§1.4_web-components-shadow-dom-strategy.prd.md), [§9.1](§9.1_testing-strategy.prd.md)\nKontext: Schweizer Sozialinstitutionen und öffentlich-rechtliche Einrichtungen unterliegen eBGG (Bundesgesetz über die Beseitigung von Benachteiligungen). Cura zielt auf WCAG 2.1 AA als Mindeststandard. UXP-020 ist nicht a11y-geprüft.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.7",
+      "type": "decision",
+      "state": "context",
+      "title": "ESLint + TypeScript Setup für cura-app",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] ESLint + TypeScript Setup für cura-app\nfile: §3.7_eslint-typescript-setup.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN\nDatum: 2026-04-11\nBezug: [§5.2](§5.2_cicd-pipeline.prd.md), [§3.4](§3.4_uxp-023-angular-port.prd.md)\nKontext: frontend/cura-app hat aktuell kein ESLint konfiguriert. ci-frontend.yml ruft jedoch npm run lint auf — dieser Step wird scheitern, sobald die Pipeline scharf läuft. Zusätzlich fehlt eine teamweite Code-Quality-Baseline für TypeScript/Angular.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§3.8",
+      "type": "decision",
+      "state": "context",
+      "title": "Husky + lint-staged Pre-Commit-Hooks",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Husky + lint-staged Pre-Commit-Hooks\nfile: §3.8_husky-lint-staged-precommit.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN\nDatum: 2026-04-11\nBezug: [§3.7](§3.7_eslint-typescript-setup.ctx.md), [§5.2](§5.2_cicd-pipeline.prd.md)\nKontext: §3.7 richtet ESLint ein, läuft aber nur manuell oder in CI. Fehler werden erst im PR sichtbar — dann ist der Commit bereits in der History. Pre-Commit-Hooks blockieren fehlerhaften Code bereits lokal vor dem Commit und verkürzen den Feedback-Loop.\n\nVoraussetzung: §3.7 muss abgeschlossen sein (ESLint-Setup vorhanden).\n\n---"
+    },
+    {
+      "id": "§4.11",
+      "type": "spec",
+      "state": "superseded",
+      "title": "Prompts Runtime → Quarkus Tooling Context",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Prompts Runtime → Quarkus Tooling Context\nfile: §4.11_prompts-runtime-quarkus-tooling.prd.md\nstatus: superseded\n\n> STATUS: SUPERSEDED (2026-04-25) — Diese Spec definierte das Prompt-Asset-Format\n> für Quarkus + LangChain4j (@SystemMessage, @RegisterAiService,\n> @PromptTemplateResource, Quarkus-Build-Step-Loader). Mit der Greenfield-Embabel-\n> Entscheidung wird das Prompt-Format direkt in den Embabel-Action-Specs der neuen\n> Spring-Boot-Apps (core-service + extension-service, Spring Boot 3.5 + Embabel 0.4\n> + Spring AI 1.1) definiert — also kein Quarkus-Loader, keine @RegisterAiService-\n> Annotationen.\n>\n> Was bleibt fachlich gültig: Die Klassifizierung in §6 pro Datei in\n> context/prompts/runtime/ (TPL / SYS / TOOL / SPEC / ARCH / DUP / REVIEW)\n> kann für die Embabel-Migration weiterverwendet werden, ebenso die Aufteilung\n> in ReportingAssistant / QualityAssistant / IbbChatAssistant als logische\n> Agent-Gruppierung. Nur das Java-Loader- und Annotation-Mapping ist obsolet.\n>\n> Aktuelle Zielarchitektur:\n> [embabel-migration-plan.md](../research/embabel-migration-plan.md)."
+    },
+    {
+      "id": "§4.12",
+      "type": "spec",
+      "state": "context",
+      "title": "Prompt Reference-Asset Includes (Shared Knowledge Blocks)",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Prompt Reference-Asset Includes (Shared Knowledge Blocks)\nfile: §4.12_prompt-reference-asset-includes.prd.md\nstatus: draft · priority: P2\n\nDatum: 2026-04-11\nBezug:\n- [§4.11](§4.11_prompts-runtime-quarkus-tooling.prd.md) — definiert das Asset-Format und den PromptCatalog-Loader. §4.12 ergänzt §4.11 um einen einzigen Mechanismus: wiederverwendbare Reference-Assets, die von mehreren Templates geteilt werden können.\n- [§4.9](§4.9_backend-rename-and-ai-tooling.prd.md) — cura-server-ai ist die Zielumgebung. Der Loader wohnt dort.\n- [PROMPT-01](../../prompts/runtime/PROMPT-01-indikator-mapping.md) — konkreter Trigger-Fall: der IBBplus-Mapping-Katalog (Wohnen GB_KB + Wohnen PB_SB + Tagesstruktur) ist ~100 Zeilen und lebt heute inline in der ## SystemMessage dieses Prompts, wird aber logisch von mehreren künftigen Prompts gebraucht (PROMPT-11 Berichtsgenerierung, PROMPT-19 IBB-Relevanz-Prüfung, PROMPT-34 IBB-Aggregation, potenziell QualityAssistant-Checks)."
+    },
+    {
+      "id": "§4.13",
+      "type": "hypothesis",
+      "state": "context",
+      "title": "Report-Generierung ohne AI — Machbarkeits-Analyse",
+      "created": "2026-04-18",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[EXP] Report-Generierung ohne AI — Machbarkeits-Analyse\nfile: §4.13_report-generation-non-ai-analyse.exp.md\nstatus: draft · priority: P2\n\n> Exploration-B nach chevp-ai-framework: Alternativen-Vergleich zwischen AI-first (Status quo),\n> Hybrid (AI nur im semantischen Kern, Ränder regelbasiert) und Vollständig-Deterministisch (keine AI).\n> Ergebnis ist eine dokumentierte Empfehlung mit Trade-offs, keine Implementation.\n\n---\n\n## 1. Problem Statement"
+    },
+    {
+      "id": "§4.14",
+      "type": "decision",
+      "state": "context",
+      "title": "Embabel Cura-Record Agent — Volles Datenmodell",
+      "created": "2026-04-24",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Embabel Cura-Record Agent — Volles Datenmodell\nfile: §4.14_embabel-cura-record-agent.ctx.md\nstatus: draft · priority: P2\n\n> G1-Context nach chevp-ai-framework: Problem Statement, Hypothesen,\n> Risiken und Scope-Grenzen für einen neuen Embabel-Agent, der aus Freitext-\n> Pflegenotizen strukturierte CuraRecord-Einträge über alle 15 Sozki-\n> Kategorien erzeugt. Ergebnis ist eine Entscheidungsgrundlage für G2 (EXP).\n\nBezug:\n- [06-embabel-care-feed-agent](../../backend/06-embabel-care-feed-agent/) — Vorgänger, deckt nur 4 Entry-Types (VORFALL/BEOBACHTUNG/MASSNAHME/STIMMUNG)\n- [data.model.ts](../../frontend/cura-app/src/app/models/data.model.ts) — Angular CuraRecord-Interface, Ziel-Shape\n- [§4.9_backend-rename-and-ai-tooling.prd.md](§4.9_backend-rename-and-ai-tooling.prd.md) — cura-server-ai In-Process-LLM-Integration\n- [§4.13_report-generation-non-ai-analyse.exp.md](§4.13_report-generation-non-ai-analyse.exp.md) — Analyse: welche Stages AI brauchen, welche deterministisch lösbar sind\n- [cura-ai-framework/WF-001](../cura-ai-framework/WF-001-cura-ai-framework.md) — Runtime-Regeln (AI_GENERATED-Status, Datenschutz, Hallucination-Schwellen)"
+    },
+    {
+      "id": "§4.15",
+      "type": "decision",
+      "state": "context",
+      "title": "Embabel Report-Agents — alle Report-Erstellungs-Agenten als Embabel-Komposition",
+      "created": "2026-04-24",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Embabel Report-Agents — alle Report-Erstellungs-Agenten als Embabel-Komposition\nfile: §4.15_embabel-report-agents.ctx.md\nstatus: draft · priority: P2\n\n> G1-Context nach chevp-ai-framework: Problem Statement, Hypothesen,\n> Risiken und Scope-Grenzen für ein neues Embabel-Projekt **08-embabel-\n> report-agents**, das die Report-Erstellungs-Pipeline (heute in\n> cura-server, getrieben durch [PromptRegistry](../../backend/cura-server/src/main/java/ch/cura/server/service/PromptRegistry.java)\n> + [AiGatewayService](../../backend/cura-server/src/main/java/ch/cura/server/service/AiGatewayService.java))\n> als Embabel-Agent-Komposition aus den Prompts in [context/prompts/runtime/](../prompts/runtime/)\n> neu aufbaut. Ergebnis ist eine Entscheidungsgrundlage für G2 (EXP)."
+    },
+    {
+      "id": "§4.16",
+      "type": "hypothesis",
+      "state": "exploration",
+      "title": "RAG Knowledge Base — Korpus + Embeddings via Ollama",
+      "created": "2026-04-25",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[EXP] RAG Knowledge Base — Korpus + Embeddings via Ollama\nfile: §4.16_rag-knowledge-base.exp.md\nstatus: active\n\n> Zusätzlich zu den Prompt-Templates unter context/prompts/runtime/ ein\n> RAG-System, das Domänenwissen (IBB, Fachbegriffe, Pflege, nDSG) zur\n> Laufzeit retrieval-basiert in den LLM-Kontext zieht — via vorhandenem\n> Ollama-Container und Spring AI im core-service. Keine neuen Container.\n\n---\n\n## 1. Problem Statement"
+    },
+    {
+      "id": "§4.1",
+      "type": "spec",
+      "state": "production",
+      "title": "OpenAPI-basierte Integration — Java Quarkus Backend",
+      "created": "2026-04-03",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] OpenAPI-basierte Integration — Java Quarkus Backend\nfile: §4.1_openapi-integration.prd.md\nstatus: finished\n\nStatus: ABGESCHLOSSEN (2026-04-10)\nDatum: 2026-04-10\nBezug: [§2.4.1](§2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md), [§6.1](§6.1_deployment-quarkus-aws.prd.md), [§8.2](§8.2_electron-desktop-ipc-config.ctx.md)\nKontext: Das Backend wird von PHP/Lumen auf Java Quarkus migriert. Quarkus bringt native OpenAPI-Unterstützung via SmallRye OpenAPI. Der Quarkus-Server läuft zunächst lokal (Electron-Dev-Szenario) gegen die Remote-MariaDB auf my.cyon, später auf AWS.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§4.2",
+      "type": "spec",
+      "state": "superseded",
+      "title": "Transformation nach chevp-ai-service Auslagerung",
+      "created": "2026-04-03",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Transformation nach chevp-ai-service Auslagerung\nfile: §4.2_transformation-chevp-ai-service.prd.md\nstatus: superseded\n\n> ⚠️ Zusätzlich SUPERSEDED am 2026-04-11 durch [§4.9](§4.9_backend-rename-and-ai-tooling.prd.md).\n>\n> §4.2 ging davon aus, dass chevp-ai-service als produktiver LLM-Pipeline-\n> Service neben cura-api läuft. Diese Architektur gilt nicht mehr:\n> chevp-ai-service ist nur Dev-Test-Bridge, die LLM-Pipeline wandert\n> nach cura-server-ai (in-process, mit quarkus-langchain4j und\n> Tool-Use). Siehe §4.9 für die neue Architektur.\n\nBezug: §6.2 (abgelöst), ADR-002 (verfeinert), [ADR-004](../../decisions/ADR-004-datenbank-mariadb-jwt-auth.md), [§2.4.1](§2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md), [§4.9](§4.9_backend-rename-and-ai-tooling.prd.md)\nZiel: Cura-Repo bereinigen nach Auslagerung der KI-Pipeline in separates chevp-ai-service PHP-Repo. Business-Logic in cura-api (PHP auf Cyon), Prompts in Firestore, Frontend als Thin Client.\nStatus: SUPERSEDED (2026-04-05 — Daten-Layer durch ADR-004/§2.4.1 ersetzt; 2026-04-11 — AI-Pipeline-Architektur durch §4.9 ersetzt.)"
+    },
+    {
+      "id": "§4.3",
+      "type": "spec",
+      "state": "context",
+      "title": "Prompts Runtime Reorganisation",
+      "created": "2026-04-04",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Prompts Runtime Reorganisation\nfile: §4.3_prompts-runtime-reorganisation.prd.md\nstatus: backlog · priority: P2\n\nStatus: Draft  \nDatum: 2026-04-04  \nKontext: Das Verzeichnis context/prompts/runtime/ enthält 135 Dateien, davon viele Duplikate, Architektur-Dokumente und Feature-Specs, die nicht als Runtime-Prompts gehören.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§4.4",
+      "type": "decision",
+      "state": "superseded",
+      "title": "chevp-ai-service Integrations-Vertrag & Error-Handling",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] chevp-ai-service Integrations-Vertrag & Error-Handling\nfile: §4.4_chevp-ai-service-integration-contract.ctx.md\nstatus: superseded\n\n> ⚠️ SUPERSEDED am 2026-04-11 durch [§4.9](§4.9_backend-rename-and-ai-tooling.prd.md).\n>\n> §4.4 spezifiziert einen Integrations-Vertrag zwischen cura-api (Quarkus)\n> und chevp-ai-service als produktivem LLM-Caller. Diese Annahme ist\n> ungültig: chevp-ai-service ist nur eine Dev-Test-Bridge, der LLM-Call\n> läuft direkt aus cura-server-ai (siehe §4.9). Ein externer\n> Integrations-Vertrag ist damit obsolet — die LLM-Integration läuft\n> in-process via quarkus-langchain4j gegen Anthropic.\n\nStatus: SUPERSEDED (2026-04-11 — siehe §4.9)\nDatum: 2026-04-05\nBezug: [§4.2](§4.2_transformation-chevp-ai-service.prd.md), [ADR-002](../../decisions/ADR-002-server-seitige-ki.md), [§5.1](§5.1_dynamic-report-migration.prd.md), [§4.5](§4.5_api-error-format.ctx.md)\nKontext: cura-api ruft AI-Funktionen extern via chevp-ai-service (eigenes PHP-Repo, tenant-unaware). AiGatewayService ist skelettiert, aber Vertrag (Endpoints, Payloads, Streaming, Retries, Timeouts) ist nicht spezifiziert. Ohne stabilen Contract blockiert jeder AI-Feature (Chat, Report-Generation, Extraktion)."
+    },
+    {
+      "id": "§4.5",
+      "type": "decision",
+      "state": "context",
+      "title": "API-Error-Format (RFC 7807 Problem+JSON)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] API-Error-Format (RFC 7807 Problem+JSON)\nfile: §4.5_api-error-format.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§2.3.2](§2.3.2_json-schema-library-integration.ctx.md), [§4.4](§4.4_chevp-ai-service-integration-contract.ctx.md), [§3.3](§3.3_angular-routing-state-forms.prd.md)\nKontext: cura-api liefert aktuell uneinheitliche Fehler-Responses. Für zuverlässige Frontend-Fehlerbehandlung (Toast, Inline-Validation, Retry) braucht es ein kanonisches Format. RFC 7807 (Problem Details for HTTP APIs) ist Industriestandard.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§4.6",
+      "type": "decision",
+      "state": "context",
+      "title": "Quarkus E2E — Cyon-MariaDB Anbindung",
+      "created": "2026-04-10",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Quarkus E2E — Cyon-MariaDB Anbindung\nfile: §4.6_quarkus-cyon-mariadb-e2e.ctx.md\nstatus: backlog · priority: P2\n\nDatum: 2026-04-11\nConcern: Cyon DB / Datenbank-Anbindung in Production-Umgebung\nBezug:\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — Quarkus-Skeleton\n- [§4.7](§4.7_firebase-auth-e2e.ctx.md) — Auth-Layer (separater Concern)\n- [§4.8](§4.8_chevp-ai-service-e2e.ctx.md) — AI-Service (separater Concern)\n- [§2.5](§2.5_database-migrations-phinx.ctx.md) — Schema-Migrations\n- [§6.7](§6.7_quarkus-container.ctx.md) — %local-Profil als Vorlage\n- [§6.4](§6.4_aws-cloud-deployment.prd.md) — AWS-Pendant (RDS statt Cyon)\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§4.7",
+      "type": "decision",
+      "state": "context",
+      "title": "Firebase Auth E2E — echtes ID-Token gegen Quarkus-Filter",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Firebase Auth E2E — echtes ID-Token gegen Quarkus-Filter\nfile: §4.7_firebase-auth-e2e.ctx.md\nstatus: backlog · priority: P2\n\nDatum: 2026-04-11\nConcern: Authentication / Firebase-ID-Token-Verifikation\nBezug:\n- [§2.4.1 (finished)](§2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md) — Hybrid-Auth-Konzept\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — FirebaseAuthFilter ist im Code, aber nie mit echtem Token getestet\n- [§4.6](§4.6_quarkus-cyon-mariadb-e2e.ctx.md) — DB-Anbindung (separater Concern)\n- [§4.8](§4.8_chevp-ai-service-e2e.ctx.md) — AI-Service (separater Concern)\n- [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md) — Tenant-Isolation, baut auf Auth auf\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§4.8",
+      "type": "decision",
+      "state": "context",
+      "title": "chevp-ai-service E2E — echter AI-Backend statt Mock",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] chevp-ai-service E2E — echter AI-Backend statt Mock\nfile: §4.8_chevp-ai-service-e2e.ctx.md\nstatus: backlog · priority: P2\n\nDatum: 2026-04-11\nConcern: AI-Service-Integration mit echter LLM-Backend\nBezug:\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — AiGatewayService ist im Code\n- [§4.2](§4.2_transformation-chevp-ai-service.prd.md) — Transformations-Logik im AI-Service (vorgelagert)\n- [§4.4 (finished)](§4.4_prompt-verbesserungen.exp.md) — Prompt-Engineering\n- [§4.6](§4.6_quarkus-cyon-mariadb-e2e.ctx.md) — DB für AI-Call-Logging\n- [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md) — Mock als Vergleichsbasis\n- [§6.10](§6.10_ai-chat-feed-sse.ctx.md) — SSE-Streaming-Pfad\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§4.9",
+      "type": "spec",
+      "state": "superseded",
+      "title": "Backend-Umbenennung cura-server + AI-Modul mit Tool-Use (LangChain4j)",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Backend-Umbenennung cura-server + AI-Modul mit Tool-Use (LangChain4j)\nfile: §4.9_backend-rename-and-ai-tooling.prd.md\nstatus: superseded\n\n> STATUS: SUPERSEDED (2026-04-25) — Diese Spec war für eine Quarkus-Refaktorierung\n> (cura-server-core + cura-server-ai mit quarkus-langchain4j) gedacht. Mit der\n> Greenfield-Embabel-Entscheidung läuft die AI-Schicht in neuen Spring-Boot-Apps\n> (core-service / extension-service mit Embabel 0.4 direkt), nicht als Refactoring\n> von cura-server. Das alte backend/cura-server (Quarkus) ist deprecated und wird\n> nicht weiter umgebaut. Aktuelle Zielarchitektur:\n> [embabel-migration-plan.md](../research/embabel-migration-plan.md).\n> Der untenstehende Inhalt ist nur noch historischer Kontext.\n\nDatum: 2026-04-11\nBezug:\n- [§6.11](§6.11_ai-context-strategy-sessions-vs-tooling.ctx.md) — wird durch §4.9 ersetzt (Option-C-Entscheidung kippt: Tool-Use ist jetzt Pflicht-Bestandteil)\n- [§4.4](§4.4_chevp-ai-service-integration-contract.ctx.md) — Contract muss von „chevp-ai-service als produktiver LLM-Caller\" auf „chevp-ai-service als Dev-Bridge\" umgeschrieben werden\n- [§4.2](§4.2_transformation-chevp-ai-service.prd.md) — Architekturannahme „chevp-ai-service produktiv\" gilt nicht mehr\n- [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md) — Mock-Fixtures bleiben für Tool-loose Calls, müssen aber Tool-Loops emuli"
+    },
+    {
+      "id": "§5.1",
+      "type": "spec",
+      "state": "context",
+      "title": "Migration zu dynamischem AI-Report-Datenmodell",
+      "created": "2026-04-03",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Migration zu dynamischem AI-Report-Datenmodell\nfile: §5.1_dynamic-report-migration.prd.md\nstatus: backlog · priority: P2\n\nZiel: Statische Analytics-DTOs durch ein generisches, AI-gesteuertes Report-Format ersetzen. Die AI entscheidet zur Laufzeit, welche Tabellen, Spalten, Aggregationen und Visualisierungen für eine Auswertung relevant sind — basierend auf den Freitext-Reports und der konkreten Fragestellung.\n\nBezug: §6.2 (KI-Pipeline), §4.1 (OpenAPI), PROMPT-27 (Strukturierte Endausgabe), S03 (Dashboard), S04 (Analytics-Services)\n\n---"
+    },
+    {
+      "id": "§5.2",
+      "type": "spec",
+      "state": "context",
+      "title": "CI/CD-Pipeline (GitHub Actions) — Drei-Stufen-Architektur, Manual-Only",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] CI/CD-Pipeline (GitHub Actions) — Drei-Stufen-Architektur, Manual-Only\nfile: §5.2_cicd-pipeline.prd.md\nstatus: backlog · priority: P2\n\nDatum: 2026-04-11 (gross überarbeitet — alter Stand 2026-04-06 war noch im PHP/Lumen-Zeitalter)\nConcern: CI/CD · Build-Hierarchie · Kostenkontrolle bei Private-Repo\nBezug:\n- [§5.3 (backlog)](§5.3_workflow-split-electron-build.ctx.md) — der ursprüngliche Workflow-Split, in §5.2 jetzt konsolidiert\n- [§5.4 (active)](§5.4_workflow-electron-build-windows.ctx.md) — Electron Windows\n- [§5.5 (active)](§5.5_windows-demo-bundle.ctx.md) — Standalone Demo-Bundle (Native Quarkus)\n- [§5.6 (active)](§5.6_workflow-refactor.ctx.md) — die *Umsetzung* der hier beschriebenen Architektur\n- [§6.4 (backlog)](§6.4_aws-cloud-deployment.prd.md) — AWS-Deploy-Ziel (Phase 2)\n- [§6.12 (active)](§6.12_mycyon-static-showcase-deploy.ctx.md) — my cyon Showcase-Deploy\n- [§6.13 (backlog)](§6.13_aws-quarkus-apprunner-deploy.ctx.md) — AWS Quarkus Deployment (Phase 2)"
+    },
+    {
+      "id": "§5.3",
+      "type": "decision",
+      "state": "production",
+      "title": "Workflow-Split & Electron-macOS-Build",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Workflow-Split & Electron-macOS-Build\nfile: §5.3_workflow-split-electron-build.ctx.md\nstatus: finished\n\nClosed 2026-04-11: Umgesetzt — ci.yml ist in ci-backend.yml +\nci-frontend.yml aufgeteilt, build-electron-mac.yml existiert. Die\nzwei nicht-erfüllten Akzeptanzkriterien (Path-Filter paths: backend/**\nbzw. paths: frontend/cura-app/** und Auto-Trigger auf push/\npull_request) sind obsolet durch [§5.2 §2.1 Trigger-Regel](§5.2_cicd-pipeline.prd.md):\nmit Manual-Only-Trigger gibt es keine Push-Events mehr, gegen die ein\nPath-Filter wirken könnte. Das Closing erfolgt im Zuge von\n[§5.6 §3.8](§5.6_workflow-refactor.ctx.md).\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§5.2](§5.2_cicd-pipeline.prd.md), [§8.2](§8.2_electron-desktop.ctx.md)\nKontext: Die aktuelle ci.yml bündelt Backend-Lint, Backend-Test, Frontend-Lint und Frontend-Test in einer Datei. Für zielgerichtetes Deployment und einen neuen manuell triggerbaren Electron-macOS-Build soll die Pipeline in separate Workflow-Dateien aufgeteilt werden."
+    },
+    {
+      "id": "§5.4",
+      "type": "decision",
+      "state": "exploration",
+      "title": "GitHub-Workflow — Electron-Build für Windows",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] GitHub-Workflow — Electron-Build für Windows\nfile: §5.4_workflow-electron-build-windows.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: CI/CD · Release-Pipeline · Desktop-Distribution\nBezug:\n- [§5.3 (backlog)](§5.3_workflow-split-electron-build.ctx.md) — analoger macOS-Workflow, dient als Vorlage\n- [§5.2 (backlog)](§5.2_cicd-pipeline.prd.md) — Gesamt-Pipeline-Strategie\n- [§6.8](§6.8_electron-thin-client-host.ctx.md) — Electron als Thin-Client (kein Sidecar mehr → kein Backend-Binary in der Windows-Build mitpacken)\n- [§6.9](§6.9_angular-renderer-thin-client.ctx.md) — Angular-Renderer im Electron\n- [.github/workflows/build-electron-mac.yml](../../../.github/workflows/build-electron-mac.yml) — bestehende Vorlage\n- [frontend/cura-desktop/electron-builder.yml](../../../frontend/cura-desktop/electron-builder.yml) — win-Target ist bereits definiert (nsis, x64)\n- [frontend/cura-desktop/package.json](../../../frontend/cura-desktop/package.json) — dist:win-Script existiert bereits"
+    },
+    {
+      "id": "§5.5",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Windows Demo Bundle — Native Quarkus + H2 + Simulationsdaten",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Windows Demo Bundle — Native Quarkus + H2 + Simulationsdaten\nfile: §5.5_windows-demo-bundle.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: Distribution · Sales-Showcase · Native-Build · Demo-Mode\nBezug:\n- [§5.4](§5.4_workflow-electron-build-windows.ctx.md) — Thin-Client-Workflow für Windows; §5.5 ist additiv, ersetzt §5.4 nicht\n- [§5.3 (backlog)](§5.3_workflow-split-electron-build.ctx.md) — analoger macOS-Workflow als Vorlage für die Job-Struktur\n- [§6.5](§6.5_local-docker-stack.ctx.md) — produktiver Docker-Stack mit MariaDB; §5.5 vermeidet beides bewusst\n- [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md) — bestehende AI-Fixtures; mögliche Quelle für Simulationsdaten\n- [§6.7](§6.7_quarkus-container.ctx.md) — JVM-Container und %local-Profil; §5.5 ergänzt um %demo\n- [§6.8](§6.8_electron-thin-client-host.ctx.md) — Electron als Thin-Client; §5.5 ist eine bewusste, dokumentierte Ausnahme (siehe §5)\n- [§6.10](§6.10_ai-chat-feed-sse.ctx.md) — AI-Chat-Feed; einziges aktives Feature im Demo-Bundle\n- [backend/cura-server/src/main/resources/application.properties](../../../backend/cura-server/src/main/resources/application.properties) — bestehende Profile (%dev, %local, %desktop, %prod, %test)\n- [frontend/cura-desktop/electron-builder.yml](../../../frontend/cura-desktop/electron-builder.yml) — extraResources-"
+    },
+    {
+      "id": "§5.6",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Workflow-Refactor — Drei-Stufen-Architektur umsetzen",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Workflow-Refactor — Drei-Stufen-Architektur umsetzen\nfile: §5.6_workflow-refactor.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: CI/CD · Refactoring · Build-Pipeline-Konsolidierung\nBezug:\n- [§5.2 (backlog)](§5.2_cicd-pipeline.prd.md) — der Master-Plan, dessen Architektur §5.6 *mechanisch umsetzt*\n- [§5.3 (backlog)](§5.3_workflow-split-electron-build.ctx.md) — wird im Zuge dieses Plans nach finished/ verschoben\n- [§5.4 (active)](§5.4_workflow-electron-build-windows.ctx.md) — wird angepasst (download-artifact statt eigenem Angular-Build)\n- [§5.5 (active)](§5.5_windows-demo-bundle.ctx.md) — wird angepasst (gleicher Mechanismus, aber mit eigener Begründung warum nicht)\n- [§6.12 (active)](§6.12_mycyon-static-showcase-deploy.ctx.md) — wird durch deploy-cyon-showcase.yml von \"lokal-only\" zu \"CI-fähig\" gehoben\n- [.github/workflows/](../../../.github/workflows/) — der Bestand, der hier umgebaut wird"
+    },
+    {
+      "id": "§5.7",
+      "type": "decision",
+      "state": "exploration",
+      "title": "che-Workflow — release-desktop & deploy-installers (lokaler Pfad)",
+      "created": "2026-04-27",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] che-Workflow — release-desktop & deploy-installers (lokaler Pfad)\nfile: §5.7_che-release-desktop.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-27\nConcern: CI/CD · Release-Pipeline · Desktop-Distribution · Kostenkontrolle\nBezug:\n- [§5.3 (finished)](§5.3_workflow-split-electron-build.ctx.md) — GitHub-Actions-Pendant für macOS\n- [§5.4 (active)](§5.4_workflow-electron-build-windows.ctx.md) — GitHub-Actions-Pendant für Windows\n- [§5.2 (backlog)](§5.2_cicd-pipeline.prd.md) — Gesamt-Pipeline-Strategie\n- [§6.8](§6.8_electron-thin-client-host.ctx.md) — Thin-Client-Variante (kein embedded Backend)\n- [§11.5](§11.5_auto-updater-mandatory.prd.md) — Auto-Updater (electron-updater) ist verpflichtend\n- [.che/workflows/release-desktop.yml](../../.che/workflows/release-desktop.yml)\n- [.che/workflows/deploy-installers.yml](../../.che/workflows/deploy-installers.yml)\n- [scripts/build-electron-mac-thin-local.sh](../../scripts/build-electron-mac-thin-local.sh)\n- [scripts/build-electron-windows-thin-local.sh](../../scripts/build-electron-windows-thin-local.sh)\n- [scripts/desktop/deploy-cyon-installers.sh](../../scripts/desktop/deploy-cyon-installers.sh)"
+    },
+    {
+      "id": "§6.10",
+      "type": "decision",
+      "state": "exploration",
+      "title": "AI Chat Feed — SSE-Stream End-to-End durch alle Layer",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] AI Chat Feed — SSE-Stream End-to-End durch alle Layer\nfile: §6.10_ai-chat-feed-sse.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: AI Chat Feed (Querschnitt: chevp-ai-service ↔ Quarkus ↔ Angular ↔ Electron)\nBezug:\n- [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md) — Mock-Server liefert SSE-Streams für Tests\n- [§6.7](§6.7_quarkus-container.ctx.md) — Quarkus muss SSE durchreichen\n- [§6.9](§6.9_angular-renderer-thin-client.ctx.md) — Renderer muss SSE konsumieren\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — generierter ChatService (sync)\n- [§4.2 (backlog)](§4.2_transformation-chevp-ai-service.prd.md) — Transformations-Logik im AI-Service\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§6.11",
+      "type": "decision",
+      "state": "superseded",
+      "title": "AI-Context-Strategie — Sessions + Artefakte vs. Tool-Use",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] AI-Context-Strategie — Sessions + Artefakte vs. Tool-Use\nfile: §6.11_ai-context-strategy-sessions-vs-tooling.ctx.md\nstatus: superseded\n\n> ⚠️ SUPERSEDED am 2026-04-11 durch [§4.9](§4.9_backend-rename-and-ai-tooling.prd.md).\n>\n> §6.11 baute auf der Annahme, chevp-ai-service sei der produktive\n> LLM-Caller. Tatsächlich ist es nur eine Dev-Test-Bridge — der\n> Quarkus-Server ruft das LLM selbst auf. Damit ist die Entscheidung\n> gegen Tool-Use neu zu bewerten und in §4.9 zu „Hybrid: Default-Bundle\n> + Tool-Use mit Guardrails\" gekippt. Die §6.11-Sorgen zu Tenant-Isolation\n> (§7.1) und NLPD-Audit (§7.2) sind in §4.9 §5 als konkrete Guardrails\n> aufgenommen, nicht verworfen.\n\nDatum: 2026-04-11\nBezug: [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md), [§4.4](§4.4_chevp-ai-service-integration-contract.ctx.md), [§4.2](§4.2_transformation-chevp-ai-service.prd.md), [§6.10](§6.10_ai-chat-feed-sse.ctx.md)"
+    },
+    {
+      "id": "§6.12",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Static Showcase Deployment auf my cyon (FTP + HTTP-Basic-Auth, Mehr-Mandanten-Demo)",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Static Showcase Deployment auf my cyon (FTP + HTTP-Basic-Auth, Mehr-Mandanten-Demo)\nfile: §6.12_mycyon-static-showcase-deploy.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: Demo-Hosting / Stakeholder-Showcase\nBezug:\n- [§6.5](§6.5_local-docker-stack.ctx.md) — der „echte\" lokale Stack, den dieses Showcase bewusst NICHT braucht\n- [§6.6](§6.6_cura-ai-mock-fixtures.ctx.md) — Fixture-Format, an dem sich die Showcase-Datensätze orientieren\n- [§6.9](§6.9_angular-renderer-thin-client.ctx.md) — Renderer-Struktur, die hier in den Showcase-Modus gezwungen wird\n- [§6.4 (backlog)](§6.4_aws-cloud-deployment.prd.md) — die spätere „echte\" Cloud-Variante (out of scope)\n- [§4.7 (backlog)](§4.7_firebase-auth-e2e.ctx.md) — Firebase-Auth ist für §6.12 explizit nicht aktiv"
+    },
+    {
+      "id": "§6.13",
+      "type": "decision",
+      "state": "exploration",
+      "title": "AWS Quarkus Deployment — ECR + App Runner",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] AWS Quarkus Deployment — ECR + App Runner\nfile: §6.13_aws-quarkus-apprunner-deploy.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: Cloud-Deployment des Quarkus-Backends (nur Backend, kein Frontend, keine DB-Migration)\nBezug:\n- [§6.4 (backlog)](§6.4_aws-cloud-deployment.prd.md) — übergeordnete PRD; §6.13 trifft den dort offen gelassenen Compute-Entscheid und engt den Scope auf das Backend ein\n- [§6.7](§6.7_quarkus-container.ctx.md) — Dockerfile.jvm und Profile-Mechanik (%prod existiert bereits)\n- [§6.5](§6.5_local-docker-stack.ctx.md) — lokaler Compose-Stack, der dasselbe Image konsumiert\n- [§5.2 (backlog)](§5.2_cicd-pipeline.prd.md) — automatischer Push/Deploy via CI (Folgeschritt, nicht Teil von §6.13)\n- [§6.12](§6.12_mycyon-static-showcase-deploy.ctx.md) — Frontend-Deployment, läuft separat"
+    },
+    {
+      "id": "§6.1",
+      "type": "spec",
+      "state": "production",
+      "title": "Deployment: PHP/Lumen + Angular auf Cyon Hosting",
+      "created": "2026-04-04",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Deployment: PHP/Lumen + Angular auf Cyon Hosting\nfile: §6.1_deployment-php-angular.prd.md\nstatus: finished\n\nStatus: In Bearbeitung  \nDatum: 2026-04-04  \nZiel: Vollständige Deployment-Infrastruktur für das Cura-Projekt auf Cyon Shared Hosting (Apache/PHP) und als statisches Angular-Bundle.\n\n---\n\n## Übersicht"
+    },
+    {
+      "id": "§6.2",
+      "type": "spec",
+      "state": "production",
+      "title": "PHP-Server für Firebase & KI-Ausführung",
+      "created": "2026-04-03",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] PHP-Server für Firebase & KI-Ausführung\nfile: §6.2_php-server-firebase-ki.prd.md\nstatus: finished\n\nBezug: ADR-002\nZiel: Angular-Client enthält keine Business-Logic. Firebase Firestore/Storage und KI-Prompts werden server-seitig über einen PHP-Server ausgeführt.\nHosting: cura.sowuvuma.cyon.site (bestehendes Cyon-Hosting)\nStatus: ⛔ ABGELÖST durch §4.2 — KI-Pipeline wurde in separates chevp-ai-service Repo ausgelagert. Phasen 2-6 werden nicht mehr in Cura implementiert. backend/php-api/ wurde entfernt.\n\n---\n\n## Übersicht"
+    },
+    {
+      "id": "§6.3",
+      "type": "decision",
+      "state": "context",
+      "title": "Monitoring, Logging & Health-Checks",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Monitoring, Logging & Health-Checks\nfile: §6.3_monitoring-logging-health.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§6.1](§6.1_deployment-php-angular.prd.md), [§4.4](§4.4_chevp-ai-service-integration-contract.ctx.md), [§4.5](§4.5_api-error-format.ctx.md), [§5.2](§5.2_cicd-pipeline.prd.md)\nKontext: cura-api besitzt einen /health-Stub, aber keine strukturierten Logs, kein Monitoring, keine Alerts. Cyon-Shared-Hosting limitiert Infrastruktur-Wahl. Für Produktions-Betrieb mit sensiblen Sozial-Daten sind strukturiertes Logging und Fehler-Reporting Pflicht.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§6.4",
+      "type": "spec",
+      "state": "context",
+      "title": "AWS Cloud Deployment: Quarkus + Angular",
+      "created": "2026-04-08",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] AWS Cloud Deployment: Quarkus + Angular\nfile: §6.4_aws-cloud-deployment.prd.md\nstatus: backlog · priority: P2\n\nStatus: BACKLOG (2026-04-08 — ausgelagert aus §6.1)\nDatum: 2026-04-08\nBezug: [§6.1](§6.1_local-electron-quarkus-exe.prd.md), [§5.2](§5.2_cicd-pipeline.prd.md)\nKontext: Sobald der lokale Betrieb (§6.1) stabil ist, wird Quarkus auf AWS deployt. Angular wird als statische Assets ausgeliefert. Electron-Desktop und Browser-SPA konsumieren dieselbe API.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§6.5",
+      "type": "decision",
+      "state": "production",
+      "title": "Lokaler Docker-Stack — Compose-Orchestrierung für Cura",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Lokaler Docker-Stack — Compose-Orchestrierung für Cura\nfile: §6.5_local-docker-stack.ctx.md\nstatus: finished\n\nDatum: 2026-04-11\nConcern: Docker / Container-Orchestrierung\nBezug:\n- [§6.7 — Quarkus Container](§6.7_quarkus-container.ctx.md) (das *Was* im Container)\n- [§6.6 — cura-ai-mock Cura Fixtures](§6.6_cura-ai-mock-fixtures.ctx.md)\n- [§6.8 — Electron Thin-Client Host](§6.8_electron-thin-client-host.ctx.md)\n- [§6.4 (backlog)](../§6.4_aws-cloud-deployment.prd.md) — Production-Pendant auf AWS\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§6.6",
+      "type": "decision",
+      "state": "exploration",
+      "title": "cura-ai-mock — fachliche Cura-Fixtures für deterministische AI-Antworten",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] cura-ai-mock — fachliche Cura-Fixtures für deterministische AI-Antworten\nfile: §6.6_cura-ai-mock-fixtures.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nBezug: [§6.5](§6.5_local-docker-stack.ctx.md), [§4.4 (finished)](§4.4_prompt-verbesserungen.exp.md), [§9.1](§9.1_testing-strategy.prd.md)\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§6.7",
+      "type": "decision",
+      "state": "production",
+      "title": "Quarkus Container — JVM-Image und %local-Profil",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Quarkus Container — JVM-Image und %local-Profil\nfile: §6.7_quarkus-container.ctx.md\nstatus: finished\n\nDatum: 2026-04-11\nConcern: Java Quarkus / Backend-Containerisierung\nBezug:\n- [§6.5](§6.5_local-docker-stack.ctx.md) — Compose-Klammer, die dieses Image konsumiert\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — Quarkus-Skeleton\n- [§4.6](§4.6_quarkus-cyon-firebase-ai-e2e.ctx.md) — Cyon-Anbindung (anderes Profil)\n- [§6.4 (backlog)](§6.4_aws-cloud-deployment.prd.md) — Production-Image auf AWS\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§6.8",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Electron Thin-Client Host — kein Sidecar mehr, externes Backend",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Electron Thin-Client Host — kein Sidecar mehr, externes Backend\nfile: §6.8_electron-thin-client-host.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: Electron / Desktop-Host\nBezug:\n- [§6.5](§6.5_local-docker-stack.ctx.md) — der Backend-Stack, gegen den Electron redet\n- [§6.9](§6.9_angular-renderer-thin-client.ctx.md) — Renderer-Seite (Angular im Electron)\n- [§6.1 (finished, OBSOLET)](§6.1_local-electron-quarkus-exe.prd.md) — alter Sidecar-Ansatz\n- [§6.4 (backlog)](§6.4_aws-cloud-deployment.prd.md) — Production: gleiche Topologie, AWS statt Docker\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§6.9",
+      "type": "decision",
+      "state": "exploration",
+      "title": "Angular Renderer — Thin-Client gegen externes Quarkus",
+      "created": "2026-04-11",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Angular Renderer — Thin-Client gegen externes Quarkus\nfile: §6.9_angular-renderer-thin-client.ctx.md\nstatus: active · priority: P2\n\nDatum: 2026-04-11\nConcern: Angular / Frontend-Renderer\nBezug:\n- [§6.5](§6.5_local-docker-stack.ctx.md) — der lokale Backend-Stack\n- [§6.7](§6.7_quarkus-container.ctx.md) — die API auf der anderen Seite des HTTP-Drahts\n- [§6.8](§6.8_electron-thin-client-host.ctx.md) — der Electron-Host, in dem der Renderer läuft\n- [§6.10](§6.10_ai-chat-feed-sse.ctx.md) — Sonderfall SSE-Streaming\n- [§4.1 (finished)](§4.1_openapi-integration.prd.md) — generierter API-Client\n\n---\n\n## 1. Kontext"
+    },
+    {
+      "id": "§7.0",
+      "type": "decision",
+      "state": "context",
+      "title": "Threat Model — Bedrohungsanalyse (STRIDE)",
+      "created": "2026-04-08",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Threat Model — Bedrohungsanalyse (STRIDE)\nfile: §7.0_threat-model.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-08)\nDatum: 2026-04-08\nBezug: [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md), [§7.6](§7.6_dsr-retention-und-loeschkonzept.ctx.md), [§8.4](§8.4_offline-security-mobile-web.ctx.md), [§9.2](§9.2_security-and-privacy-tests.prd.md)\nKontext: Cura verarbeitet besonders schützenswerte Personendaten (nLPD Art. 5 lit. c: Gesundheitsdaten, Sozialhilfe-Massnahmen) von vulnerablen Personen in Schweizer Sozialinstitutionen. Die §7.x-Pläne definieren Schutzmassnahmen, aber ohne systematische Bedrohungsanalyse fehlt die Grundlage, ob die Massnahmen die richtigen Risiken adressieren. Dieses Threat Model dient als Basis für alle Security-Pläne."
+    },
+    {
+      "id": "§7.10",
+      "type": "decision",
+      "state": "context",
+      "title": "Production-Env-Hardening (APP_DEBUG, CORS, Secrets)",
+      "created": "2026-04-13",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Production-Env-Hardening (APP_DEBUG, CORS, Secrets)\nfile: §7.10_production-env-hardening.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-13)\nDatum: 2026-04-13\nBezug: [§6.2](§6.2_php-server-firebase-ki.prd.md), [§7.0](§7.0_threat-model.ctx.md), [§7.7](§7.7_cors-credentials-origin-scoping.ctx.md)\nKontext: Security-Audit 2026-04-13. backend/cura-api/.env.example setzt APP_DEBUG=true als Default. Handler.php emittiert bei APP_DEBUG=true Exception-Klasse, Message und File:Line in den Response-Body — auf Produktion ein Info-Leak ersten Grades (Pfade, Stacktraces, Library-Versionen). Die FTP-Deployment-Pipeline exkludiert .env korrekt, aber es gibt keine Validierung, dass die auf Cyon manuell hinterlegte .env die richtigen Werte hat. Fehlt z.B. CORS_ALLOWED_ORIGINS, fällt der Code auf einen leeren Default zurück, und die ohnehin fragile CORS-Middleware (§7.7) wird angreifbarer. Ein Self-Check-Endpoint und ein Deploy-Smoke-Test müssen diese Werte zur Laufzeit bestätigen."
+    },
+    {
+      "id": "§7.11",
+      "type": "decision",
+      "state": "context",
+      "title": ".htpasswd-Verfügbarkeit überwachen (Basic-Auth-Fallback)",
+      "created": "2026-04-13",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] .htpasswd-Verfügbarkeit überwachen (Basic-Auth-Fallback)\nfile: §7.11_htpasswd-availability-monitoring.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-13)\nDatum: 2026-04-13\nBezug: [§6.12](§6.12_mycyon-static-showcase-deploy.ctx.md), [§7.0](§7.0_threat-model.ctx.md), [§6.3](§6.3_monitoring-logging-health.ctx.md)\nKontext: Security-Audit 2026-04-13. Die Root-.htaccess (deployment/cyon/.htaccess) schützt cura.sowuvuma.cyon.site/* via Basic Auth:\n\ncurl -I gegen eine Unterroute liefert aktuell korrekt HTTP/2 401. Aber: der AuthUserFile-Pfad ist hart kodiert und liegt ausserhalb des deployten Verzeichnisses — d.h. kein Deploy-Prozess kontrolliert die Datei. Wird sie versehentlich gelöscht, umbenannt, in den Permissions kaputt gemacht oder von Cyon-Support verschoben, liefert Apache je nach Version entweder 500 (erkennbar) oder ignoriert den <Require>-Block still → die gesamte Site wird öffentlich zugänglich. Schlimmster Fall ist, dass es niemand merkt, weil Alerts fehlen."
+    },
+    {
+      "id": "§7.1",
+      "type": "decision",
+      "state": "context",
+      "title": "Multi-Tenancy Security & Isolations-Tests",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Multi-Tenancy Security & Isolations-Tests\nfile: §7.1_multi-tenancy-security-isolation.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§7.0](§7.0_threat-model.ctx.md), [ADR-004](../../decisions/ADR-004-datenbank-mariadb-jwt-auth.md), [§2.4.1](§2.4.1_hybrid-firebase-auth-mariadb-data.ctx.md), [§4.5](§4.5_api-error-format.ctx.md), [§9.1](§9.1_testing-strategy.prd.md)\nKontext: Cura ist Multi-Tenant. Ein Datenleck zwischen Tenants (Sozialinstitutionen) wäre ein kritischer Vorfall. documents.tenant_id trennt Daten logisch, aber ohne systematische Isolations-Tests bleibt das Risiko hoch.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§7.2",
+      "type": "decision",
+      "state": "context",
+      "title": "nLPD/DSGVO-Compliance & Audit-Logging",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] nLPD/DSGVO-Compliance & Audit-Logging\nfile: §7.2_nlpd-compliance-audit-log.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-05)\nDatum: 2026-04-05\nBezug: [§7.0](§7.0_threat-model.ctx.md), [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [ADR-002](../../decisions/ADR-002-server-seitige-ki.md), [§2.5](§2.5_database-migrations-phinx.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md), [§7.6](§7.6_dsr-retention-und-loeschkonzept.ctx.md), [§9.2](§9.2_security-and-privacy-tests.prd.md)\nKontext: Cura verarbeitet besonders schützenswerte Personendaten (Gesundheitsdaten, Sozialleistungen, IBB-Indikatoren) von Menschen in Schweizer Sozialinstitutionen. Die Schweizer nLPD (revidiertes Datenschutzgesetz, in Kraft seit 01.09.2023) und DSGVO (bei EU-Betroffenen) verlangen Audit-Trails, Betroffenenrechte, Datenminimierung und DSFA."
+    },
+    {
+      "id": "§7.3",
+      "type": "decision",
+      "state": "context",
+      "title": "Ablagesystem-Sicherheitsarchitektur",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Ablagesystem-Sicherheitsarchitektur\nfile: §7.3_ablagesystem-sicherheitsarchitektur.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md), [PROMPT-120](../../prompts/runtime/PROMPT-120-Dateisystem-basierte-Ablage-mit-Baumstruktur-und-Ordnererstellung.md)\nKontext: Cura benötigt ein Ablagesystem für Dokumente, Fotos, Berichte und Formulare. Diese Dateien enthalten besonders schützenswerte Personendaten (Gesundheitsdaten, Sozialberichte). Ein unkontrolliertes Dateisystem-Modell mit Klartext-Pfaden birgt erhebliche Risiken: Path-Traversal, unautorisierter Zugriff, fehlende Nachvollziehbarkeit."
+    },
+    {
+      "id": "§7.4",
+      "type": "decision",
+      "state": "context",
+      "title": "Feld- und Dateiverschlüsselung",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Feld- und Dateiverschlüsselung\nfile: §7.4_feld-und-dateiverschluesselung.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md)\nKontext: Cura speichert besonders schützenswerte Personendaten (Diagnosen, AHV-Nummern, Sozialberichte) als Plain JSON in documents.data. Weder Felder noch hochgeladene Dateien werden verschlüsselt. Bei Datenbank-Kompromittierung oder Backup-Diebstahl liegen alle Daten im Klartext vor. §7.2 definiert Feldverschlüsselung als offenes Akzeptanzkriterium.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§7.5",
+      "type": "decision",
+      "state": "context",
+      "title": "RBAC & Freigaben (serverseitig)",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] RBAC & Freigaben (serverseitig)\nfile: §7.5_rbac-und-freigaben.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md)\nKontext: Cura hat drei Rollen (pflege, admin, leitung), aber Rollenprüfung findet aktuell nur im Frontend statt (role.guard.ts). Im Backend extrahiert AuthMiddleware die Rolle und speichert sie in Request::attributes, aber kein Controller erzwingt sie. TenantContext::isSuperAdmin() existiert, wird aber nie aufgerufen. Für ein datenschutzkritisches System reicht Frontend-RBAC nicht — ein manipulierter Request umgeht es."
+    },
+    {
+      "id": "§7.6",
+      "type": "decision",
+      "state": "context",
+      "title": "DSR, Retention & Löschkonzept",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] DSR, Retention & Löschkonzept\nfile: §7.6_dsr-retention-und-loeschkonzept.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md)\nKontext: nLPD Art. 25 (Auskunft), Art. 32 (Löschung/Berichtigung) und DSGVO Art. 15–17 verpflichten zur Umsetzung von Data-Subject-Rights. §7.2 definiert DSR-Endpoints als offenes Akzeptanzkriterium. Im Code existieren weder Export- noch Erase-Endpoints. Soft-Delete ist implementiert, aber ohne automatisierten Hard-Delete-Job oder Anonymisierungslogik."
+    },
+    {
+      "id": "§7.7",
+      "type": "decision",
+      "state": "context",
+      "title": "CORS: Allow-Credentials auf Origin-Check einschränken",
+      "created": "2026-04-13",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] CORS: Allow-Credentials auf Origin-Check einschränken\nfile: §7.7_cors-credentials-origin-scoping.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-13)\nDatum: 2026-04-13\nBezug: [§7.0](§7.0_threat-model.ctx.md), [§6.2](§6.2_php-server-firebase-ki.prd.md)\nKontext: Security-Audit 2026-04-13 (cura.sowuvuma.cyon.site). CorsMiddleware setzt Access-Control-Allow-Credentials: true bedingungslos auf jede Response, auch wenn der Origin nicht in CORS_ALLOWED_ORIGINS enthalten ist. Aktuell harmlos, weil Access-Control-Allow-Origin nur bei Match gesetzt wird und Browser die Credentials ohne passenden Origin-Header nicht akzeptieren. Wird CORS_ALLOWED_ORIGINS jedoch jemals versehentlich auf * oder leer gesetzt, leakt Credentials-Handling sofort — die Middleware soll defense-in-depth sein, nicht auf Browser-Verhalten vertrauen."
+    },
+    {
+      "id": "§7.8",
+      "type": "decision",
+      "state": "context",
+      "title": "Health-Endpunkte: Information Disclosure reduzieren",
+      "created": "2026-04-13",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Health-Endpunkte: Information Disclosure reduzieren\nfile: §7.8_health-endpoint-info-disclosure.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-13)\nDatum: 2026-04-13\nBezug: [§6.3](§6.3_monitoring-logging-health.ctx.md), [§7.0](§7.0_threat-model.ctx.md)\nKontext: Security-Audit 2026-04-13. GET /api/health/ready liefert aktuell service, version (aus APP_VERSION), DB-Status und AI-Service-URL mit Latenz-Details. Heute per Apache-Basic-Auth geschützt (Require valid-user), aber sobald die Route für externes Uptime-Monitoring ausgenommen wird (siehe §6.3), werden diese Details öffentlich. Version-Strings sind Recon-Material für CVE-gezielte Angriffe; interne Service-URLs leaken Netzwerk-Topologie. Liveness und Readiness müssen minimal sein — Details gehören in einen separaten, auth-pflichtigen /health/deep."
+    },
+    {
+      "id": "§7.9",
+      "type": "decision",
+      "state": "context",
+      "title": "Row-Level Ownership-Authorization für Records & Residents",
+      "created": "2026-04-13",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Row-Level Ownership-Authorization für Records & Residents\nfile: §7.9_row-level-ownership-authorization.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-13)\nDatum: 2026-04-13\nBezug: [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md), [§7.0](§7.0_threat-model.ctx.md), [§9.2](§9.2_security-and-privacy-tests.prd.md)\nKontext: Security-Audit 2026-04-13. RecordController und ResidentController erzwingen via DocumentRepository die Tenant-Isolation (tenant_id in WHERE), aber keine Row-Level-Checks innerhalb des Tenants. Jeder authentifizierte Benutzer mit Rolle pflege kann damit:\n\n- alle Residents und Records des Tenants auflisten (GET),\n- beliebige Records und Residents editieren (PUT/PATCH), unabhängig von created_by oder Zuweisung,\n- beliebige Records löschen (DELETE)."
+    },
+    {
+      "id": "§8.1",
+      "type": "spec",
+      "state": "context",
+      "title": "Mobile-App Architektur (Capacitor Android/iOS)",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Mobile-App Architektur (Capacitor Android/iOS)\nfile: §8.1_mobile-capacitor-architecture.prd.md\nstatus: backlog · priority: P2\n\nStatus: IN ARBEIT (2026-04-06)\nDatum: 2026-04-05\nBezug: [§3.3](§3.3_angular-routing-state-forms.prd.md), [§3.4](§3.4_uxp-020-angular-port.prd.md), [§8.3](§8.3_offline-sync-strategy.ctx.md)\nKontext: mobile/android/ und mobile/ios/ sind aktuell leere Platzhalter. Pflegekräfte auf Schicht benötigen Smartphone-/Tablet-Zugriff, teils in WLAN-schwachen Zonen (Wohngruppen, Ausflüge). Capacitor erlaubt Wiederverwendung von cura-app Angular-Code → minimaler Mehraufwand.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§8.2",
+      "type": "decision",
+      "state": "production",
+      "title": "Electron-Desktop — lokaler Quarkus-Server",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Electron-Desktop — lokaler Quarkus-Server\nfile: §8.2_electron-desktop.ctx.md\nstatus: finished\n\nStatus: UMGESETZT (2026-04-08 — vereinfacht: kein IPC, keine Config-Datei)\nDatum: 2026-04-08\nBezug: [§4.1](../§4.1_openapi-integration.prd.md), [§6.1](../§6.1_deployment-quarkus-aws.prd.md)\nKontext: frontend/cura-desktop/ ist ein Electron-Shell, der den Angular-Build lokal einbettet und sich mit dem lokalen Quarkus-Server (localhost:8080) verbindet.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§8.3",
+      "type": "decision",
+      "state": "context",
+      "title": "cura-desktop als Debug-Stack-Launcher",
+      "created": "2026-04-27",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] cura-desktop als Debug-Stack-Launcher\nfile: §8.3_cura-desktop-debug-launcher.ctx.md\nstatus: in-progress\n\nStatus: UMSETZUNG (Initial-Wurf, 2026-04-27)\nBezug: [§6.5](../§6.5_local-docker-stack.ctx.md), [§8.2](§8.2_electron-desktop.ctx.md), [§11](§11_distributable-desktop-app.prd.md)\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§8.4",
+      "type": "decision",
+      "state": "context",
+      "title": "Offline-Security (Mobile + Web)",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[CTX] Offline-Security (Mobile + Web)\nfile: §8.4_offline-security-mobile-web.ctx.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§8.1](§8.1_mobile-capacitor-architecture.prd.md), [§8.3](§8.3_offline-sync-strategy.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md)\nKontext: §8.3 definiert Offline-Sync für Residents, Records, Medikation und Fotos via IndexedDB. Aktuell speichert offline-db.ts alle Daten unverschlüsselt in IndexedDB (cachePut schreibt payload direkt). Auf Shared Devices, verlorenen Geräten oder bei physischem Zugriff sind Gesundheits- und Sozialdaten im Klartext einsehbar (Browser DevTools, Disk-Extraction).\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§9.1",
+      "type": "spec",
+      "state": "context",
+      "title": "Test-Strategie — Unit, Integration, E2E, Visual",
+      "created": "2026-04-05",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Test-Strategie — Unit, Integration, E2E, Visual\nfile: §9.1_testing-strategy.prd.md\nstatus: in-progress · priority: P2\n\nStatus: IN ARBEIT (2026-04-12)\nDatum: 2026-04-05\nBezug: [§5.2](§5.2_cicd-pipeline.prd.md), [§3.4](§3.4_uxp-020-angular-port.prd.md), [§3.6](§3.6_accessibility-wcag-aa.prd.md), [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§9.2](§9.2_security-and-privacy-tests.prd.md)\nKontext: Weder cura-server noch cura-app haben nennenswerte Tests. PHPUnit + Jasmine sind konfiguriert, aber leer. Für Produktions-Reife mit Sozial-Daten ist eine abgestufte Test-Pyramide Pflicht.\n\n---\n\n## 1. Ziel"
+    },
+    {
+      "id": "§9.2",
+      "type": "spec",
+      "state": "context",
+      "title": "Security & Privacy Tests",
+      "created": "2026-04-06",
+      "version": 1,
+      "gates_passed": [],
+      "body": "[PRD] Security & Privacy Tests\nfile: §9.2_security-and-privacy-tests.prd.md\nstatus: backlog · priority: P2\n\nStatus: OFFEN (2026-04-06)\nDatum: 2026-04-06\nBezug: [§9.1](§9.1_testing-strategy.prd.md), [§7.1](§7.1_multi-tenancy-security-isolation.ctx.md), [§7.2](§7.2_nlpd-compliance-audit-log.ctx.md), [§7.3](§7.3_ablagesystem-sicherheitsarchitektur.ctx.md), [§7.4](§7.4_feld-und-dateiverschluesselung.ctx.md), [§7.5](§7.5_rbac-und-freigaben.ctx.md), [§7.6](§7.6_dsr-retention-und-loeschkonzept.ctx.md), [§8.4](§8.4_offline-security-mobile-web.ctx.md)\nKontext: §9.1 definiert die allgemeine Teststrategie. Die Security- und Datenschutz-spezifischen Tests sind dort nur als \"OWASP ZAP Baseline\" erwähnt. Für ein System mit besonders schützenswerten Daten braucht es eine dedizierte Security-Test-Suite, die Cross-Tenant-Isolation, RBAC, Verschlüsselung, DSR und Offline-Sicherheit systematisch prüft."
+    }
+  ],
+  "edges": [
+    {
+      "from": "§1.3",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§1.4",
+      "to": "§1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§1.4",
+      "to": "§1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.0",
+      "to": "§10.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.0",
+      "to": "§10.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.0",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.1",
+      "to": "§10.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.2",
+      "to": "§10.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§10.2",
+      "to": "§10.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§10.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§10.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§11.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.0",
+      "to": "§12.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.1",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.2",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.2",
+      "to": "§11.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.3",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.3",
+      "to": "§11.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.3",
+      "to": "§11.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.4",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.4",
+      "to": "§11.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.4",
+      "to": "§11.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.5",
+      "to": "§5.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.6",
+      "to": "§11.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.6",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.6",
+      "to": "§12.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.7",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.7",
+      "to": "§11.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.7",
+      "to": "§11.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.7.insights",
+      "to": "§11.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.7.insights",
+      "to": "§11.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.8",
+      "to": "§11.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.9.1",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.9.1",
+      "to": "§11.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.9.1",
+      "to": "§11.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.9",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§11.9",
+      "to": "§11.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§12.0",
+      "to": "§11.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.0",
+      "to": "§13.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.1",
+      "to": "§13.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.2",
+      "to": "§13.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.2",
+      "to": "§13.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.2.insights",
+      "to": "§13.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.3",
+      "to": "§13.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.3",
+      "to": "§13.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§13.3",
+      "to": "§13.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§4.14",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§4.15",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.0",
+      "to": "§14.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.1",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.1",
+      "to": "§14.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.2",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.2",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§14.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.3",
+      "to": "§1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.4",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.4",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.4",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.4",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§14.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§4.14",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§4.15",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§4.16",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.5",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§14.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.6",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7.0",
+      "to": "§14.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7.0",
+      "to": "§14.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7.0",
+      "to": "§14.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7.0",
+      "to": "§14.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.7",
+      "to": "§14.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§14.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§14.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§14.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§14.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§14.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§14.8",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.1",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.1",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§2.2.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§2.3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.1.2",
+      "to": "§2.1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.2.1",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.2.2",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.2.2",
+      "to": "§2.2.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.2.2",
+      "to": "§3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.3.1",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.3.2",
+      "to": "§2.3.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.3.2",
+      "to": "§4.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.4.1",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.4.1",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.5",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.5",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§2.5",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.1",
+      "to": "§2.1.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.1",
+      "to": "§2.2.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.1",
+      "to": "§1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.3",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.3",
+      "to": "§1.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.4",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.5",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.5",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.5",
+      "to": "§3.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.6",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.6",
+      "to": "§1.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.6",
+      "to": "§9.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.7",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.7",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.8",
+      "to": "§3.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§3.8",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.11",
+      "to": "§4.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.11",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.11",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.11",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.12",
+      "to": "§4.11",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.12",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.13",
+      "to": "§5.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.13",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.14",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.14",
+      "to": "§4.13",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.15",
+      "to": "§4.14",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.15",
+      "to": "§4.13",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.15",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.15",
+      "to": "§5.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.1",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.1",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.1",
+      "to": "§8.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.2",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.2",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.4",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.4",
+      "to": "§4.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.4",
+      "to": "§5.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.4",
+      "to": "§4.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.5",
+      "to": "§2.3.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.5",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.5",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§4.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§4.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§2.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.6",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.7",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.7",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.7",
+      "to": "§4.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.7",
+      "to": "§4.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.7",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§4.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§4.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.8",
+      "to": "§4.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§6.11",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§4.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§4.9",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§5.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§5.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§5.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§5.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§6.12",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.2",
+      "to": "§6.13",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.3",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.3",
+      "to": "§5.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.3",
+      "to": "§8.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.4",
+      "to": "§5.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.4",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.4",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.4",
+      "to": "§6.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§5.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§5.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.5",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.6",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.6",
+      "to": "§5.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.6",
+      "to": "§5.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.6",
+      "to": "§5.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.6",
+      "to": "§6.12",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§5.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§5.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§11.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§11.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§5.7",
+      "to": "§11.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.10",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.10",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.10",
+      "to": "§6.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.10",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.10",
+      "to": "§4.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.11",
+      "to": "§4.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.11",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.11",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.11",
+      "to": "§4.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.11",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.12",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.12",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.12",
+      "to": "§6.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.12",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.12",
+      "to": "§4.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.13",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.13",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.13",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.13",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.13",
+      "to": "§6.12",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.1",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.1",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.1",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.1",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.1",
+      "to": "§8.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.3",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.3",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.3",
+      "to": "§4.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.3",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.4",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.4",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.4",
+      "to": "§6.13",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.5",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.5",
+      "to": "§6.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.5",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.5",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.6",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.6",
+      "to": "§4.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.6",
+      "to": "§9.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.7",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.7",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.7",
+      "to": "§4.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.7",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.8",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.8",
+      "to": "§6.9",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.8",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.8",
+      "to": "§6.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.9",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.9",
+      "to": "§6.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.9",
+      "to": "§6.8",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.9",
+      "to": "§6.10",
+      "type": "depends_on"
+    },
+    {
+      "from": "§6.9",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§7.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§8.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.0",
+      "to": "§9.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.10",
+      "to": "§6.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.10",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.10",
+      "to": "§7.7",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.11",
+      "to": "§6.12",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.11",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.11",
+      "to": "§6.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.1",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.1",
+      "to": "§2.4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.1",
+      "to": "§4.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.1",
+      "to": "§9.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§2.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§7.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.2",
+      "to": "§9.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.3",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.3",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.3",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.3",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.4",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.4",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.5",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.5",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.5",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.6",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.6",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.6",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.6",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.7",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.7",
+      "to": "§6.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.8",
+      "to": "§6.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.8",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.9",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.9",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.9",
+      "to": "§7.0",
+      "type": "depends_on"
+    },
+    {
+      "from": "§7.9",
+      "to": "§9.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.1",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.1",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.1",
+      "to": "§8.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.2",
+      "to": "§4.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.2",
+      "to": "§6.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§6.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§8.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§8.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§3.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§4.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.3",
+      "to": "§8.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.4",
+      "to": "§8.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.4",
+      "to": "§8.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§8.4",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.1",
+      "to": "§5.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.1",
+      "to": "§3.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.1",
+      "to": "§3.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.1",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.1",
+      "to": "§9.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§9.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.1",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.2",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.3",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.4",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.5",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§7.6",
+      "type": "depends_on"
+    },
+    {
+      "from": "§9.2",
+      "to": "§8.4",
+      "type": "depends_on"
+    }
+  ]
+}
+</script>
+
+<script>
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const STATES = {
+    context:     { color: css('--state-context'),     label: "Backlog/Draft" },
+    exploration: { color: css('--state-exploration'), label: "Active" },
+    production:  { color: css('--state-production'),  label: "Finished" },
+    superseded:  { color: css('--state-superseded'),  label: "Deprecated/Superseded" },
+    invalidated: { color: css('--state-invalidated'), label: "Archived" },
+  };
+  const TYPE_SHAPE = {
+    spec:        'rect',      // PRD
+    decision:    'hexagon',   // CTX
+    hypothesis:  'diamond',   // EXP
+  };
+  const TYPE_LABEL = { spec: 'PRD', decision: 'CTX', hypothesis: 'EXP' };
+  const EDGE_STYLE = {
+    depends_on:        { color: css('--edge-depends_on'),        dash: null,    width: 1.5 },
+    refines:           { color: css('--edge-refines'),           dash: null,    width: 2 },
+    supersedes:        { color: css('--edge-supersedes'),        dash: null,    width: 3 },
+    contradicts:       { color: css('--edge-contradicts'),       dash: '6 4',   width: 2 },
+    related_to:        { color: css('--edge-related_to'),        dash: '2 4',   width: 1 },
+    produced_by:       { color: css('--edge-produced_by'),       dash: '1 3',   width: 1 },
+    evidence_for:      { color: css('--edge-evidence_for'),      dash: null,    width: 2 },
+    evidence_against:  { color: css('--edge-evidence_against'),  dash: null,    width: 2 },
+  };
+
+  const raw = JSON.parse(document.getElementById('graph-data').textContent);
+  const nodeMap = Object.fromEntries(raw.nodes.map(n => [n.id, n]));
+  const NODE_R = 20;
+
+  // group nodes by chapter (§N) so the layout has visual clusters
+  function chapterOf(id) {
+    const m = id.match(/§(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+  const chapters = [...new Set(raw.nodes.map(n => chapterOf(n.id)))].sort((a,b) => a-b);
+  const chapterAngle = Object.fromEntries(
+    chapters.map((c, i) => [c, (i / chapters.length) * Math.PI * 2])
+  );
+
+  raw.nodes.forEach((n, i) => {
+    const a = chapterAngle[chapterOf(n.id)] + (Math.random() - 0.5) * 0.4;
+    const r = 350 + Math.random() * 150;
+    n.x = Math.cos(a) * r;
+    n.y = Math.sin(a) * r;
+    n.vx = 0; n.vy = 0;
+    n.fixed = false;
+    n.hidden = false;
+  });
+
+  const defs = document.getElementById('defs');
+  const usedColors = new Set(Object.values(EDGE_STYLE).map(s => s.color));
+  for (const c of usedColors) {
+    const id = 'arrow_' + c.replace('#','');
+    defs.insertAdjacentHTML('beforeend', `
+      <marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="${c}"/>
+      </marker>`);
+  }
+  const arrowFor = c => 'arrow_' + c.replace('#','');
+
+  const svg = document.getElementById('svg');
+  const viewport = document.getElementById('viewport');
+  const edgeLayer = document.getElementById('edges');
+  const edgeLabelLayer = document.getElementById('edgeLabels');
+  const nodeLayer = document.getElementById('nodes');
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  function shapePath(shape, r) {
+    switch (shape) {
+      case 'rect':         return `M ${-r} ${-r*0.7} h ${2*r} v ${1.4*r} h ${-2*r} z`;
+      case 'diamond':      return `M 0 ${-r} L ${r} 0 L 0 ${r} L ${-r} 0 z`;
+      case 'hexagon':      {
+        const pts = [];
+        for (let k = 0; k < 6; k++) {
+          const a = Math.PI/6 + k * Math.PI/3;
+          pts.push(`${(k===0?'M':'L')} ${Math.cos(a)*r} ${Math.sin(a)*r}`);
+        }
+        return pts.join(' ') + ' z';
+      }
+      default: return null;
+    }
+  }
+
+  raw.edges.forEach(e => {
+    const style = EDGE_STYLE[e.type] ?? { color: '#888', dash: null, width: 1 };
+    const path = document.createElementNS(SVGNS, 'path');
+    path.setAttribute('class', 'edge');
+    path.setAttribute('stroke', style.color);
+    path.setAttribute('stroke-width', style.width);
+    if (style.dash) path.setAttribute('stroke-dasharray', style.dash);
+    path.setAttribute('marker-end', `url(#${arrowFor(style.color)})`);
+    edgeLayer.appendChild(path);
+
+    const label = document.createElementNS(SVGNS, 'text');
+    label.setAttribute('class', 'edge-label');
+    label.textContent = e.type;
+    edgeLabelLayer.appendChild(label);
+
+    e._el = path;
+    e._label = label;
+    e._style = style;
+  });
+
+  raw.nodes.forEach(n => {
+    const g = document.createElementNS(SVGNS, 'g');
+    g.setAttribute('class', 'node-group');
+    g.dataset.id = n.id;
+
+    const stateColor = STATES[n.state]?.color ?? '#888';
+    const isFinal = n.state === 'superseded' || n.state === 'invalidated';
+    const shape = TYPE_SHAPE[n.type] ?? 'rect';
+
+    let shapeEl;
+    const path = shapePath(shape, NODE_R);
+    if (path) {
+      shapeEl = document.createElementNS(SVGNS, 'path');
+      shapeEl.setAttribute('d', path);
+    } else {
+      shapeEl = document.createElementNS(SVGNS, 'circle');
+      shapeEl.setAttribute('r', NODE_R);
+    }
+    shapeEl.setAttribute('class', 'shape');
+    shapeEl.setAttribute('fill', stateColor);
+    shapeEl.setAttribute('stroke', isFinal ? css('--bg') : stateColor);
+    shapeEl.setAttribute('stroke-width', '1.5');
+    if (isFinal) shapeEl.setAttribute('stroke-dasharray', '4 3');
+
+    const idText = document.createElementNS(SVGNS, 'text');
+    idText.setAttribute('class', 'label');
+    idText.setAttribute('text-anchor', 'middle');
+    idText.setAttribute('dominant-baseline', 'central');
+    idText.setAttribute('y', '0');
+    idText.style.fontWeight = '600';
+    idText.style.fontSize = '9.5px';
+    idText.textContent = n.id;
+
+    const titleText = document.createElementNS(SVGNS, 'text');
+    titleText.setAttribute('class', 'label outside');
+    titleText.setAttribute('text-anchor', 'middle');
+    titleText.setAttribute('y', NODE_R + 12);
+    titleText.textContent = n.title.length > 32 ? n.title.slice(0, 30) + '…' : n.title;
+
+    g.appendChild(shapeEl);
+    g.appendChild(idText);
+    g.appendChild(titleText);
+    nodeLayer.appendChild(g);
+
+    n._el = g;
+    n._shape = shapeEl;
+    n._title = titleText;
+  });
+
+  const REPULSION = 8000;
+  const SPRING_LENGTH = 110;
+  const SPRING_K = 0.05;
+  const CENTER_K = 0.0015;
+  const DAMPING = 0.82;
+  let temperature = 1.0;
+
+  function tick() {
+    const live = raw.nodes.filter(n => !n.hidden);
+    for (let i = 0; i < live.length; i++) {
+      for (let j = i + 1; j < live.length; j++) {
+        const a = live[i], b = live[j];
+        let dx = b.x - a.x, dy = b.y - a.y;
+        let d2 = dx*dx + dy*dy;
+        if (d2 < 1) { dx = Math.random() - 0.5; dy = Math.random() - 0.5; d2 = 1; }
+        const d = Math.sqrt(d2);
+        const f = REPULSION / d2;
+        const fx = f * dx / d, fy = f * dy / d;
+        a.vx -= fx; a.vy -= fy;
+        b.vx += fx; b.vy += fy;
+      }
+    }
+    for (const e of raw.edges) {
+      const a = nodeMap[e.from], b = nodeMap[e.to];
+      if (!a || !b || a.hidden || b.hidden) continue;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const f = (d - SPRING_LENGTH) * SPRING_K;
+      const fx = f * dx / d, fy = f * dy / d;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    }
+    for (const n of live) {
+      n.vx -= n.x * CENTER_K;
+      n.vy -= n.y * CENTER_K;
+    }
+    for (const n of live) {
+      if (n.fixed) { n.vx = 0; n.vy = 0; continue; }
+      n.vx *= DAMPING; n.vy *= DAMPING;
+      n.x += n.vx * temperature;
+      n.y += n.vy * temperature;
+    }
+    temperature = Math.max(0.05, temperature * 0.998);
+  }
+
+  function render() {
+    for (const n of raw.nodes) {
+      n._el.setAttribute('transform', `translate(${n.x},${n.y})`);
+      n._el.style.display = n.hidden ? 'none' : '';
+    }
+    for (const e of raw.edges) {
+      const a = nodeMap[e.from], b = nodeMap[e.to];
+      if (!a || !b) { e._el.style.display = 'none'; e._label.style.display = 'none'; continue; }
+      const hide = a.hidden || b.hidden;
+      e._el.style.display = hide ? 'none' : '';
+      e._label.style.display = hide ? 'none' : '';
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const ux = dx/d, uy = dy/d;
+      const sx = a.x + ux * NODE_R, sy = a.y + uy * NODE_R;
+      const ex = b.x - ux * (NODE_R + 4), ey = b.y - uy * (NODE_R + 4);
+      e._el.setAttribute('d', `M ${sx} ${sy} L ${ex} ${ey}`);
+      e._label.setAttribute('x', (sx + ex) / 2);
+      e._label.setAttribute('y', (sy + ey) / 2 - 3);
+    }
+  }
+
+  function loop() { tick(); render(); requestAnimationFrame(loop); }
+  loop();
+
+  let panX = 0, panY = 0, scale = 0.7;
+  function applyView() {
+    const rect = svg.getBoundingClientRect();
+    viewport.setAttribute('transform',
+      `translate(${rect.width/2 + panX},${rect.height/2 + panY}) scale(${scale})`);
+  }
+  applyView();
+  window.addEventListener('resize', applyView);
+
+  svg.addEventListener('wheel', ev => {
+    ev.preventDefault();
+    const delta = -ev.deltaY * 0.001;
+    scale = Math.min(3, Math.max(0.15, scale * (1 + delta)));
+    applyView();
+  }, { passive: false });
+
+  let panning = null;
+  svg.addEventListener('mousedown', ev => {
+    if (ev.target.closest('.node-group')) return;
+    panning = { x: ev.clientX, y: ev.clientY, px: panX, py: panY };
+    svg.classList.add('dragging');
+  });
+  window.addEventListener('mousemove', ev => {
+    if (!panning) return;
+    panX = panning.px + (ev.clientX - panning.x);
+    panY = panning.py + (ev.clientY - panning.y);
+    applyView();
+  });
+  window.addEventListener('mouseup', () => { panning = null; svg.classList.remove('dragging'); });
+
+  function clientToWorld(cx, cy) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: (cx - rect.left - rect.width/2 - panX) / scale,
+      y: (cy - rect.top - rect.height/2 - panY) / scale,
+    };
+  }
+  let dragging = null;
+  nodeLayer.addEventListener('mousedown', ev => {
+    const g = ev.target.closest('.node-group');
+    if (!g) return;
+    ev.stopPropagation();
+    const n = nodeMap[g.dataset.id];
+    n.fixed = true;
+    dragging = { node: n };
+    temperature = Math.max(temperature, 0.5);
+  });
+  window.addEventListener('mousemove', ev => {
+    if (!dragging) return;
+    const p = clientToWorld(ev.clientX, ev.clientY);
+    dragging.node.x = p.x; dragging.node.y = p.y;
+    dragging.node.vx = 0; dragging.node.vy = 0;
+  });
+  window.addEventListener('mouseup', () => {
+    if (dragging) { dragging.node.fixed = false; dragging = null; }
+  });
+
+  let selectedId = null;
+  nodeLayer.addEventListener('click', ev => {
+    const g = ev.target.closest('.node-group');
+    if (!g) return;
+    selectNode(g.dataset.id);
+  });
+  svg.addEventListener('click', ev => {
+    if (!ev.target.closest('.node-group')) selectNode(null);
+  });
+
+  function selectNode(id) {
+    selectedId = id;
+    const neighbours = new Set();
+    if (id) {
+      neighbours.add(id);
+      for (const e of raw.edges) {
+        if (e.from === id) neighbours.add(e.to);
+        if (e.to === id) neighbours.add(e.from);
+      }
+    }
+    for (const n of raw.nodes) {
+      n._el.classList.toggle('selected', n.id === id);
+      n._el.classList.toggle('dim', !!id && !neighbours.has(n.id));
+    }
+    for (const e of raw.edges) {
+      const incident = id && (e.from === id || e.to === id);
+      e._el.classList.toggle('dim', !!id && !incident);
+      e._label.classList.toggle('dim', !!id && !incident);
+    }
+    renderDetails(id);
+  }
+
+  const details = document.getElementById('details');
+  function renderDetails(id) {
+    if (!id) {
+      details.innerHTML = `<h2>Details</h2><p class="empty">Knoten anklicken, um Inhalte zu sehen.</p>`;
+      return;
+    }
+    const n = nodeMap[id];
+    if (!n) return;
+    const outgoing = raw.edges.filter(e => e.from === id);
+    const incoming = raw.edges.filter(e => e.to === id);
+    details.innerHTML = `
+      <h2>Knoten</h2>
+      <p class="node-title">${esc(n.title)}</p>
+      <div class="meta">
+        <b>${esc(n.id)}</b> · ${esc(TYPE_LABEL[n.type] || n.type)} ·
+        <span style="color:${STATES[n.state]?.color}">${esc(STATES[n.state]?.label || n.state)}</span>
+        <br><span>created: ${esc(n.created || '—')}</span>
+      </div>
+      <div class="body">${esc(n.body || '')}</div>
+      <div class="edges">
+        <h2>Kanten</h2>
+        ${edgeList('ausgehend (zeigt auf)', outgoing, 'to')}
+        ${edgeList('eingehend (wird referenziert)', incoming, 'from')}
+      </div>
+    `;
+  }
+  function edgeList(label, list, otherKey) {
+    if (!list.length) return `<div class="meta">${label}: —</div>`;
+    return `
+      <div class="meta">${label}:</div>
+      <ul>${list.map(e =>
+        `<li><b>${esc(e.type)}</b> → ${esc(e[otherKey])}${e.note ? ` <span>(${esc(e.note)})</span>` : ''}</li>`
+      ).join('')}</ul>`;
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ----- Filters -----
+  const stateFilterRoot = document.getElementById('state-filters');
+  const activeStates = new Set(Object.keys(STATES));
+  for (const [key, meta] of Object.entries(STATES)) {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.setAttribute('aria-pressed', 'true');
+    chip.dataset.state = key;
+    chip.innerHTML = `<span class="dot" style="background:${meta.color}"></span>${meta.label}`;
+    chip.onclick = () => {
+      if (activeStates.has(key)) activeStates.delete(key); else activeStates.add(key);
+      chip.setAttribute('aria-pressed', activeStates.has(key) ? 'true' : 'false');
+      applyFilter();
+    };
+    stateFilterRoot.appendChild(chip);
+  }
+  const typeFilterRoot = document.getElementById('type-filters');
+  const activeTypes = new Set(Object.keys(TYPE_SHAPE));
+  for (const [key, _shape] of Object.entries(TYPE_SHAPE)) {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.setAttribute('aria-pressed', 'true');
+    chip.dataset.t = key;
+    chip.textContent = TYPE_LABEL[key] || key;
+    chip.onclick = () => {
+      if (activeTypes.has(key)) activeTypes.delete(key); else activeTypes.add(key);
+      chip.setAttribute('aria-pressed', activeTypes.has(key) ? 'true' : 'false');
+      applyFilter();
+    };
+    typeFilterRoot.appendChild(chip);
+  }
+  const searchInput = document.getElementById('search');
+  let searchQuery = '';
+  searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
+    applyFilter();
+  });
+  function applyFilter() {
+    for (const n of raw.nodes) {
+      const stateOk = activeStates.has(n.state);
+      const typeOk = activeTypes.has(n.type);
+      const searchOk = !searchQuery
+        || n.id.toLowerCase().includes(searchQuery)
+        || n.title.toLowerCase().includes(searchQuery);
+      n.hidden = !(stateOk && typeOk && searchOk);
+    }
+    temperature = Math.max(temperature, 0.5);
+  }
+
+  const legend = document.getElementById('legend');
+  const edgeLegend = Object.entries(EDGE_STYLE)
+    .filter(([k]) => raw.edges.some(e => e.type === k))
+    .map(([k, s]) =>
+      `<span class="group"><span class="edge-swatch" style="border-top-color:${s.color};border-top-style:${s.dash ? 'dashed' : 'solid'}"></span>${k}</span>`
+    ).join('');
+  legend.innerHTML = edgeLegend;
+</script>
+</body>
+</html>
