@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Die Insel im Ozean — Patrice Chevillat</title>
+  <meta name="description" content="Eine Bildbetrachtung über Mensch, KI und die Architektur der Kontrolle — gelesen entlang des chevp-ai-framework." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #fbfaf6;
+      --paper-edge: #efece2;
+      --ink: #1f1d1a;
+      --ink-soft: #4a4640;
+      --ink-faint: #8a847b;
+      --rule: #d9d3c4;
+      --accent: #7a3b2e;
+      --accent-soft: #b9866b;
+      --tag-bg: #f1ede0;
+      --tag-ink: #5b4a32;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+      font-size: 19px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s; }
+    a:hover { border-bottom-color: var(--accent); }
+
+    /* ─────────── Site header (portfolio brand) ─────────── */
+    .site-header {
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+    .site-header-inner {
+      max-width: 1080px; margin: 0 auto;
+      padding: 22px 32px;
+      display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    }
+    .brand {
+      font-family: 'EB Garamond', serif;
+      font-size: 22px; font-weight: 500; letter-spacing: -0.005em;
+      color: var(--ink); border-bottom: none;
+    }
+    .brand .brand-mark {
+      color: var(--accent); margin-right: 6px; font-style: italic;
+    }
+    .brand .brand-sub {
+      display: block; font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--ink-faint); font-weight: 500; margin-top: 2px;
+    }
+    .site-nav {
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .site-nav a { color: var(--ink-soft); margin-left: 28px; }
+    .site-nav a.active { color: var(--accent); }
+    .site-nav a:first-child { margin-left: 0; }
+
+    /* ─────────── Article frame ─────────── */
+    .article {
+      max-width: 720px; margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+
+    /* Back link */
+    .back-link {
+      font-family: 'Inter', sans-serif; font-size: 12px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 40px; display: inline-block;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* Article header (editorial style) */
+    .article-meta {
+      font-family: 'Inter', sans-serif; font-size: 12px;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 18px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .article-meta .date { color: var(--accent); font-weight: 500; }
+    .article-meta .meta-dot { color: var(--rule); }
+    .article-meta .tag-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .article-meta .tag-chips span {
+      background: var(--tag-bg); color: var(--tag-ink);
+      padding: 3px 10px; border-radius: 2px; letter-spacing: .06em;
+      font-size: 10.5px;
+    }
+
+    .article-header h1 {
+      font-family: 'EB Garamond', serif; font-weight: 500;
+      font-size: 48px; line-height: 1.1; letter-spacing: -0.012em;
+      margin: 0 0 14px; color: var(--ink);
+    }
+    .article-header .lede {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      font-size: 22px; line-height: 1.45; color: var(--ink-soft);
+      margin: 0 0 36px;
+    }
+    .article-header .author-line {
+      display: flex; align-items: center; gap: 12px;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      color: var(--ink-faint); margin: 0 0 40px;
+      padding-bottom: 28px; border-bottom: 1px solid var(--rule);
+    }
+    .author-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent); color: var(--paper);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'EB Garamond', serif; font-style: italic;
+      font-size: 16px; font-weight: 500;
+    }
+    .author-line strong { color: var(--ink-soft); font-weight: 600; }
+    .author-line .reading-time::before { content: '·'; color: var(--rule); margin-right: 12px; }
+
+    /* Hero image */
+    .hero { margin: 0 0 48px; }
+    .hero img {
+      display: block; width: 100%; height: auto;
+      border-radius: 2px;
+      box-shadow: 0 1px 0 var(--paper-edge), 0 24px 48px -28px rgba(31,29,26,0.4);
+    }
+    .hero-cap {
+      font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink-faint);
+      text-align: center; margin-top: 14px;
+    }
+    .hero-cap em {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      text-transform: none; letter-spacing: .02em;
+      color: var(--ink-soft); font-size: 14px;
+    }
+
+    /* Body — single column for article reading */
+    .body { text-align: left; }
+    .body h2 {
+      font-family: 'EB Garamond', serif; font-weight: 600;
+      font-size: 26px; line-height: 1.25;
+      margin: 44px 0 14px;
+      display: flex; align-items: baseline; gap: 14px;
+    }
+    .body h2 .num {
+      font-family: 'Inter', sans-serif; font-weight: 500;
+      font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent-soft); flex-shrink: 0;
+    }
+    .body p { margin: 0 0 18px; font-size: 19px; color: var(--ink); }
+    .body p:last-child { margin-bottom: 0; }
+
+    /* Pull quote */
+    .pull {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      font-size: 28px; line-height: 1.3; color: var(--accent);
+      text-align: center; max-width: 600px; margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Antithese */
+    .antithese {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      margin: 36px 0; border: 1px solid var(--rule); border-radius: 2px;
+      overflow: hidden;
+    }
+    .antithese > div { padding: 22px 26px; }
+    .antithese .nicht {
+      background: #f7f4ea; color: var(--ink-faint);
+      border-right: 1px solid var(--rule);
+    }
+    .antithese .sondern { background: var(--paper); color: var(--ink); }
+    .antithese .label {
+      font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: .22em;
+      text-transform: uppercase; margin-bottom: 8px; display: block;
+    }
+    .antithese .nicht .label { color: var(--ink-faint); }
+    .antithese .sondern .label { color: var(--accent); }
+    .antithese p {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      font-size: 18px; line-height: 1.4; margin: 0;
+    }
+
+    /* Glossar */
+    .glossar {
+      width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif;
+      font-size: 14px; margin: 16px 0;
+    }
+    .glossar th, .glossar td {
+      text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    .glossar th {
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-faint); font-weight: 600;
+    }
+    .glossar td:first-child {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      color: var(--accent); width: 30%; font-size: 17px;
+    }
+    .glossar td:last-child { color: var(--ink-soft); }
+    .glossar tr:last-child td { border-bottom: none; }
+
+    /* Principles grid */
+    .principles {
+      list-style: none; margin: 24px 0; padding: 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .principles li {
+      border-left: 2px solid var(--accent-soft); padding: 10px 16px;
+      background: #f7f4ea;
+    }
+    .principles li strong {
+      display: block; font-family: 'Inter', sans-serif; font-size: 11px;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .principles li span {
+      font-family: 'EB Garamond', serif; font-style: italic;
+      color: var(--ink-soft); font-size: 16px;
+    }
+
+    /* Author bio at end */
+    .author-bio {
+      margin-top: 64px; padding: 28px 0; border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      display: flex; gap: 18px; align-items: center;
+    }
+    .author-bio .author-avatar { width: 56px; height: 56px; font-size: 22px; }
+    .author-bio .bio-text {
+      font-size: 16px; color: var(--ink-soft);
+    }
+    .author-bio .bio-text strong { color: var(--ink); font-weight: 600; }
+    .author-bio .bio-text a { color: var(--accent); }
+
+    /* Related */
+    .related {
+      margin-top: 56px;
+    }
+    .related h3 {
+      font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--ink-faint); margin: 0 0 18px;
+    }
+    .related ul { list-style: none; margin: 0; padding: 0; }
+    .related li {
+      padding: 14px 0; border-bottom: 1px solid var(--rule);
+      display: flex; justify-content: space-between; gap: 24px;
+      font-size: 16px;
+    }
+    .related li:last-child { border-bottom: none; }
+    .related li a { color: var(--ink); border-bottom: none; }
+    .related li a:hover { color: var(--accent); }
+    .related li .meta {
+      font-family: 'Inter', sans-serif; font-size: 11px;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+      flex-shrink: 0;
+    }
+
+    /* ─────────── Footer ─────────── */
+    .site-footer {
+      border-top: 1px solid var(--rule);
+      background: var(--paper-edge);
+      margin-top: 80px;
+    }
+    .site-footer-inner {
+      max-width: 1080px; margin: 0 auto;
+      padding: 36px 32px;
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 24px; flex-wrap: wrap;
+      font-family: 'Inter', sans-serif; font-size: 12px; color: var(--ink-faint);
+    }
+    .site-footer .copy { letter-spacing: .02em; }
+    .site-footer .copy em {
+      font-family: 'EB Garamond', serif; font-style: italic; color: var(--ink-soft);
+    }
+    .site-footer nav a { color: var(--ink-soft); margin-left: 18px; }
+    .site-footer nav a:first-child { margin-left: 0; }
+
+    @media (max-width: 720px) {
+      .site-header-inner { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 22px; }
+      .site-nav a { margin-left: 0; margin-right: 18px; }
+      .article { padding: 36px 22px 56px; }
+      .article-header h1 { font-size: 36px; }
+      .article-header .lede { font-size: 19px; }
+      .antithese { grid-template-columns: 1fr; }
+      .antithese .nicht { border-right: none; border-bottom: 1px solid var(--rule); }
+      .principles { grid-template-columns: 1fr; }
+      .site-footer-inner { flex-direction: column; align-items: flex-start; }
+      .site-footer nav a { margin-left: 0; margin-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="https://chevp.github.io/">
+        Patrice Chevillat
+      </a>
+      <nav class="site-nav">
+        <a href="https://chevp.github.io/chevp-ai-framework/">Haltung</a>
+        <a href="https://chevp.github.io/">Über mich</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="article">
+
+    <a class="back-link" href="https://chevp.github.io/">← Zur Hauptseite</a>
+
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="date">Mai 2026</span>
+        <span class="meta-dot">·</span>
+        <span class="tag-chips">
+          <span>Bildbetrachtung</span>
+          <span>Haltung</span>
+          <span>Mensch-KI</span>
+          <span>Framework</span>
+        </span>
+      </div>
+      <h1>Die Insel im Ozean</h1>
+      <p class="lede">
+        Eine Bildbetrachtung über Mensch, KI und die Architektur der Kontrolle — gelesen entlang des
+        chevp-ai-framework.
+      </p>
+      <div class="author-line">
+        <span class="author-avatar">P</span>
+        <span>von <strong>Patrice Chevillat</strong></span>
+        <span class="reading-time">7 min Lesezeit</span>
+      </div>
+    </header>
+
+    <figure class="hero">
+      <img src="island-on-the-ocean.png" alt="Eine isometrische Insel mit detailreich gezeichneter Stadt — Türme, Kuppeln, Gärten, Mauern — schwebt über einem dunklen Ozean, dessen Wellen aus KI-Symbolen, Code-Fragmenten und Fehlermeldungen bestehen. In der Mitte der Stadt steht eine kleine menschliche Figur an einem Lichtpunkt." />
+      <figcaption class="hero-cap"><em>„The Library &amp; Statues" — eine Insel auf dem Ozean der Modelle.</em></figcaption>
+    </figure>
+
+    <article class="body">
+
+      <p>
+        Das Bild zeigt nur scheinbar eine Stadt. Es zeigt eine <em>Haltung</em>: eine kleine, sorgfältig
+        gebaute Insel, die auf einem Ozean aus Code, Modellen, Fehlermeldungen und Promptfragmenten ruht.
+        Die KI ist hier nicht der Feind und nicht das Werkzeug — sie ist der Untergrund. Bewohnbar wird er
+        nur dort, wo Menschen Mauern, Wege und Lichter ziehen. Dieser Text liest das Bild als Allegorie der
+        Mensch-KI-Beziehung und legt es über das <em>chevp-ai-framework</em>, dessen Versprechen lautet:
+        <em>AI writes the code. You stay in control.</em>
+      </p>
+
+      <h2><span class="num">01</span>Was wir sehen</h2>
+      <p>
+        Eine isometrische Insel, getragen von Erde und Stein, schwebt über einem nachtblauen Ozean. Auf ihr
+        steht eine Stadt: Kuppeln, Türme, Fachwerk, Brücken, Gärten, eine Bibliothek. Mauern fassen das
+        Ganze ein. Im Zentrum, klein, fast übersehbar, ein Mensch an einem Lichtpunkt — eine Laterne, ein
+        offenes Tor, eine Schwelle. Der Ozean ringsum besteht nicht aus Wasser. Er besteht aus Symbolen:
+        Codeblöcken, Logos, Statuscodes, abgebrochenen Sätzen — <em>„I'm sorry, but…"</em>, <em>404</em>,
+        ein Herz, ein Würfel, ein Modellname.
+      </p>
+      <p>
+        Wer das Bild ein zweites Mal ansieht, merkt: das eigentliche Motiv ist nicht die Stadt. Es ist
+        die <em>Grenze</em> zwischen Stadt und Ozean.
+      </p>
+
+      <h2><span class="num">02</span>Der Ozean</h2>
+      <p>
+        Der Ozean ist nicht böse. Er ist nur ungerichtet. Was hier tost, ist die ganze versammelte Kapazität
+        moderner Modelle — die Fähigkeit, alles zu sagen, das meiste plausibel, vieles richtig, einiges
+        falsch, und nichts davon mit Begründung. Der Ozean kann tragen, und er kann verschlingen. Er kennt
+        keine Bedeutung; er erzeugt Form, ohne sie zu meinen.
+      </p>
+      <p>
+        Wer ohne Insel auf diesem Ozean treibt, überlebt eine Weile durch Glück. Aber er bewohnt ihn nicht.
+      </p>
+
+      <h2><span class="num">03</span>Die Insel</h2>
+      <p>
+        Die Insel ist klein im Verhältnis zum Ozean. Sie ist es immer. Das ist keine Schwäche, sondern die
+        Definition: ein bewohnbarer Ort ist <em>begrenzt</em>. Eine grenzenlose Insel wäre wieder nur Ozean.
+        Was die Insel ausmacht, sind ihre Mauern, ihre Wege, ihre Häuser — Strukturen, die der Mensch
+        eingezogen hat, damit das, was darunter strömt, nicht alles bestimmt.
+      </p>
+      <p>
+        Übersetzt heißt das: Kontrolle ist nicht das Gegenteil von Fähigkeit. Sie ist die <em>Form</em>, in
+        der Fähigkeit nutzbar wird.
+      </p>
+
+      <p class="pull">
+        Die Insel ist nicht das Gegenteil des Ozeans. Sie ist die Gestalt, in der der Ozean bewohnbar wird.
+      </p>
+
+      <h2><span class="num">04</span>Lesart der Symbole</h2>
+      <p>
+        Das Bild lässt sich Punkt für Punkt auf die Frage nach Mensch und KI legen. Jedes Element entspricht
+        einer Entscheidung im Entwurf:
+      </p>
+
+      <table class="glossar">
+        <thead>
+          <tr><th>Im Bild</th><th>In der Praxis</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Der Ozean</td>
+            <td>Die rohe, ungerichtete Kapazität der Modelle — generativ, schnell, ohne Auskunftsfähigkeit.</td>
+          </tr>
+          <tr>
+            <td>Die Insel</td>
+            <td>Der kuratierte Raum: Plan, Spec, Entscheidung, Artefakt. Nichts entsteht hier zufällig.</td>
+          </tr>
+          <tr>
+            <td>Die Mauer</td>
+            <td>Die Gates. Was hereinkommt, kommt durch ein Tor — und das Tor steht unter menschlicher Hand.</td>
+          </tr>
+          <tr>
+            <td>Die Wege</td>
+            <td>Die Phasen. Von Verstehen zu Planen zu Bauen führt kein Sprung, sondern eine Sequenz.</td>
+          </tr>
+          <tr>
+            <td>Die Bibliothek</td>
+            <td>Der Kontext. Erinnerung in lesbarer Form, nicht in Modellgewichten versteckt.</td>
+          </tr>
+          <tr>
+            <td>Das Licht in der Mitte</td>
+            <td>Der Checkpoint. Der Punkt, an dem ein Mensch ja oder nein sagt, bevor es weitergeht.</td>
+          </tr>
+          <tr>
+            <td>Die Figur</td>
+            <td>Der Mensch. Klein, aber im Zentrum. Nicht Zuschauer — Entscheider.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">05</span>Die Mauer und das Tor</h2>
+      <p>
+        Eine Mauer ohne Tor ist Verweigerung. Ein Tor ohne Mauer ist Naivität. Die Insel zeigt beides
+        zusammen: sie schließt nicht aus, sie <em>regelt den Eintritt</em>. Das ist die ganze Pointe.
+        Wer KI wegsperrt, verliert ihre Kraft; wer ihr alles öffnet, verliert sich selbst. Die Frage ist
+        nicht <em>ob</em> man die Maschine hereinlässt, sondern <em>wo, wie und in welcher Form</em>.
+      </p>
+
+      <div class="antithese">
+        <div class="nicht">
+          <span class="label">Nicht</span>
+          <p>Ein Modell, das einen Auftrag entgegennimmt und ein Ergebnis zurückgibt, dessen Weg dorthin
+          niemand mehr abläuft.</p>
+        </div>
+        <div class="sondern">
+          <span class="label">Sondern</span>
+          <p>Eine Insel mit benannten Toren, an denen der Mensch entscheidet, was hereinkommt, weiterläuft
+          oder umkehrt.</p>
+        </div>
+      </div>
+
+      <h2><span class="num">06</span>Das Framework als Bauplan</h2>
+      <p>
+        Das <a href="https://chevp.github.io/chevp-ai-framework/">chevp-ai-framework</a> ist die schriftliche
+        Form dessen, was das Bild zeigt. Sein Versprechen ist nicht, KI zu übertreffen, sondern sie
+        <em>einzubinden</em> — in eine Folge von drei Phasen mit menschlichen Schwellen dazwischen:
+        <em>Understand</em>, <em>Plan</em>, <em>Build</em>. Zwischen je zwei Phasen ein Tor (G1, G2, G3),
+        das nur der Mensch durchschreiten lässt.
+      </p>
+      <p>
+        Vier Sätze tragen dieses Bauwerk:
+      </p>
+
+      <ul class="principles">
+        <li>
+          <strong>Context before code</strong>
+          <span>KI ohne Kontext erfindet Lösungen für Probleme, die niemand gestellt hat.</span>
+        </li>
+        <li>
+          <strong>A prototype is not the product</strong>
+          <span>Was schnell entsteht, ist nicht das, was bleibt — Validierung ist kein Luxus.</span>
+        </li>
+        <li>
+          <strong>Small steps, with stops</strong>
+          <span>Schritt, Pause, Prüfung. Nicht weil es langsamer ist, sondern weil es lesbar ist.</span>
+        </li>
+        <li>
+          <strong>The human decides</strong>
+          <span>Die Maschine schlägt vor. Der Mensch verfügt. Verantwortung ist nicht delegierbar.</span>
+        </li>
+      </ul>
+
+      <p>
+        Diese vier Sätze sind die Mauern der Insel. Sie sperren den Ozean nicht aus — sie geben ihm Form.
+      </p>
+
+      <h2><span class="num">07</span>Die kleine Figur</h2>
+      <p>
+        Auffällig ist, wie klein der Mensch auf dem Bild gezeichnet ist. Eine ehrliche Größenordnung: eine
+        Person ist gegenüber der gesammelten Kraft eines Modellsystems winzig. Dennoch steht sie im
+        Zentrum, am Licht, an der Schwelle. Das ist die ganze Erzählung des Frameworks: nicht <em>weil</em>
+        der Mensch der Maschine überlegen wäre, sondern <em>weil</em> die Verantwortung im Maßstab eines
+        Menschen geschnitten ist und nirgendwo sonst hineinpasst.
+      </p>
+
+      <h2><span class="num">08</span>Schluss</h2>
+      <p>
+        Das Bild ist kein Manifest, aber es lässt sich wie eines lesen. Eine Insel im Ozean ist ein
+        Versprechen: dass es möglich bleibt, einen Ort zu bewohnen, der nicht von dem bestimmt wird, was
+        unter ihm strömt. Das Framework gibt diesem Versprechen Form. Die Phasen sind die Wege, die Gates
+        sind die Tore, der Mensch ist die Figur am Licht. Nicht Aktionismus. Nicht Autonomie. <em>Eine
+        bewohnbare Form.</em>
+      </p>
+
+      <aside class="author-bio">
+        <span class="author-avatar">P</span>
+        <div class="bio-text">
+          <strong>Patrice Chevillat</strong> schreibt über Werkzeuge, Prozesse und Haltung im
+          Zusammenspiel von Mensch und KI. Mehr im
+          <a href="https://chevp.github.io/chevp-ai-framework/">chevp-ai-framework</a>.
+        </div>
+      </aside>
+
+      <section class="related">
+        <h3>Verwandt</h3>
+        <ul>
+          <li>
+            <a href="https://chevp.github.io/chevp-ai-framework/">chevp-ai-framework — AI writes the code. You stay in control.</a>
+            <span class="meta">Framework</span>
+          </li>
+        </ul>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <span class="copy">© <span id="year">2026</span> <em>Patrice Chevillat</em>. Alle Rechte vorbehalten.</span>
+      <nav>
+        <a href="https://chevp.github.io/">Hauptseite</a>
+        <a href="https://chevp.github.io/chevp-ai-framework/">Framework</a>
+        <a href="https://chevp.github.io/site-policy/impressum.html">Impressum</a>
+        <a href="https://chevp.github.io/site-policy/privacy.html">Datenschutz</a>
+        <a href="https://chevp.github.io/site-policy/contact.html">Kontakt</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
