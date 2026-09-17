@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Product IDE — UI Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#12151b;
+    --surface:#181d25;
+    --surface-2:#1f2530;
+    --surface-3:#262d3a;
+    --border:#2b3240;
+    --border-soft:#232a36;
+    --text:#e7eaf1;
+    --text-dim:#9aa3b6;
+    --text-faint:#5e6779;
+    --accent:#a98af5;
+    --accent-soft:rgba(169,138,245,0.14);
+    --warn:#e0a84a;
+    --warn-soft:rgba(224,168,74,0.14);
+    --good:#5fbf8f;
+    --good-soft:rgba(95,191,143,0.14);
+    --danger:#e0707a;
+    --danger-soft:rgba(224,112,122,0.14);
+    --paper:#f3efe6;
+    --paper-ink:#242017;
+    --font-ui:'Instrument Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+    --font-doc:'Source Serif 4',Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--ground);
+    color:var(--text);
+    font-family:var(--font-ui);
+    font-size:13.5px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+  ::selection{background:var(--accent-soft); color:var(--text);}
+  button{font:inherit;}
+
+  .app{display:flex; flex-direction:column; min-height:100vh;}
+
+  /* ---------- Titlebar ---------- */
+  .titlebar{
+    display:flex; align-items:center; gap:22px;
+    padding:9px 16px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--border);
+    flex:none;
+  }
+  .titlebar .app-name{font-weight:700; font-size:13px; letter-spacing:-0.01em;}
+  .titlebar .menu{display:flex; gap:16px; font-size:12.5px; color:var(--text-faint);}
+  .titlebar .menu span{cursor:default;}
+  .titlebar .menu span:hover{color:var(--text-dim);}
+  .titlebar .gsearch{
+    margin-left:auto; display:flex; align-items:center; gap:7px;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:5px 10px; width:220px;
+  }
+  .titlebar .gsearch svg{flex:none; opacity:.55;}
+  .titlebar .gsearch input{
+    background:none; border:none; outline:none; color:var(--text);
+    font-size:12px; width:100%; font-family:var(--font-ui);
+  }
+  .titlebar .gsearch input::placeholder{color:var(--text-faint);}
+
+  /* ---------- Page tab bar ---------- */
+  .pagebar{
+    display:flex; align-items:center; gap:2px;
+    padding:0 12px; background:var(--surface);
+    border-bottom:1px solid var(--border); flex:none;
+    overflow-x:auto;
+  }
+  .pagebar button{
+    background:none; border:none; border-bottom:2px solid transparent;
+    color:var(--text-faint); font-size:12.5px; padding:10px 13px; cursor:pointer;
+    white-space:nowrap;
+  }
+  .pagebar button:hover:not(:disabled){color:var(--text-dim);}
+  .pagebar button.active{color:var(--text); border-bottom-color:var(--accent); font-weight:500;}
+  .pagebar button:disabled{color:#3a4150; cursor:not-allowed;}
+
+  .page-content{flex:1; min-height:0; display:flex; flex-direction:column;}
+  .page{flex:1; min-height:0; display:none; flex-direction:column;}
+  .page.active{display:flex;}
+
+  /* ============ TEST WORKSPACE (Tests page) ============ */
+  .doc-workspace{flex:1; min-height:0; display:grid; grid-template-columns:222px 1fr 300px;}
+
+  .structure-panel{border-right:1px solid var(--border-soft); overflow-y:auto; padding:14px 8px;}
+  .panel-heading{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--text-faint); padding:0 8px 10px;
+  }
+  .tree-node{display:flex; align-items:center; gap:7px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:13px; color:var(--text-dim);}
+  .tree-node:hover{background:var(--surface-2); color:var(--text);}
+  .tree-node.selected{background:var(--surface-3); color:var(--text); font-weight:500; box-shadow:inset 2px 0 0 var(--accent);}
+  .tree-node .caret{width:10px; font-size:10px; color:var(--text-faint); flex:none;}
+  .tree-node.depth-2{padding-left:24px;}
+  .tree-node .tc-status{margin-left:auto; width:6px; height:6px; border-radius:50%; flex:none;}
+  .tree-node .tc-status.approved{background:var(--good);}
+  .tree-node .tc-status.draft{background:var(--warn);}
+  .tree-children.collapsed{display:none;}
+
+  .editor-panel{display:flex; flex-direction:column; min-width:0; border-right:1px solid var(--border-soft);}
+  .editor-toolbar{
+    display:flex; align-items:center; gap:4px; padding:8px 16px;
+    border-bottom:1px solid var(--border-soft); background:var(--surface); flex:none;
+    flex-wrap:wrap;
+  }
+  .editor-toolbar select{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    font-size:12px; border-radius:5px; padding:5px 6px; font-family:var(--font-ui);
+  }
+  .tb-btn{
+    background:none; border:1px solid transparent; color:var(--text-dim);
+    height:28px; border-radius:5px; cursor:pointer; padding:0 10px;
+    display:flex; align-items:center; justify-content:center; font-size:12px; gap:6px;
+    font-family:var(--font-ui);
+  }
+  .tb-btn:hover{background:var(--surface-2); color:var(--text); border-color:var(--border);}
+  .tb-btn.active{background:var(--surface-3); color:var(--text); border-color:var(--accent);}
+  .tb-sep{width:1px; height:18px; background:var(--border-soft); margin:0 5px;}
+  .tb-search{
+    margin-left:auto; display:flex; align-items:center; gap:6px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:4px 9px;
+  }
+  .tb-search input{background:none; border:none; outline:none; color:var(--text); font-size:12px; width:140px;}
+  .tb-search input::placeholder{color:var(--text-faint);}
+  .tb-search .count{font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint);}
+
+  .editor-scroll{flex:1; overflow-y:auto; background:var(--ground);}
+  .doc-canvas{
+    max-width:660px; margin:0 auto; padding:52px 20px 120px;
+    font-family:var(--font-doc); color:var(--text); outline:none;
+  }
+  .doc-canvas.hidden{display:none;}
+  .doc-title{font-size:32px; font-weight:600; margin:0 0 40px; letter-spacing:-0.01em; text-wrap:balance;}
+  .doc-block{border-radius:6px; padding:2px 10px; margin:0 -10px; transition:background .15s;}
+  .doc-block:hover{background:rgba(255,255,255,0.02);}
+  .doc-block.selected{background:var(--accent-soft); box-shadow:inset 2px 0 0 var(--accent);}
+  section.doc-block{padding:0 10px; margin:0 -10px 6px;}
+  section.doc-block > h2{font-family:var(--font-ui); font-size:20px; font-weight:600; margin:30px 0 12px; color:var(--text);}
+  .testcase-block{padding:6px 10px; margin:0 -10px 10px; border-radius:8px;}
+  .testcase-block > h3{font-family:var(--font-ui); font-size:15.5px; font-weight:600; margin:22px 0 10px; color:var(--text-dim); display:flex; align-items:center; gap:10px;}
+  .testcase-block .tc-id{font-family:var(--font-mono); font-size:11px; color:var(--text-faint); font-weight:400;}
+  mark.hit{background:var(--warn-soft); color:var(--warn); border-radius:2px; padding:0 1px;}
+
+  .step-list{list-style:none; padding:0; margin:0 0 20px;}
+  li.doc-block[data-block="step"]{display:flex; align-items:center; gap:9px; font-size:14px; padding:6px 10px; color:#cdd2de; cursor:pointer;}
+  li.doc-block[data-block="step"] .step-num{font-family:var(--font-mono); font-size:11px; color:var(--text-faint); width:16px; flex:none; text-align:right;}
+  li.doc-block[data-block="step"] .gen-dot{width:6px; height:6px; border-radius:50%; flex:none;}
+  li.doc-block[data-block="step"] .gen-dot.det{background:var(--good);}
+  li.doc-block[data-block="step"] .gen-dot.agent{background:var(--accent);}
+  li.doc-block[data-block="step"] code{font-family:var(--font-mono); font-size:12.5px; background:var(--surface-2); border:1px solid var(--border-soft); border-radius:4px; padding:1px 5px; color:var(--text);}
+
+  .code-view{display:none; background:#0e1015; border:1px solid var(--border-soft); border-radius:8px; padding:18px 20px; font-family:var(--font-mono); font-size:12px; color:#c7cddb; line-height:1.7; white-space:pre; overflow-x:auto; max-width:660px; margin:24px auto 0;}
+  .code-view.active{display:block;}
+  .code-view .kw{color:#a98af5;}
+  .code-view .str{color:#5fbf8f;}
+  .code-view .cm{color:#5e6779;}
+
+  /* Inspector panel */
+  .inspector-panel{padding:16px 16px 20px; overflow-y:auto;}
+  .insp-title{font-size:14.5px; font-weight:600; margin-bottom:2px;}
+  .insp-subtitle{font-family:var(--font-mono); font-size:11px; color:var(--accent); margin-bottom:18px;}
+  .insp-empty{color:var(--text-faint); font-size:12.5px; line-height:1.6;}
+
+  .field-row{padding:9px 0; border-bottom:1px solid var(--border-soft); display:flex; flex-direction:column; gap:6px;}
+  .field-row:last-child{border-bottom:none;}
+  .field-row label{font-size:11px; color:var(--text-faint); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.04em;}
+  .field-row .static{font-size:12.5px; color:var(--text-dim); font-family:var(--font-mono);}
+  .field-row select, .field-row input[type="text"], .field-row input[type="number"]{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    font-size:12.5px; border-radius:5px; padding:6px 8px; font-family:var(--font-ui); width:100%;
+  }
+  .field-row .toggle-pill{
+    display:inline-flex; width:fit-content; align-items:center; gap:6px;
+    font-family:var(--font-mono); font-size:11.5px; padding:4px 9px; border-radius:20px;
+    background:var(--good-soft); color:var(--good); border:1px solid transparent; cursor:pointer;
+  }
+  .field-row .toggle-pill.off{background:var(--surface-2); color:var(--text-faint); border-color:var(--border);}
+  .field-row .ref-chip{
+    display:inline-flex; align-items:center; gap:6px; width:fit-content;
+    font-family:var(--font-mono); font-size:12px; color:var(--accent);
+    background:var(--accent-soft); border-radius:6px; padding:5px 9px;
+  }
+  .field-row .gen-pill{
+    display:inline-flex; width:fit-content; align-items:center; gap:6px;
+    font-family:var(--font-mono); font-size:11.5px; padding:4px 9px; border-radius:20px;
+  }
+  .field-row .gen-pill.det{background:var(--good-soft); color:var(--good);}
+  .field-row .gen-pill.agent{background:var(--accent-soft); color:var(--accent);}
+
+  /* Statusbar */
+  .statusbar{
+    display:flex; align-items:center; gap:14px; padding:8px 16px;
+    background:var(--surface-2); border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); flex:none;
+    flex-wrap:wrap;
+  }
+  .statusbar .sep{color:var(--border);}
+  .statusbar .state.ok{color:var(--good);}
+  .statusbar .state.warn{color:var(--warn);}
+  .statusbar .spacer{margin-left:auto;}
+  .statusbar .goto-mat{
+    background:var(--surface-3); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:5px; padding:4px 10px; cursor:pointer; font-family:var(--font-mono); font-size:11px;
+  }
+  .statusbar .goto-mat:hover{color:var(--text); border-color:var(--accent);}
+
+  /* ============ GENERIC PAGE SHELL ============ */
+  .simple-page{flex:1; overflow-y:auto; padding:30px 40px 60px;}
+  .simple-page .ph{max-width:820px;}
+  .simple-page h1{font-size:19px; font-weight:600; margin:0 0 4px;}
+  .simple-page .ph-sub{color:var(--text-faint); font-size:12.5px; margin:0 0 28px; font-family:var(--font-mono);}
+
+  .card{border:1px solid var(--border); border-radius:10px; background:var(--surface); padding:18px 20px; margin-bottom:16px;}
+  .card h2{font-size:12.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin:0 0 14px; font-family:var(--font-mono); font-weight:500;}
+
+  /* Data-style table (Source scan, Requirements matrix) */
+  table.data-table{width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:12.5px;}
+  table.data-table th, table.data-table td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  table.data-table th{background:var(--surface-2); color:var(--text-dim); font-weight:500;}
+  table.data-table td{color:#c7cddb;}
+  table.data-table td.mono{font-family:var(--font-mono);}
+
+  .path-field{display:flex; gap:8px;}
+  .path-field input{
+    flex:1; background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    font-family:var(--font-mono); font-size:12.5px; padding:9px 11px; border-radius:7px;
+  }
+
+  /* Review page */
+  .review-legend{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px;}
+  .review-legend .pill{font-family:var(--font-mono); font-size:10.5px; padding:3px 9px; border-radius:20px;}
+  .pill.SATISFIED{background:var(--good-soft); color:var(--good);}
+  .pill.WARNING{background:var(--warn-soft); color:var(--warn);}
+  .pill.BLOCKING{background:var(--danger-soft); color:var(--danger);}
+  .pill.DEFERRED{background:var(--surface-3); color:var(--text-faint);}
+  .pill.UNSUPPORTED{background:var(--surface-3); color:var(--text-faint);}
+
+  .review-item{display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--border-soft);}
+  .review-item:last-child{border-bottom:none;}
+  .review-item .rlabel{width:130px; flex:none; font-size:13px; font-weight:500; color:var(--text-dim);}
+  .review-item .rtext{font-size:13px; color:var(--text-dim); flex:1;}
+  .review-item .rtext b{color:var(--text); font-weight:500;}
+
+  /* Materialization / pipeline page (Validation Doc, Approval) */
+  .mat-header{display:flex; align-items:baseline; gap:16px; margin-bottom:22px;}
+  .mat-header .mh-doc{font-size:16px; font-weight:600;}
+  .mat-header .mh-rev{font-family:var(--font-mono); font-size:12px; color:var(--text-faint);}
+  .mat-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:16px; align-items:start;}
+
+  .pipeline{display:flex; flex-direction:column; gap:2px;}
+  .pipe-step{display:flex; align-items:center; gap:11px; padding:9px 4px; font-size:13px; color:var(--text-dim);}
+  .pipe-step .mark{width:16px; text-align:center; font-family:var(--font-mono); font-size:12px; color:var(--text-faint); flex:none;}
+  .pipe-step.done .mark{color:var(--good);}
+  .pipe-step.current .mark{color:var(--warn);}
+  .pipe-step.done{color:var(--text);}
+  .pipe-step.current{color:var(--warn);}
+  .pipe-step.blocked .mark{color:var(--danger);}
+  .pipe-step.blocked{color:var(--danger);}
+
+  .affected-lines{font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); line-height:2;}
+  .affected-lines b{color:var(--text);}
+
+  .exec-runtime{display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; font-family:var(--font-mono); font-size:12px;}
+  .exec-runtime .k{color:var(--text-faint);}
+  .exec-runtime .v{color:var(--text-dim);}
+
+  .agent-card .astate{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px;
+    padding:3px 9px; border-radius:20px; background:var(--surface-3); color:var(--text-faint); margin-bottom:14px;
+  }
+  .agent-card .astate.running{background:var(--warn-soft); color:var(--warn);}
+  .agent-card .astate.done{background:var(--good-soft); color:var(--good);}
+  .agent-card .astate .blip{width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  .mat-actions{display:flex; gap:8px; margin:20px 0 22px;}
+  .btn{
+    font-family:var(--font-mono); font-size:12px;
+    background:var(--surface-3); border:1px solid var(--border); color:var(--text);
+    padding:8px 14px; border-radius:7px; cursor:pointer;
+  }
+  .btn:hover:not(:disabled){border-color:var(--text-faint);}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+  .btn.primary{border-color:var(--accent); color:var(--accent);}
+
+  .runlog{
+    background:#0e1015; border:1px solid var(--border-soft); border-radius:8px;
+    padding:12px 14px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim);
+    height:150px; overflow-y:auto;
+  }
+  .runlog .line{padding:1px 0; white-space:pre-wrap;}
+  .runlog .line.dim{color:var(--text-faint);}
+  .runlog .line.ok{color:var(--good);}
+  .runlog .line.warn{color:var(--warn);}
+  .runlog-empty{color:var(--text-faint);}
+
+  /* Approval / Export-Import page */
+  .approval-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; margin-top:16px;}
+  .export-formats{display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;}
+  .format-btn{
+    display:flex; flex-direction:column; gap:3px; align-items:flex-start;
+    border:1px solid var(--border); background:var(--surface); border-radius:9px;
+    padding:12px 16px; cursor:pointer; min-width:110px;
+  }
+  .format-btn:hover{border-color:var(--accent);}
+  .format-btn.active{border-color:var(--accent); background:var(--accent-soft);}
+  .format-btn b{font-size:13px;}
+  .format-btn span{font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint);}
+
+  .preview-frame{border:1px solid var(--border-soft); border-radius:10px; overflow:hidden; background:var(--surface); margin-bottom:16px;}
+  .preview-paper{background:var(--paper); color:var(--paper-ink); padding:36px 40px; font-family:var(--font-doc); max-width:520px; margin:22px auto; box-shadow:0 20px 40px -20px rgba(0,0,0,0.5); border-radius:2px;}
+  .preview-paper h3{font-size:17px; margin:0 0 4px;}
+  .preview-paper .pp-sub{font-family:var(--font-mono); font-size:10.5px; color:#6b6250; margin-bottom:16px;}
+  table.pp-table{width:100%; border-collapse:collapse; font-size:11.5px; margin-bottom:14px;}
+  table.pp-table th, table.pp-table td{border:1px solid #cfc7b3; padding:6px 8px; text-align:left; vertical-align:top;}
+  table.pp-table th{background:#e7e0cd; font-family:var(--font-ui); font-weight:600; font-size:10.5px;}
+  .pp-sign{font-family:var(--font-ui); font-size:11px; color:#6b6250; margin-top:6px; border-top:1px dashed #b8ae94; padding-top:10px;}
+
+  .status-pill{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:20px; background:var(--surface-3); color:var(--text-faint);}
+  .status-pill.sent{background:var(--warn-soft); color:var(--warn);}
+  .status-pill.reviewed{background:var(--accent-soft); color:var(--accent);}
+  .status-pill.applied{background:var(--good-soft); color:var(--good);}
+
+  .kv-list{display:flex; flex-direction:column;}
+  .kv-row{display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border-soft); align-items:baseline;}
+  .kv-row:last-child{border-bottom:none;}
+  .kv-row .k{color:var(--text-dim); font-size:13px;}
+  .kv-row .v{font-family:var(--font-mono); font-size:14px; color:var(--text);}
+  .kv-row .v.big{font-size:20px; font-weight:600;}
+  .kv-row .v.good{color:var(--good);}
+  .kv-row .v.warn{color:var(--warn);}
+  .kv-row .v.danger{color:var(--danger);}
+
+  .settings-row{display:flex; flex-direction:column; gap:8px; margin-bottom:20px;}
+  .settings-row .label{font-size:12.5px; color:var(--text-dim);}
+  .settings-row .hint{font-size:11.5px; color:var(--text-faint);}
+
+  @media (max-width:980px){
+    .doc-workspace{grid-template-columns:1fr;}
+    .structure-panel, .inspector-panel{border:none; border-top:1px solid var(--border-soft);}
+    .mat-grid, .approval-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="titlebar">
+    <span class="app-name">Test Product IDE</span>
+    <span class="menu"><span>File</span><span>Edit</span><span>View</span><span>Build</span><span>Run</span></span>
+    <div class="gsearch">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search workspace…">
+    </div>
+  </div>
+
+  <div class="pagebar">
+    <button data-page="source">Source</button>
+    <button data-page="requirements">Requirements</button>
+    <button class="active" data-page="tests">Tests</button>
+    <button data-page="validation">Validation Doc</button>
+    <button data-page="review">Review</button>
+    <button data-page="approval">Approval</button>
+    <button data-page="settings">Settings</button>
+  </div>
+
+  <div class="page-content">
+
+    <!-- ============ SOURCE PAGE ============ -->
+    <section class="page" id="page-source">
+      <div class="simple-page">
+        <div class="ph">
+          <h1>Source</h1>
+          <p class="ph-sub">Repository, aus dem E2E-Testfälle abgeleitet werden.</p>
+
+          <div class="card">
+            <h2>Repository Root</h2>
+            <div class="path-field">
+              <input type="text" value="C:\chevp\apps\myapp">
+              <button class="btn">Browse…</button>
+              <button class="btn primary" id="btn-scan">Scan Repository</button>
+            </div>
+            <p class="ph-sub" style="margin:10px 0 0;">Deterministisch: Routen und Selektoren werden aus dem Quellcode extrahiert. Fehlende Erwartungswerte werden agentisch ergänzt.</p>
+          </div>
+
+          <div class="card">
+            <h2>Detected Surfaces</h2>
+            <table class="data-table">
+              <thead><tr><th>Page</th><th>File</th><th>Route</th><th>Elements</th></tr></thead>
+              <tbody>
+                <tr><td>Login</td><td class="mono">src/pages/Login.tsx</td><td class="mono">/login</td><td>4 interactive</td></tr>
+                <tr><td>Dashboard</td><td class="mono">src/pages/Dashboard.tsx</td><td class="mono">/dashboard</td><td>12 interactive</td></tr>
+                <tr><td>Checkout</td><td class="mono">src/pages/Checkout.tsx</td><td class="mono">/checkout</td><td>9 interactive</td></tr>
+                <tr><td>Cart</td><td class="mono">src/pages/Cart.tsx</td><td class="mono">/cart</td><td>6 interactive</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REQUIREMENTS PAGE ============ -->
+    <section class="page" id="page-requirements">
+      <div class="simple-page">
+        <div class="ph" style="max-width:960px;">
+          <h1>Requirements</h1>
+          <p class="ph-sub">Anforderungsmatrix — Grundlage für die Testfall-Zuordnung (Traceability).</p>
+
+          <div class="card">
+            <h2>Requirements Matrix</h2>
+            <table class="data-table">
+              <thead><tr><th>Req ID</th><th>Description</th><th>Priority</th><th>Linked Tests</th><th>Coverage</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">REQ-001</td><td>User can log in with valid credentials</td><td>Must</td><td class="mono">TC-LOGIN-01</td><td><span class="pill SATISFIED">SATISFIED</span></td></tr>
+                <tr><td class="mono">REQ-002</td><td>Invalid login shows an error message</td><td>Must</td><td class="mono">TC-LOGIN-02</td><td><span class="pill SATISFIED">SATISFIED</span></td></tr>
+                <tr><td class="mono">REQ-003</td><td>User can reset a forgotten password</td><td>Should</td><td class="mono">—</td><td><span class="pill BLOCKING">UNCOVERED</span></td></tr>
+                <tr><td class="mono">REQ-004</td><td>Checkout requires a valid payment method</td><td>Must</td><td class="mono">TC-CHK-01, TC-CHK-02</td><td><span class="pill SATISFIED">SATISFIED</span></td></tr>
+                <tr><td class="mono">REQ-005</td><td>Cart total recalculates on quantity change</td><td>Should</td><td class="mono">TC-CHK-03</td><td><span class="pill WARNING">PARTIAL</span></td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:14px;"><button class="btn">Import Matrix (.xlsx)</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TESTS PAGE ============ -->
+    <section class="page active" id="page-tests">
+      <div class="doc-workspace">
+
+        <nav class="structure-panel">
+          <div class="panel-heading">Test Suites</div>
+          <div class="tree-node" data-target="suite-login"><span class="caret">▾</span>Login.spec.ts</div>
+          <div class="tree-children">
+            <div class="tree-node depth-2" data-target="tc-login-01"><span class="caret">▾</span>TC-LOGIN-01<span class="tc-status approved"></span></div>
+            <div class="tree-node depth-2" data-target="tc-login-02"><span class="caret">▾</span>TC-LOGIN-02<span class="tc-status approved"></span></div>
+          </div>
+          <div class="tree-node" data-target="suite-checkout"><span class="caret">▾</span>Checkout.spec.ts</div>
+          <div class="tree-children">
+            <div class="tree-node depth-2" data-target="tc-chk-01"><span class="caret">▾</span>TC-CHK-01<span class="tc-status draft"></span></div>
+            <div class="tree-node depth-2" data-target="tc-chk-02"><span class="caret">▾</span>TC-CHK-02<span class="tc-status draft"></span></div>
+            <div class="tree-node depth-2" data-target="tc-chk-03"><span class="caret">▾</span>TC-CHK-03<span class="tc-status draft"></span></div>
+          </div>
+        </nav>
+
+        <div class="editor-panel">
+          <div class="editor-toolbar">
+            <button class="tb-btn" id="tb-view-steps" data-view="steps">Steps</button>
+            <button class="tb-btn" id="tb-view-code" data-view="code">&lt;/&gt; Code</button>
+            <span class="tb-sep"></span>
+            <button class="tb-btn" title="Fügt einen agentisch generierten Schritt hinzu">+ Step</button>
+            <button class="tb-btn" title="Regeneriert die Erwartungswerte agentisch">⟳ Regenerate</button>
+            <div class="tb-search">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="doc-search" placeholder="In Testfällen suchen…">
+              <span class="count" id="doc-search-count"></span>
+            </div>
+          </div>
+
+          <div class="editor-scroll">
+            <div class="doc-canvas" id="test-editor" spellcheck="false">
+              <h1 class="doc-title">E2E Test Suite — myapp</h1>
+
+              <section class="doc-block" data-block="suite" id="suite-login">
+                <h2>Login.spec.ts</h2>
+
+                <div class="doc-block testcase-block" data-block="testcase" data-req="REQ-001" data-status="Approved" id="tc-login-01">
+                  <h3>Successful login<span class="tc-id">TC-LOGIN-01</span></h3>
+                  <ol class="step-list">
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="/login" data-req="REQ-001"><span class="step-num">1</span><span class="gen-dot det"></span>Navigate to <code>/login</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="#email" data-req="REQ-001"><span class="step-num">2</span><span class="gen-dot det"></span>Fill <code>#email</code> with <code>test@kosmos.dev</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="#password" data-req="REQ-001"><span class="step-num">3</span><span class="gen-dot det"></span>Fill <code>#password</code> with <code>••••••••</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="button[type=submit]" data-req="REQ-001"><span class="step-num">4</span><span class="gen-dot det"></span>Click <code>button[type=submit]</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector="/dashboard" data-req="REQ-001"><span class="step-num">5</span><span class="gen-dot agent"></span>Expect redirect to <code>/dashboard</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector=".user-greeting" data-req="REQ-001"><span class="step-num">6</span><span class="gen-dot agent"></span>Expect <code>.user-greeting</code> to contain "Welcome"</li>
+                  </ol>
+                </div>
+
+                <div class="doc-block testcase-block" data-block="testcase" data-req="REQ-002" data-status="Approved" id="tc-login-02">
+                  <h3>Invalid credentials show error<span class="tc-id">TC-LOGIN-02</span></h3>
+                  <ol class="step-list">
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="/login" data-req="REQ-002"><span class="step-num">1</span><span class="gen-dot det"></span>Navigate to <code>/login</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="#email" data-req="REQ-002"><span class="step-num">2</span><span class="gen-dot det"></span>Fill <code>#email</code> with <code>wrong@kosmos.dev</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="#password" data-req="REQ-002"><span class="step-num">3</span><span class="gen-dot det"></span>Fill <code>#password</code> with <code>wrongpass</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="button[type=submit]" data-req="REQ-002"><span class="step-num">4</span><span class="gen-dot det"></span>Click <code>button[type=submit]</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector=".form-error" data-req="REQ-002"><span class="step-num">5</span><span class="gen-dot agent"></span>Expect <code>.form-error</code> to contain "Invalid credentials"</li>
+                  </ol>
+                </div>
+              </section>
+
+              <section class="doc-block" data-block="suite" id="suite-checkout">
+                <h2>Checkout.spec.ts</h2>
+
+                <div class="doc-block testcase-block" data-block="testcase" data-req="REQ-004" data-status="Draft" id="tc-chk-01">
+                  <h3>Add to cart and checkout<span class="tc-id">TC-CHK-01</span></h3>
+                  <ol class="step-list">
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="/cart" data-req="REQ-004"><span class="step-num">1</span><span class="gen-dot det"></span>Navigate to <code>/cart</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="[data-testid=checkout-btn]" data-req="REQ-004"><span class="step-num">2</span><span class="gen-dot det"></span>Click <code>[data-testid=checkout-btn]</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector="/checkout" data-req="REQ-004"><span class="step-num">3</span><span class="gen-dot agent"></span>Expect redirect to <code>/checkout</code></li>
+                  </ol>
+                </div>
+
+                <div class="doc-block testcase-block" data-block="testcase" data-req="REQ-004" data-status="Draft" id="tc-chk-02">
+                  <h3>Payment validation<span class="tc-id">TC-CHK-02</span></h3>
+                  <ol class="step-list">
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="#card-number" data-req="REQ-004"><span class="step-num">1</span><span class="gen-dot det"></span>Fill <code>#card-number</code> with <code>4242…0002</code></li>
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="[data-testid=pay-btn]" data-req="REQ-004"><span class="step-num">2</span><span class="gen-dot det"></span>Click <code>[data-testid=pay-btn]</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector=".payment-error" data-req="REQ-004"><span class="step-num">3</span><span class="gen-dot agent"></span>Expect <code>.payment-error</code> to contain "declined"</li>
+                  </ol>
+                </div>
+
+                <div class="doc-block testcase-block" data-block="testcase" data-req="REQ-005" data-status="Draft" id="tc-chk-03">
+                  <h3>Quantity update recalculates total<span class="tc-id">TC-CHK-03</span></h3>
+                  <ol class="step-list">
+                    <li class="doc-block" data-block="step" data-gen="det" data-selector="[data-testid=qty-input]" data-req="REQ-005"><span class="step-num">1</span><span class="gen-dot det"></span>Fill <code>[data-testid=qty-input]</code> with <code>3</code></li>
+                    <li class="doc-block" data-block="step" data-gen="agent" data-selector=".cart-total" data-req="REQ-005"><span class="step-num">2</span><span class="gen-dot agent"></span>Expect <code>.cart-total</code> to update proportionally</li>
+                  </ol>
+                </div>
+              </section>
+            </div>
+
+            <pre class="code-view" id="test-code">// Login.spec.ts — generated
+<span class="kw">import</span> { test, expect } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+test(<span class="str">'TC-LOGIN-01 — Successful login'</span>, <span class="kw">async</span> ({ page }) =&gt; {
+  <span class="cm">// deterministic — from route + selector scan</span>
+  <span class="kw">await</span> page.goto(<span class="str">'/login'</span>);
+  <span class="kw">await</span> page.fill(<span class="str">'#email'</span>, <span class="str">'test@kosmos.dev'</span>);
+  <span class="kw">await</span> page.fill(<span class="str">'#password'</span>, <span class="str">'••••••••'</span>);
+  <span class="kw">await</span> page.click(<span class="str">'button[type=submit]'</span>);
+
+  <span class="cm">// agentic — inferred from REQ-001</span>
+  <span class="kw">await</span> expect(page).toHaveURL(<span class="str">'/dashboard'</span>);
+  <span class="kw">await</span> expect(page.locator(<span class="str">'.user-greeting'</span>)).toContainText(<span class="str">'Welcome'</span>);
+});</pre>
+          </div>
+        </div>
+
+        <aside class="inspector-panel" id="inspector">
+          <div class="insp-empty">Wähle einen Testfall oder einen Schritt aus, um seine Eigenschaften zu sehen.</div>
+        </aside>
+      </div>
+
+      <div class="statusbar">
+        <span>Tests generated: <span id="sb-tests">5</span>/5</span>
+        <span class="sep">·</span>
+        <span>Requirement coverage: <span id="sb-coverage">4</span>/5</span>
+        <span class="sep">·</span>
+        <span class="state warn" id="sb-state">2 test cases still Draft</span>
+        <div class="spacer"></div>
+        <button class="goto-mat" data-page="validation">Validation Document →</button>
+      </div>
+    </section>
+
+    <!-- ============ VALIDATION DOC PAGE ============ -->
+    <section class="page" id="page-validation">
+      <div class="simple-page">
+        <div class="mat-header">
+          <span class="mh-doc">Validation Document — myapp</span>
+          <span class="mh-rev">Revision <span id="mat-rev">3</span></span>
+        </div>
+
+        <div class="mat-grid">
+          <div>
+            <div class="card">
+              <h2>Pipeline</h2>
+              <div class="pipeline" id="pipeline">
+                <div class="pipe-step done"><span class="mark">✓</span>Scan Repository</div>
+                <div class="pipe-step done"><span class="mark">✓</span>Match Requirements</div>
+                <div class="pipe-step done"><span class="mark">✓</span>Generate Steps (deterministic)</div>
+                <div class="pipe-step done"><span class="mark">✓</span>Generate Assertions (agentic)</div>
+                <div class="pipe-step done"><span class="mark">✓</span>Compile .nexo</div>
+                <div class="pipe-step current" data-step="run"><span class="mark">→</span>Run nexo.exe</div>
+                <div class="pipe-step" data-step="worddoc"><span class="mark">○</span>Generate Word Document</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Affected</h2>
+              <div class="affected-lines"><b>5</b> test cases<br><b>5</b> requirements<br><b>1</b> uncovered requirement</div>
+            </div>
+
+            <div class="mat-actions">
+              <button class="btn" id="btn-compile">Compile</button>
+              <button class="btn primary" id="btn-run">Run</button>
+              <button class="btn" id="btn-cancel" disabled>Cancel</button>
+            </div>
+
+            <div class="card" style="margin-bottom:0;">
+              <h2>Output</h2>
+              <div class="runlog" id="runlog"><div class="line runlog-empty">Noch nicht gestartet.</div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h2>Execution</h2>
+              <div class="exec-runtime">
+                <span class="k">Schema</span><span class="v">nexo-5</span>
+                <span class="k">Entry</span><span class="v">testdoc.materialize</span>
+                <span class="k">Agents</span><span class="v">1</span>
+                <span class="k">Delegates</span><span class="v">0</span>
+                <span class="k">File</span><span class="v">testdoc.nexo.json</span>
+                <span class="k">Runtime</span><span class="v">nexo.exe</span>
+              </div>
+            </div>
+
+            <div class="card agent-card">
+              <h2>Validation Document Agent</h2>
+              <div class="astate" id="agent-state"><span class="blip"></span><span id="agent-state-text">Idle</span></div>
+              <div class="exec-runtime" style="grid-template-columns:1fr 1.3fr;">
+                <span class="k">Task</span><span class="v">Generate Word validation document</span>
+                <span class="k">Input</span><span class="v" id="agent-input">Revision 3</span>
+                <span class="k">Output</span><span class="v" id="agent-output">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REVIEW PAGE ============ -->
+    <section class="page" id="page-review">
+      <div class="simple-page">
+        <div class="ph">
+          <h1>Review</h1>
+          <p class="ph-sub">Nur BLOCKING stoppt die Materialisierung.</p>
+          <div class="review-legend">
+            <span class="pill SATISFIED">SATISFIED</span>
+            <span class="pill DEFERRED">DEFERRED</span>
+            <span class="pill WARNING">WARNING</span>
+            <span class="pill UNSUPPORTED">UNSUPPORTED</span>
+            <span class="pill BLOCKING">BLOCKING</span>
+          </div>
+          <div class="card">
+            <div class="review-item">
+              <div class="rlabel">Coverage</div>
+              <div class="rtext"><span class="pill SATISFIED" style="margin-right:8px;">✓</span>All <b>Must</b>-Requirements haben ≥1 verknüpften Testfall</div>
+            </div>
+            <div class="review-item">
+              <div class="rlabel">Traceability</div>
+              <div class="rtext"><span class="pill BLOCKING" style="margin-right:8px;">✗</span><b>REQ-003</b> ist mit keinem Testfall verknüpft</div>
+            </div>
+            <div class="review-item">
+              <div class="rlabel">Selectors</div>
+              <div class="rtext"><span class="pill WARNING" style="margin-right:8px;">⚠</span><b>.user-greeting</b> wurde im letzten DOM-Snapshot von <b>/dashboard</b> nicht gefunden</div>
+            </div>
+            <div class="review-item">
+              <div class="rlabel">Human-in-the-loop</div>
+              <div class="rtext"><span class="pill WARNING" style="margin-right:8px;">⚠</span><b>2</b> Testfälle sind noch <b>Draft</b>, nicht freigegeben</div>
+            </div>
+            <div class="review-item">
+              <div class="rlabel">Formatting</div>
+              <div class="rtext"><span class="pill SATISFIED" style="margin-right:8px;">✓</span>Valid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPROVAL PAGE (Export / Human-in-the-loop / Import) ============ -->
+    <section class="page" id="page-approval">
+      <div class="simple-page">
+        <div class="ph" style="max-width:1080px;">
+          <h1>Approval</h1>
+          <p class="ph-sub">Human-in-the-loop-Freigabe des Validierungsdokuments — Export zur Prüfung, Re-Import der Entscheidung.</p>
+
+          <div class="card">
+            <h2>Approval Status</h2>
+            <div class="pipeline" id="approval-pipeline">
+              <div class="pipe-step done"><span class="mark">✓</span>Generated</div>
+              <div class="pipe-step current" data-astep="exported"><span class="mark">→</span>Exported</div>
+              <div class="pipe-step" data-astep="review"><span class="mark">○</span>Under Review</div>
+              <div class="pipe-step" data-astep="imported"><span class="mark">○</span>Reviewed Import Received</div>
+              <div class="pipe-step" data-astep="applied"><span class="mark">○</span>Applied to Tests</div>
+            </div>
+          </div>
+
+          <div class="approval-grid">
+            <div class="card" style="margin-bottom:0;">
+              <h2>Export</h2>
+              <div class="export-formats">
+                <button class="format-btn active"><b>DOCX</b><span>Validation Document</span></button>
+                <button class="format-btn"><b>ZIP</b><span>Playwright *.spec.ts</span></button>
+                <button class="format-btn"><b>CSV</b><span>Requirements Matrix</span></button>
+              </div>
+
+              <div class="preview-frame">
+                <div class="preview-paper">
+                  <h3>Test Validation Document</h3>
+                  <div class="pp-sub">myapp · Revision 3 · generated 2026-09-08</div>
+                  <table class="pp-table">
+                    <thead><tr><th>Test Case</th><th>Requirement</th><th>Step</th><th>Expected Result</th></tr></thead>
+                    <tbody>
+                      <tr><td>TC-LOGIN-01</td><td>REQ-001</td><td>Submit valid credentials</td><td>Redirect to /dashboard</td></tr>
+                      <tr><td>TC-CHK-03</td><td>REQ-005</td><td>Increase quantity to 3</td><td>Cart total updates proportionally</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="pp-sign">Approved by: ______________________&nbsp;&nbsp;&nbsp;Date: __________</div>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <span class="label">Reviewer</span>
+                <div class="path-field"><input type="text" value="qa-lead@kosmos.dev"></div>
+              </div>
+              <button class="btn primary" id="btn-send-approval">Send for Approval</button>
+              <span class="status-pill sent" id="approval-status" style="margin-left:10px;">Exported</span>
+            </div>
+
+            <div class="card" style="margin-bottom:0;">
+              <h2>Import</h2>
+              <div class="settings-row">
+                <span class="label">Reviewed Document</span>
+                <div class="path-field">
+                  <input type="text" id="import-path" value="validation-report-signed.docx">
+                  <button class="btn">Browse…</button>
+                </div>
+                <span class="hint">Enthält die vom Reviewer im Word-Dokument markierten Freigaben pro Testschritt.</span>
+              </div>
+              <button class="btn primary" id="btn-import" disabled>Import Reviewed Document</button>
+
+              <div class="runlog" id="import-log" style="margin-top:14px;"><div class="line runlog-empty">Noch kein Import ausgeführt.</div></div>
+
+              <div class="kv-list" id="import-result" style="margin-top:14px; display:none;">
+                <div class="kv-row"><span class="k">Approved steps</span><span class="v big good" id="res-approved">—</span></div>
+                <div class="kv-row"><span class="k">Flagged (comment)</span><span class="v big warn" id="res-flagged">—</span></div>
+                <div class="kv-row"><span class="k">Rejected</span><span class="v big danger" id="res-rejected">—</span></div>
+              </div>
+
+              <button class="btn" id="btn-apply" style="margin-top:14px;" disabled>Apply to Tests</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SETTINGS PAGE ============ -->
+    <section class="page" id="page-settings">
+      <div class="simple-page">
+        <div class="ph">
+          <h1>Settings</h1>
+          <p class="ph-sub">Runtime</p>
+          <div class="card">
+            <div class="settings-row">
+              <span class="label">Repository root</span>
+              <div class="path-field">
+                <input type="text" value="C:\chevp\apps\myapp">
+                <button class="btn">Browse…</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <span class="label">Playwright config</span>
+              <div class="path-field">
+                <input type="text" value="C:\chevp\apps\myapp\playwright.config.ts">
+                <button class="btn">Browse…</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <span class="label">Validation document output</span>
+              <div class="path-field">
+                <input type="text" value="C:\chevp\apps\kosmos\out\validation-report.docx">
+                <button class="btn">Browse…</button>
+              </div>
+            </div>
+            <div class="settings-row">
+              <span class="label">Nexo executable</span>
+              <div class="path-field">
+                <input type="text" value="C:\chevp\apps\kosmos\runtime\nexo\nexo.exe">
+                <button class="btn">Browse…</button>
+              </div>
+              <span class="hint">Wird über den Electron Main Process gestartet, nicht simuliert.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var state = { revision: 3, testsApproved: 3, testsTotal: 5, coverage: 4, coverageTotal: 5 };
+
+  /* ---- page switching ---- */
+  var pagebarButtons = document.querySelectorAll('.pagebar button[data-page]');
+  function gotoPage(name){
+    document.querySelectorAll('.pagebar button[data-page]').forEach(function(b){ b.classList.toggle('active', b.dataset.page === name); });
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.toggle('active', p.id === 'page-' + name); });
+  }
+  pagebarButtons.forEach(function(b){ b.addEventListener('click', function(){ gotoPage(b.dataset.page); }); });
+  document.querySelectorAll('.goto-mat[data-page]').forEach(function(b){
+    b.addEventListener('click', function(){ gotoPage(b.dataset.page); });
+  });
+
+  /* ---- structure tree <-> editor (Tests page) ---- */
+  var editor = document.getElementById('test-editor');
+  var inspector = document.getElementById('inspector');
+
+  function clearSelection(){
+    document.querySelectorAll('.doc-block.selected').forEach(function(el){ el.classList.remove('selected'); });
+  }
+
+  function fieldRow(label, controlHtml){
+    return '<div class="field-row"><label>' + label + '</label>' + controlHtml + '</div>';
+  }
+
+  function renderInspector(kind, el){
+    if(kind === 'suite'){
+      var title = el.querySelector(':scope > h2').textContent;
+      var count = el.querySelectorAll('[data-block="testcase"]').length;
+      inspector.innerHTML =
+        '<div class="insp-title">' + title + '</div>' +
+        '<div class="insp-subtitle">TEST SUITE</div>' +
+        fieldRow('File', '<div class="static">tests/' + title + '</div>') +
+        fieldRow('Test Cases', '<div class="static">' + count + '</div>') +
+        fieldRow('Runner', '<div class="static">@playwright/test</div>');
+    } else if(kind === 'testcase'){
+      var titleEl = el.querySelector(':scope > h3');
+      var title = titleEl ? titleEl.firstChild.textContent.trim() : 'Test Case';
+      var id = el.querySelector('.tc-id') ? el.querySelector('.tc-id').textContent : '';
+      var steps = el.querySelectorAll('[data-block="step"]');
+      var det = 0, agent = 0;
+      steps.forEach(function(s){ if(s.dataset.gen === 'det') det++; else agent++; });
+      var status = el.dataset.status || 'Draft';
+      inspector.innerHTML =
+        '<div class="insp-title">' + title + '</div>' +
+        '<div class="insp-subtitle">' + id + '</div>' +
+        fieldRow('Requirement', '<span class="ref-chip">◆ ' + el.dataset.req + '</span>') +
+        fieldRow('Steps', '<div class="static">' + steps.length + ' total — ' + det + ' deterministic, ' + agent + ' agentic</div>') +
+        fieldRow('Status', '<span class="toggle-pill' + (status !== 'Approved' ? ' off' : '') + '">' + status + '</span>');
+    } else if(kind === 'step'){
+      var gen = el.dataset.gen === 'det' ? 'Deterministic' : 'Agentic';
+      var kindLabel = /^Expect/.test(el.textContent.trim()) ? 'Assertion' : 'Action';
+      inspector.innerHTML =
+        '<div class="insp-title">Step ' + el.querySelector('.step-num').textContent + '</div>' +
+        '<div class="insp-subtitle">TEST STEP</div>' +
+        fieldRow('Type', '<div class="static">' + kindLabel + '</div>') +
+        fieldRow('Selector', '<div class="static">' + el.dataset.selector + '</div>') +
+        fieldRow('Generation', '<span class="gen-pill ' + el.dataset.gen + '">' + (el.dataset.gen === 'det' ? '● ' : '◆ ') + gen + '</span>') +
+        fieldRow('Requirement', '<span class="ref-chip">◆ ' + el.dataset.req + '</span>');
+    }
+  }
+
+  function selectBlock(el, kind){
+    clearSelection();
+    el.classList.add('selected');
+    renderInspector(kind, el);
+  }
+
+  editor.addEventListener('click', function(e){
+    var step = e.target.closest('[data-block="step"]');
+    var testcase = e.target.closest('[data-block="testcase"]');
+    var suite = e.target.closest('[data-block="suite"]');
+    if(step){ selectBlock(step, 'step'); }
+    else if(testcase && e.target.closest('h3')){ selectBlock(testcase, 'testcase'); }
+    else if(suite && e.target.closest('h2')){ selectBlock(suite, 'suite'); }
+  });
+
+  document.querySelectorAll('.tree-node[data-target]').forEach(function(node){
+    node.addEventListener('click', function(){
+      document.querySelectorAll('.tree-node').forEach(function(n){ n.classList.remove('selected'); });
+      node.classList.add('selected');
+      var target = document.getElementById(node.dataset.target);
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'center'});
+        var kind = target.dataset.block;
+        selectBlock(target, kind);
+      }
+    });
+  });
+
+  /* ---- steps / code toggle ---- */
+  var btnSteps = document.getElementById('tb-view-steps');
+  var btnCode = document.getElementById('tb-view-code');
+  var codeView = document.getElementById('test-code');
+  function setView(view){
+    btnSteps.classList.toggle('active', view === 'steps');
+    btnCode.classList.toggle('active', view === 'code');
+    editor.classList.toggle('hidden', view === 'code');
+    codeView.classList.toggle('active', view === 'code');
+  }
+  btnSteps.addEventListener('click', function(){ setView('steps'); });
+  btnCode.addEventListener('click', function(){ setView('code'); });
+  setView('steps');
+
+  /* ---- search / highlight ---- */
+  var searchInput = document.getElementById('doc-search');
+  var searchCount = document.getElementById('doc-search-count');
+  function clearMarks(){
+    editor.querySelectorAll('mark.hit').forEach(function(m){
+      var parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+  searchInput.addEventListener('input', function(){
+    clearMarks();
+    var q = this.value.trim();
+    if(!q){ searchCount.textContent = ''; return; }
+    var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+    var textNodes = [];
+    var n;
+    while(n = walker.nextNode()){ textNodes.push(n); }
+    var count = 0;
+    textNodes.forEach(function(node){
+      var text = node.nodeValue;
+      var matches = text.match(re);
+      if(!matches) return;
+      count += matches.length;
+      var frag = document.createDocumentFragment();
+      var lastIndex = 0;
+      text.replace(re, function(match, offset){
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, offset)));
+        var mark = document.createElement('mark');
+        mark.className = 'hit';
+        mark.textContent = match;
+        frag.appendChild(mark);
+        lastIndex = offset + match.length;
+        return match;
+      });
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    searchCount.textContent = count ? (count + ' Treffer') : 'kein Treffer';
+  });
+
+  /* ---- source scan (decorative) ---- */
+  var btnScan = document.getElementById('btn-scan');
+  if(btnScan){
+    btnScan.addEventListener('click', function(){
+      btnScan.textContent = 'Scanning…';
+      setTimeout(function(){ btnScan.textContent = 'Scan Repository'; }, 900);
+    });
+  }
+
+  /* ---- validation document run ---- */
+  var runlog = document.getElementById('runlog');
+  function logLine(text, cls){
+    if(runlog.querySelector('.runlog-empty')) runlog.innerHTML = '';
+    var div = document.createElement('div');
+    div.className = 'line' + (cls ? ' ' + cls : '');
+    div.textContent = text;
+    runlog.appendChild(div);
+    runlog.scrollTop = runlog.scrollHeight;
+  }
+  var btnRun = document.getElementById('btn-run');
+  var btnCompile = document.getElementById('btn-compile');
+  var btnCancel = document.getElementById('btn-cancel');
+  var agentState = document.getElementById('agent-state');
+  var agentStateText = document.getElementById('agent-state-text');
+  var agentOutput = document.getElementById('agent-output');
+
+  btnCompile.addEventListener('click', function(){
+    logLine('$ testdoc.compile → .nexo/5', 'dim');
+    logLine('testdoc.nexo.json written', 'ok');
+  });
+
+  btnRun.addEventListener('click', function(){
+    btnRun.disabled = true; btnCancel.disabled = false;
+    agentState.className = 'astate running';
+    agentStateText.textContent = 'Running';
+    agentOutput.textContent = '—';
+    logLine('$ spawn nexo.exe --entry testdoc.materialize', 'dim');
+    logLine('Entry: testdoc.materialize', 'dim');
+    logLine('Status: Running');
+
+    var steps = [
+      {sel:'[data-step="run"]', delay:500, text:'nexo.exe: resolving 5 test cases against 5 requirements'},
+      {sel:'[data-step="worddoc"]', delay:1300, text:'nexo.exe: writing validation-report.docx'}
+    ];
+    steps.forEach(function(s){
+      setTimeout(function(){
+        logLine(s.text);
+        var stepEl = document.querySelector('.pipe-step' + s.sel);
+        stepEl.classList.remove('current');
+        stepEl.classList.add('done');
+        stepEl.querySelector('.mark').textContent = '✓';
+        var next = stepEl.nextElementSibling;
+        if(next && next.dataset.step){ next.classList.add('current'); next.querySelector('.mark').textContent = '→'; }
+      }, s.delay);
+    });
+
+    setTimeout(function(){
+      logLine('REQ-003 has no linked test case', 'warn');
+      logLine('Status: Completed', 'ok');
+      logLine('Exit code: 0', 'ok');
+      agentState.className = 'astate done';
+      agentStateText.textContent = 'Done';
+      agentOutput.textContent = 'validation-report.docx';
+      btnRun.disabled = false; btnCancel.disabled = true;
+    }, 2100);
+  });
+
+  btnCancel.addEventListener('click', function(){
+    logLine('Cancelled by user', 'dim');
+    agentState.className = 'astate';
+    agentStateText.textContent = 'Idle';
+    btnRun.disabled = false; btnCancel.disabled = true;
+  });
+
+  /* ---- export format switch (decorative) ---- */
+  document.querySelectorAll('.format-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.format-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+  });
+
+  /* ---- approval: send / import / apply ---- */
+  var approvalStatus = document.getElementById('approval-status');
+  var approvalPipeline = document.getElementById('approval-pipeline');
+  var btnSendApproval = document.getElementById('btn-send-approval');
+  var btnImport = document.getElementById('btn-import');
+  var btnApply = document.getElementById('btn-apply');
+  var importLog = document.getElementById('import-log');
+  var importResult = document.getElementById('import-result');
+
+  function advanceApproval(step, label, cls){
+    document.querySelectorAll('.pipe-step[data-astep]').forEach(function(p){
+      p.classList.remove('current');
+    });
+    var stepEl = approvalPipeline.querySelector('[data-astep="' + step + '"]');
+    var prev = stepEl.previousElementSibling;
+    while(prev){
+      if(!prev.classList.contains('done')){ prev.classList.add('done'); prev.querySelector('.mark').textContent = '✓'; }
+      prev = prev.previousElementSibling;
+    }
+    stepEl.classList.add('current');
+    stepEl.querySelector('.mark').textContent = '→';
+    approvalStatus.className = 'status-pill ' + cls;
+    approvalStatus.textContent = label;
+  }
+
+  btnSendApproval.addEventListener('click', function(){
+    btnSendApproval.disabled = true;
+    advanceApproval('review', 'Under Review', 'sent');
+    btnImport.disabled = false;
+  });
+
+  function importLogLine(text, cls){
+    if(importLog.querySelector('.runlog-empty')) importLog.innerHTML = '';
+    var div = document.createElement('div');
+    div.className = 'line' + (cls ? ' ' + cls : '');
+    div.textContent = text;
+    importLog.appendChild(div);
+    importLog.scrollTop = importLog.scrollHeight;
+  }
+
+  btnImport.addEventListener('click', function(){
+    btnImport.disabled = true;
+    importLogLine('$ import validation-report-signed.docx', 'dim');
+    setTimeout(function(){
+      importLogLine('Parsing 14 test steps across 5 test cases…', 'dim');
+    }, 400);
+    setTimeout(function(){
+      importLogLine('TC-CHK-01: approved (3/3 steps)', 'ok');
+      importLogLine('TC-CHK-02: approved (3/3 steps)', 'ok');
+      importLogLine('TC-CHK-03: 1 step flagged — "selector unstable, prefer data-testid"', 'warn');
+    }, 1000);
+    setTimeout(function(){
+      importLogLine('Import complete', 'ok');
+      document.getElementById('res-approved').textContent = '13';
+      document.getElementById('res-flagged').textContent = '1';
+      document.getElementById('res-rejected').textContent = '0';
+      importResult.style.display = 'flex';
+      advanceApproval('imported', 'Reviewed Import Received', 'reviewed');
+      btnApply.disabled = false;
+    }, 1700);
+  });
+
+  btnApply.addEventListener('click', function(){
+    btnApply.disabled = true;
+    advanceApproval('applied', 'Applied', 'applied');
+    var lastStep = approvalPipeline.querySelector('[data-astep="applied"]');
+    lastStep.classList.remove('current'); lastStep.classList.add('done');
+    lastStep.querySelector('.mark').textContent = '✓';
+    state.testsApproved = 5;
+    document.querySelectorAll('.tc-status.draft').forEach(function(d){ d.classList.remove('draft'); d.classList.add('approved'); });
+    document.getElementById('sb-state').textContent = 'All test cases approved';
+    document.getElementById('sb-state').className = 'state ok';
+  });
+
+  refreshInspectorDefault();
+  function refreshInspectorDefault(){}
+})();
+</script>
+</body>
+</html>
