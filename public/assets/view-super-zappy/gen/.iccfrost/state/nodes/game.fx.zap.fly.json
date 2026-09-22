@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.zap.fly",
+  "path": ".\\gen/graph\\game\\fx\\zap\\fly",
+  "input_hash": "sha256:c49284d82a0fe270e6a6a940e3f47295f6d1cffb16a37c4da4d4f36362ba95cf",
+  "derivation_hash": "sha256:53c9e17e1c2e763b8221eb2a39155cf4f7ce2427ff544055bf631e471048ba41",
+  "outputs": [
+    {
+      "id": "game.fx.zap.fly#node.json",
+      "path": ".\\gen/out\\game.fx.zap.fly\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:1fd4ef347c7aacfe5023b87f24a8e60f15059b3a8f0ac1abd9efc8098572c95e",
+      "semantic_hash": "sha256:1fd4ef347c7aacfe5023b87f24a8e60f15059b3a8f0ac1abd9efc8098572c95e",
+      "producer": "game.fx.zap.fly",
+      "version": 1
+    }
+  ]
+}

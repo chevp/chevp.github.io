@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.shellby.spin",
+  "path": ".\\gen/graph\\game\\enemies\\shellby\\spin",
+  "input_hash": "sha256:5a3354359d0fed3626cdaf0b4e57ace5677662f3db164cb0467c58d733bd030a",
+  "derivation_hash": "sha256:6c58430acebb9c94a47a8f1c0c25dd7b6d6213f4b65a424062bbbd7c6b49ff20",
+  "outputs": [
+    {
+      "id": "game.enemies.shellby.spin#node.json",
+      "path": ".\\gen/out\\game.enemies.shellby.spin\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:09e2a1a950d026e50deba9db53150b7efa64c345dcf0e9a98dcdef3ee3b67878",
+      "semantic_hash": "sha256:09e2a1a950d026e50deba9db53150b7efa64c345dcf0e9a98dcdef3ee3b67878",
+      "producer": "game.enemies.shellby.spin",
+      "version": 1
+    }
+  ]
+}

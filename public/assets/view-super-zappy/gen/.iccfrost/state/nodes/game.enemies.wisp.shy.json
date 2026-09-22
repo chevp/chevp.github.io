@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.wisp.shy",
+  "path": ".\\gen/graph\\game\\enemies\\wisp\\shy",
+  "input_hash": "sha256:c51d6558d81d57225a1a8ec0b1112ea0d3c52c002edab607a3e560c0b704721d",
+  "derivation_hash": "sha256:7bc5ffd0186be6a1e717025e18c3d726d512b6e47dc9bf3f5b08a68196818646",
+  "outputs": [
+    {
+      "id": "game.enemies.wisp.shy#node.json",
+      "path": ".\\gen/out\\game.enemies.wisp.shy\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:f4cb8f2badd7ff1a2edb2ddfe61539425f3e280e7d59bb0b2f23b94f18bdb405",
+      "semantic_hash": "sha256:f4cb8f2badd7ff1a2edb2ddfe61539425f3e280e7d59bb0b2f23b94f18bdb405",
+      "producer": "game.enemies.wisp.shy",
+      "version": 1
+    }
+  ]
+}

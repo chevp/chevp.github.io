@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.sky.lava",
+  "path": ".\\gen/graph\\game\\tiles\\sky\\lava",
+  "input_hash": "sha256:9bc2b1d4ccd5de56456b77d84a4c4a08d2979322e3a27a839667753dc1ced541",
+  "derivation_hash": "sha256:559a0d05aef2a5f1ad11843bafc1b2fc156e028a35cd1daeeb4d8a6757641691",
+  "outputs": [
+    {
+      "id": "game.tiles.sky.lava#node.json",
+      "path": ".\\gen/out\\game.tiles.sky.lava\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:61c4fffb8587ea889face597abc569f12cc391d7ca03751de119bc7a9162552e",
+      "semantic_hash": "sha256:61c4fffb8587ea889face597abc569f12cc391d7ca03751de119bc7a9162552e",
+      "producer": "game.tiles.sky.lava",
+      "version": 1
+    }
+  ]
+}

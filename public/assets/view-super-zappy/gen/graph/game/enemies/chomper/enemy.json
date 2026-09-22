@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.chomper",
+  "title": "Chomper",
+  "hitbox": {
+    "w": 12,
+    "h": 20
+  },
+  "hp": 3,
+  "score": 300,
+  "stomp": false,
+  "behavior": "sitzt in Rohren, taucht periodisch auf",
+  "anims": [
+    "bite",
+    "hide"
+  ]
+}

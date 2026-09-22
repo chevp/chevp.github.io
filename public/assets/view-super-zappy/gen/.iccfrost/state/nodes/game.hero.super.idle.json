@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.idle",
+  "path": ".\\gen/graph\\game\\hero\\super\\idle",
+  "input_hash": "sha256:401190263e9b41d8e9597f75435fcade66cf89ca8ada2b8bf63d2fe0e3c03e14",
+  "derivation_hash": "sha256:c22b5251bbbbd9c18ca5f4818ae39de9bb0d5aa81373a6679147b77fe76d6448",
+  "outputs": [
+    {
+      "id": "game.hero.super.idle#node.json",
+      "path": ".\\gen/out\\game.hero.super.idle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:712ced6788e97f8409cfac356fbf20a477dc72f792f4a1c0cb9c6105ba9c10c1",
+      "semantic_hash": "sha256:712ced6788e97f8409cfac356fbf20a477dc72f792f4a1c0cb9c6105ba9c10c1",
+      "producer": "game.hero.super.idle",
+      "version": 1
+    }
+  ]
+}

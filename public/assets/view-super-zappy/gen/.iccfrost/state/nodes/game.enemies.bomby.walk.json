@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.bomby.walk",
+  "path": ".\\gen/graph\\game\\enemies\\bomby\\walk",
+  "input_hash": "sha256:06fab8f054c9a24430064237a346b52f88ee88d55f945dad6ce2dbe9076e939f",
+  "derivation_hash": "sha256:b28464c98cf737fb78c413907e647aab987aca117bc67652bdf2b7dff5bd9904",
+  "outputs": [
+    {
+      "id": "game.enemies.bomby.walk#node.json",
+      "path": ".\\gen/out\\game.enemies.bomby.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:60ea661674cc1751aac0d48ac418e748b096e941e247ef554c267eb5e4c7f5b1",
+      "semantic_hash": "sha256:60ea661674cc1751aac0d48ac418e748b096e941e247ef554c267eb5e4c7f5b1",
+      "producer": "game.enemies.bomby.walk",
+      "version": 1
+    }
+  ]
+}

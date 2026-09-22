@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.shellby.wake",
+  "sheet": "wake.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 2,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 12,
+    "h": 20
+  }
+}

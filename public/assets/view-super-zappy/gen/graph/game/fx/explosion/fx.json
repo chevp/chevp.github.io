@@ -1,0 +1,8 @@
+{
+  "kind": "zappy.fx/1",
+  "id": "fx.explosion",
+  "title": "Explosion",
+  "anims": [
+    "boom"
+  ]
+}

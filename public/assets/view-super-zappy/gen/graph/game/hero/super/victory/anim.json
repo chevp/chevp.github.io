@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.super.victory",
+  "sheet": "victory.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 6,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 22
+  }
+}

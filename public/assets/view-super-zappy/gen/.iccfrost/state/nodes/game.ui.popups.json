@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.ui.popups",
+  "path": ".\\gen/graph\\game\\ui\\popups",
+  "input_hash": "sha256:cbce408bd04a23fc433e45a72189ae0c8c9f1ea322315acb2af7583aa8fd86e7",
+  "derivation_hash": "sha256:f18f14f266c56997842847d435d8770edbccfc02a7a646c8b7d3a03ce1f3e2b6",
+  "outputs": [
+    {
+      "id": "game.ui.popups#node.json",
+      "path": ".\\gen/out\\game.ui.popups\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:5e0a9c4fdd97a611d2f5788907618f1648ad284c87b6b483cd079dbeb7afc725",
+      "semantic_hash": "sha256:5e0a9c4fdd97a611d2f5788907618f1648ad284c87b6b483cd079dbeb7afc725",
+      "producer": "game.ui.popups",
+      "version": 1
+    }
+  ]
+}

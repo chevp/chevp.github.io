@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.dust_land.puff",
+  "path": ".\\gen/graph\\game\\fx\\dust_land\\puff",
+  "input_hash": "sha256:e517ae9ce5ad59b7098d34f62fefad24b3104b4ff6b90fedfcd333630459c2d1",
+  "derivation_hash": "sha256:d54e0f3069a96d8e2fd0db539dc989fcb8bc67c6bfa78b5edcaa60e19279ee84",
+  "outputs": [
+    {
+      "id": "game.fx.dust_land.puff#node.json",
+      "path": ".\\gen/out\\game.fx.dust_land.puff\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:a04d1045fdb27ad91d18fc31c93c7424fdfbadcf095d00f04c43804663c1feac",
+      "semantic_hash": "sha256:a04d1045fdb27ad91d18fc31c93c7424fdfbadcf095d00f04c43804663c1feac",
+      "producer": "game.fx.dust_land.puff",
+      "version": 1
+    }
+  ]
+}

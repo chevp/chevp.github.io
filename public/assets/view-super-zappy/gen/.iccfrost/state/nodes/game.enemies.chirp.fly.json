@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.chirp.fly",
+  "path": ".\\gen/graph\\game\\enemies\\chirp\\fly",
+  "input_hash": "sha256:b7f2be499d9330b516573c6277720396ba42e89a35d42b0a6eb2428cb96e8517",
+  "derivation_hash": "sha256:a9bfe26d06df6fadaf1fe9e8cefd2012d8390ef4dc8ff7393fe26f465f35bdf2",
+  "outputs": [
+    {
+      "id": "game.enemies.chirp.fly#node.json",
+      "path": ".\\gen/out\\game.enemies.chirp.fly\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:e5dffe6c8d917d6b891cb734f6ad15481900be1feca2b495c06b3dd69cd37f1f",
+      "semantic_hash": "sha256:e5dffe6c8d917d6b891cb734f6ad15481900be1feca2b495c06b3dd69cd37f1f",
+      "producer": "game.enemies.chirp.fly",
+      "version": 1
+    }
+  ]
+}

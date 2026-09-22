@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.poof.poof",
+  "sheet": "poof.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 4,
+  "fps": 14,
+  "frameMs": 71,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.skid",
+  "path": ".\\gen/graph\\game\\hero\\super\\skid",
+  "input_hash": "sha256:d5a017a6db6e9d9ab8a9b04b8661a9dcd794933701d9b02f32bb8f57e521741b",
+  "derivation_hash": "sha256:d29b7508c675246382cd3ba4a877f1b08fae41b4e517595093ab9875987c2455",
+  "outputs": [
+    {
+      "id": "game.hero.super.skid#node.json",
+      "path": ".\\gen/out\\game.hero.super.skid\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:4a66fb4ab996c6746924263db12bfc8b450ee8a4257b9a3468958adb410af7a2",
+      "semantic_hash": "sha256:4a66fb4ab996c6746924263db12bfc8b450ee8a4257b9a3468958adb410af7a2",
+      "producer": "game.hero.super.skid",
+      "version": 1
+    }
+  ]
+}

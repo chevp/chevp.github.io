@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.chomper.hide",
+  "path": ".\\gen/graph\\game\\enemies\\chomper\\hide",
+  "input_hash": "sha256:fac34468228f69a41b8088d25024ba4bb1004f818f9d45f9f2686265d4f22bff",
+  "derivation_hash": "sha256:8f0b6a613d91decdda9a9403dc193121a515671cc038e1a72e1f7170b2f20f06",
+  "outputs": [
+    {
+      "id": "game.enemies.chomper.hide#node.json",
+      "path": ".\\gen/out\\game.enemies.chomper.hide\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:c08468fa09857f629471a3ee99dec8bb8f2c09ea92889aa6d722f01ec3f1c462",
+      "semantic_hash": "sha256:c08468fa09857f629471a3ee99dec8bb8f2c09ea92889aa6d722f01ec3f1c462",
+      "producer": "game.enemies.chomper.hide",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.super.land",
+  "sheet": "land.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 2,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 22
+  },
+  "events": {
+    "dust": [
+      0
+    ]
+  },
+  "next": "idle"
+}

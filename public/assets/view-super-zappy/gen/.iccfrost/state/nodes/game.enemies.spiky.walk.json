@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.spiky.walk",
+  "path": ".\\gen/graph\\game\\enemies\\spiky\\walk",
+  "input_hash": "sha256:4463ceabe336c0ad2149b49a7f7f7a8459b35dacc6632f49d51c52503728604f",
+  "derivation_hash": "sha256:6e1aaae3bde05818e8d3169130c761fbe414cc4692dfda1f2cbf712961a663ba",
+  "outputs": [
+    {
+      "id": "game.enemies.spiky.walk#node.json",
+      "path": ".\\gen/out\\game.enemies.spiky.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:b35228a32c8947016d5b2e3131bf77a149825d8d41d8617b4679f8e9a49cbb17",
+      "semantic_hash": "sha256:b35228a32c8947016d5b2e3131bf77a149825d8d41d8617b4679f8e9a49cbb17",
+      "producer": "game.enemies.spiky.walk",
+      "version": 1
+    }
+  ]
+}

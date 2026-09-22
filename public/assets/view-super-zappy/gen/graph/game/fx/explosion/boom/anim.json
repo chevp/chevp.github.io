@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.explosion.boom",
+  "sheet": "boom.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 6,
+  "fps": 14,
+  "frameMs": 71,
+  "loop": false,
+  "origin": {
+    "x": 16,
+    "y": 32
+  }
+}

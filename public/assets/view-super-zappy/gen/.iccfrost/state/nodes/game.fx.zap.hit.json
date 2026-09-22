@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.zap.hit",
+  "path": ".\\gen/graph\\game\\fx\\zap\\hit",
+  "input_hash": "sha256:6bd783ff43423cea3a9b174db7401e73b4a019c2ec7ed7916730c9a674c7630e",
+  "derivation_hash": "sha256:c9c1ed6d1afc66eedf52b351dbd8c9e450d1b339349e0a5941bf3dc45774b826",
+  "outputs": [
+    {
+      "id": "game.fx.zap.hit#node.json",
+      "path": ".\\gen/out\\game.fx.zap.hit\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:2907afc37676fad1652beac361aeb9cc04b27a3f6196900b74c0b13faef49abc",
+      "semantic_hash": "sha256:2907afc37676fad1652beac361aeb9cc04b27a3f6196900b74c0b13faef49abc",
+      "producer": "game.fx.zap.hit",
+      "version": 1
+    }
+  ]
+}

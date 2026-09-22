@@ -1,0 +1,27 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.small.walk",
+  "sheet": "walk.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 6,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 14
+  },
+  "events": {
+    "footstep": [
+      0,
+      3
+    ]
+  }
+}

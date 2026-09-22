@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.item/1",
+  "id": "items.gem_green",
+  "title": "Smaragd",
+  "score": 100,
+  "anims": [
+    "shimmer"
+  ]
+}

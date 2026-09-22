@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.spiky",
+  "title": "Spiky",
+  "hitbox": {
+    "w": 14,
+    "h": 12
+  },
+  "hp": 2,
+  "score": 250,
+  "stomp": false,
+  "behavior": "läuft; nur Zap-Treffer schaden",
+  "anims": [
+    "walk",
+    "curl"
+  ]
+}

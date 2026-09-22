@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.heart.beat",
+  "sheet": "beat.png",
+  "frame": {
+    "w": 12,
+    "h": 12
+  },
+  "frames": 2,
+  "fps": 3,
+  "frameMs": 333,
+  "loop": true,
+  "origin": {
+    "x": 6,
+    "y": 12
+  }
+}

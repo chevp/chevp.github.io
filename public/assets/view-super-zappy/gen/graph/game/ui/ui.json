@@ -1,0 +1,27 @@
+{
+  "kind": "zappy.ui/1",
+  "id": "ui",
+  "resolution": {
+    "w": 256,
+    "h": 224
+  },
+  "hud": {
+    "file": "hud.png",
+    "cell": 12,
+    "icons": [
+      "heart_full",
+      "heart_empty",
+      "coin_icon",
+      "life_icon",
+      "timer_icon"
+    ]
+  },
+  "font": {
+    "file": "font.png",
+    "cell": {
+      "w": 6,
+      "h": 8
+    },
+    "glyphs": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-:x!."
+  }
+}

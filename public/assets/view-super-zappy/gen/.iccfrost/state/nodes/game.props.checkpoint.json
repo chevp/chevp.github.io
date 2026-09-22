@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.props.checkpoint",
+  "path": ".\\gen/graph\\game\\props\\checkpoint",
+  "input_hash": "sha256:558414b357115b03b20519ae385a5040163521d3f07085f473d09df0be25217c",
+  "derivation_hash": "sha256:6f18ae4b71ff3b72396fb053a4439c9e514d52f1ca2cb36ef3234e21fadc43ce",
+  "outputs": [
+    {
+      "id": "game.props.checkpoint#node.json",
+      "path": ".\\gen/out\\game.props.checkpoint\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:7d2c34e5f78cb6ac58ef9f3e68abf16d32e894e67636d8b03e6e12c77618a390",
+      "semantic_hash": "sha256:7d2c34e5f78cb6ac58ef9f3e68abf16d32e894e67636d8b03e6e12c77618a390",
+      "producer": "game.props.checkpoint",
+      "version": 1
+    }
+  ]
+}

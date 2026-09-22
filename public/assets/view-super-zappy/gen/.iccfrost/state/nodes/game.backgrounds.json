@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.backgrounds",
+  "path": ".\\gen/graph\\game\\backgrounds",
+  "input_hash": "sha256:40c32a5e0c0b694850d4a5445b5baeedf8c419a847fd57fb6041ee36f8e6a1f2",
+  "derivation_hash": "sha256:b008f8f32b99bec16a67f52d52c04a859b04b33078dd8bf2d222c0db3beafc18",
+  "outputs": [
+    {
+      "id": "game.backgrounds#node.json",
+      "path": ".\\gen/out\\game.backgrounds\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:401bb2d8b8aa758d89593ee3820ef288bab8f1c6b87cb1f840b98fab8b23a316",
+      "semantic_hash": "sha256:401bb2d8b8aa758d89593ee3820ef288bab8f1c6b87cb1f840b98fab8b23a316",
+      "producer": "game.backgrounds",
+      "version": 1
+    }
+  ]
+}

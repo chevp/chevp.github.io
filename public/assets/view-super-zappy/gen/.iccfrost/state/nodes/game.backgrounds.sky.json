@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.backgrounds.sky",
+  "path": ".\\gen/graph\\game\\backgrounds\\sky",
+  "input_hash": "sha256:84c23338d20018fa7d63ab48e88442e67f1076451048397949adb61b7ac9d2c3",
+  "derivation_hash": "sha256:9e7443607427749b0f7fc981b61b3528f965b1867a4d2e11ed4294ca4718292e",
+  "outputs": [
+    {
+      "id": "game.backgrounds.sky#node.json",
+      "path": ".\\gen/out\\game.backgrounds.sky\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:8a8fb3f97ba839ea87ff95bb815959a875f5f5a3c86484e580b91647170c9e68",
+      "semantic_hash": "sha256:8a8fb3f97ba839ea87ff95bb815959a875f5f5a3c86484e580b91647170c9e68",
+      "producer": "game.backgrounds.sky",
+      "version": 1
+    }
+  ]
+}

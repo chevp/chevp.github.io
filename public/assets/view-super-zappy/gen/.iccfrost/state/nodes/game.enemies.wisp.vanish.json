@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.wisp.vanish",
+  "path": ".\\gen/graph\\game\\enemies\\wisp\\vanish",
+  "input_hash": "sha256:173fc9c2827b1ce4e82414210a7576ef7eeee15364141586ba305b6ef91fd3c4",
+  "derivation_hash": "sha256:8a59ff5712a14d91e9992771bf7230724ddcf924e57da8de17fb65aa39f90b49",
+  "outputs": [
+    {
+      "id": "game.enemies.wisp.vanish#node.json",
+      "path": ".\\gen/out\\game.enemies.wisp.vanish\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:f3ba1a9b28e3c81faaeaeadfe0878478d3b7ae5b7616852a9c52a34c60b8ffdf",
+      "semantic_hash": "sha256:f3ba1a9b28e3c81faaeaeadfe0878478d3b7ae5b7616852a9c52a34c60b8ffdf",
+      "producer": "game.enemies.wisp.vanish",
+      "version": 1
+    }
+  ]
+}

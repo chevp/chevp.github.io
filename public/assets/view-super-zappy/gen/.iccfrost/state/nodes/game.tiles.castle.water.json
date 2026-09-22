@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.castle.water",
+  "path": ".\\gen/graph\\game\\tiles\\castle\\water",
+  "input_hash": "sha256:382cd2e7a0ad85109eb7218692fa88907f51d618754f73c1bee79df831110445",
+  "derivation_hash": "sha256:68c24fd267d5fab5bbd36c62fa477b2e2ff22bf208e5ddf042b4e8699bb1e103",
+  "outputs": [
+    {
+      "id": "game.tiles.castle.water#node.json",
+      "path": ".\\gen/out\\game.tiles.castle.water\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:a88ddf5186a0acfcf70d5c0492ae9d61e8c4a36062216404b3cf064c55b5b058",
+      "semantic_hash": "sha256:a88ddf5186a0acfcf70d5c0492ae9d61e8c4a36062216404b3cf064c55b5b058",
+      "producer": "game.tiles.castle.water",
+      "version": 1
+    }
+  ]
+}

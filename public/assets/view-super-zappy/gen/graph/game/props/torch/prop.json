@@ -1,0 +1,8 @@
+{
+  "kind": "zappy.prop/1",
+  "id": "props.torch",
+  "title": "Fackel",
+  "anims": [
+    "burn"
+  ]
+}

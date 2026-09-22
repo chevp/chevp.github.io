@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.blobby.flip",
+  "path": ".\\gen/graph\\game\\enemies\\blobby\\flip",
+  "input_hash": "sha256:f080c7d3a45cd2fff3d639b1be141aae446d35fc4eb4fb4be8cf0eaff20c930d",
+  "derivation_hash": "sha256:87ec4de695769aaa962768ac3334c471cf34f3f20a4446f57eb52e6c954692b9",
+  "outputs": [
+    {
+      "id": "game.enemies.blobby.flip#node.json",
+      "path": ".\\gen/out\\game.enemies.blobby.flip\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:fadb8507e7325c593cc1164330446a054f578d3aac5ac1ac6eeb6f9cff75f973",
+      "semantic_hash": "sha256:fadb8507e7325c593cc1164330446a054f578d3aac5ac1ac6eeb6f9cff75f973",
+      "producer": "game.enemies.blobby.flip",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "zappy.transform/1",
+  "id": "hero.transform",
+  "from": "small",
+  "to": "super",
+  "trigger": "item:cell"
+}

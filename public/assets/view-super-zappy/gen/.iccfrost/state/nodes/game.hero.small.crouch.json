@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.crouch",
+  "path": ".\\gen/graph\\game\\hero\\small\\crouch",
+  "input_hash": "sha256:92723b139ec6594d9d2452a301f3ad15ff440fc7942c948b063609a2dedbce3f",
+  "derivation_hash": "sha256:d0e251f64debcc1b5bfac27523f0d190b71f034969d5f873bf8175e1ffb3fc88",
+  "outputs": [
+    {
+      "id": "game.hero.small.crouch#node.json",
+      "path": ".\\gen/out\\game.hero.small.crouch\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:cf3afce5e39c593977d2e107d249dd1c1b7eb20a856c324200f5a833ae036e23",
+      "semantic_hash": "sha256:cf3afce5e39c593977d2e107d249dd1c1b7eb20a856c324200f5a833ae036e23",
+      "producer": "game.hero.small.crouch",
+      "version": 1
+    }
+  ]
+}

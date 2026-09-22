@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.shellby.walk",
+  "path": ".\\gen/graph\\game\\enemies\\shellby\\walk",
+  "input_hash": "sha256:7766d8805ceb11c7c74487d8b5f8892cd611564873381a0d0ff15c8c0f00bcac",
+  "derivation_hash": "sha256:04963b70c061b7cc7e5bc30362db0461a3d35757bd6bdf7b422365b3ec25cb27",
+  "outputs": [
+    {
+      "id": "game.enemies.shellby.walk#node.json",
+      "path": ".\\gen/out\\game.enemies.shellby.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:bd4910beb8a7ffb449f0c454b1afd94bf9141b631f6f9d59f29c7bd0c67594c3",
+      "semantic_hash": "sha256:bd4910beb8a7ffb449f0c454b1afd94bf9141b631f6f9d59f29c7bd0c67594c3",
+      "producer": "game.enemies.shellby.walk",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.super.wall_slide",
+  "sheet": "wall_slide.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 2,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 22
+  }
+}

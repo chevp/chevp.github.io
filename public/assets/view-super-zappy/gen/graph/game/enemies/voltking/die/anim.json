@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.voltking.die",
+  "sheet": "die.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 6,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": false,
+  "origin": {
+    "x": 16,
+    "y": 32
+  },
+  "hitbox": {
+    "w": 22,
+    "h": 26
+  }
+}

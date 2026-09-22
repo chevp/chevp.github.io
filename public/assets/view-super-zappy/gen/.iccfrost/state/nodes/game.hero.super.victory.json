@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.victory",
+  "path": ".\\gen/graph\\game\\hero\\super\\victory",
+  "input_hash": "sha256:4b5ed2d34d7bdb7022b133625d400b69a4f5fe09f81c3db36d3bab17560bcb19",
+  "derivation_hash": "sha256:2d6b41026246348406501b06b94794c441b2bda3812f14c9757c90657e4ccd28",
+  "outputs": [
+    {
+      "id": "game.hero.super.victory#node.json",
+      "path": ".\\gen/out\\game.hero.super.victory\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:077729b526478e1e64770bdd92c2234bd239772bf34ea6fa9ae549446b243588",
+      "semantic_hash": "sha256:077729b526478e1e64770bdd92c2234bd239772bf34ea6fa9ae549446b243588",
+      "producer": "game.hero.super.victory",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.climb",
+  "path": ".\\gen/graph\\game\\hero\\super\\climb",
+  "input_hash": "sha256:8596454eff27753ad2cdc312f9fdeb47327f5c2720236007d751f8794b10f351",
+  "derivation_hash": "sha256:aa6d0ef6e3d64acf54c6647ec299ae2b0a3bef5863f36273f3ea9694feeef88d",
+  "outputs": [
+    {
+      "id": "game.hero.super.climb#node.json",
+      "path": ".\\gen/out\\game.hero.super.climb\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:bab5b2a5e916ae2e30f73e09a57055fcfce149606006315edce5659c8495ec29",
+      "semantic_hash": "sha256:bab5b2a5e916ae2e30f73e09a57055fcfce149606006315edce5659c8495ec29",
+      "producer": "game.hero.super.climb",
+      "version": 1
+    }
+  ]
+}

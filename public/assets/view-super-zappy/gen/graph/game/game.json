@@ -1,0 +1,19 @@
+{
+  "kind": "zappy.game/1",
+  "id": "super-zappy",
+  "title": "Super Zappy",
+  "resolution": {
+    "w": 256,
+    "h": 224
+  },
+  "tile": 16,
+  "genre": "2D-Jump-and-Run, Frontansicht, Pixel-Look",
+  "lives": 3,
+  "worlds": 1,
+  "theme": [
+    "grass",
+    "cave",
+    "sky",
+    "castle"
+  ]
+}

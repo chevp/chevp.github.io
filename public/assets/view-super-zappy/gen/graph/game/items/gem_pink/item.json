@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.item/1",
+  "id": "items.gem_pink",
+  "title": "Rubin",
+  "score": 200,
+  "anims": [
+    "shimmer"
+  ]
+}

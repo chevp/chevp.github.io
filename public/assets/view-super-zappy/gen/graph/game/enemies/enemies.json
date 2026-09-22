@@ -1,0 +1,16 @@
+{
+  "kind": "zappy.enemies/1",
+  "id": "enemies",
+  "entries": [
+    "blobby",
+    "shellby",
+    "chirp",
+    "chomper",
+    "spiky",
+    "wisp",
+    "crusher",
+    "bomby",
+    "finn",
+    "voltking"
+  ]
+}

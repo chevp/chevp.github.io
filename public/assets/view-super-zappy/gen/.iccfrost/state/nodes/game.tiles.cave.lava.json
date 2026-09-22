@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.cave.lava",
+  "path": ".\\gen/graph\\game\\tiles\\cave\\lava",
+  "input_hash": "sha256:16859dca42e68ee5893d7b7dbcdda3968633a3701f82f7f44738dba050401b7b",
+  "derivation_hash": "sha256:90b7fbab9e19b71e920c180e3c56f7f3477a33bef61cc81eee97666386c03fe2",
+  "outputs": [
+    {
+      "id": "game.tiles.cave.lava#node.json",
+      "path": ".\\gen/out\\game.tiles.cave.lava\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:d2967bac6005a4a95302293407d255612bace8650aca05c198414cbd90694ede",
+      "semantic_hash": "sha256:d2967bac6005a4a95302293407d255612bace8650aca05c198414cbd90694ede",
+      "producer": "game.tiles.cave.lava",
+      "version": 1
+    }
+  ]
+}

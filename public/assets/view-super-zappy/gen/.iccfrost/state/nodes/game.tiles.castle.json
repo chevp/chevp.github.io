@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.castle",
+  "path": ".\\gen/graph\\game\\tiles\\castle",
+  "input_hash": "sha256:d984f6f0847b0e30c89146f4100fff446c3a658ab1a1344eb04d04f207a1c6ce",
+  "derivation_hash": "sha256:49f48e8243dbc0a1542369fd71625baa8111d9f403c90603d7b6ed4f50831c00",
+  "outputs": [
+    {
+      "id": "game.tiles.castle#node.json",
+      "path": ".\\gen/out\\game.tiles.castle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:be421dc03030de48320261d7cf44a8f6cc1ac3110c97b4a4c3db2bce93acd6a6",
+      "semantic_hash": "sha256:be421dc03030de48320261d7cf44a8f6cc1ac3110c97b4a4c3db2bce93acd6a6",
+      "producer": "game.tiles.castle",
+      "version": 1
+    }
+  ]
+}

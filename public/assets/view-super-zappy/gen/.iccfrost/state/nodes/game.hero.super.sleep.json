@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.sleep",
+  "path": ".\\gen/graph\\game\\hero\\super\\sleep",
+  "input_hash": "sha256:3c4fcdfe7453fd93fc43dd25d0cf67b56a03b68e7cb8e025214cfab25c0188c7",
+  "derivation_hash": "sha256:aa183dfbc55ca00eb82280e3be3e57d63f0a4441ebf66d5509eefb3d149af684",
+  "outputs": [
+    {
+      "id": "game.hero.super.sleep#node.json",
+      "path": ".\\gen/out\\game.hero.super.sleep\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:810a685e602d37378bfb961b426fdd287c622bd76725beffdf5f3c1c207f57c6",
+      "semantic_hash": "sha256:810a685e602d37378bfb961b426fdd287c622bd76725beffdf5f3c1c207f57c6",
+      "producer": "game.hero.super.sleep",
+      "version": 1
+    }
+  ]
+}

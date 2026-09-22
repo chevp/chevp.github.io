@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.form/1",
+  "id": "hero.small",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 14
+  },
+  "hitboxLow": {
+    "w": 10,
+    "h": 9
+  },
+  "onHurt": "die"
+}

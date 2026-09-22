@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.backgrounds.grass",
+  "path": ".\\gen/graph\\game\\backgrounds\\grass",
+  "input_hash": "sha256:269048354a9bea5304d68f6309426ffaa0ea9caa14bc996d3f3dd1cd882407ec",
+  "derivation_hash": "sha256:44a575e2a136e8a427caab0c688eb7220f13eae63058a43bce929d918660fec6",
+  "outputs": [
+    {
+      "id": "game.backgrounds.grass#node.json",
+      "path": ".\\gen/out\\game.backgrounds.grass\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:338996d8249a77ff7ad09613c25b981064fb7f5b64d7668a6ce24bcc876509ba",
+      "semantic_hash": "sha256:338996d8249a77ff7ad09613c25b981064fb7f5b64d7668a6ce24bcc876509ba",
+      "producer": "game.backgrounds.grass",
+      "version": 1
+    }
+  ]
+}

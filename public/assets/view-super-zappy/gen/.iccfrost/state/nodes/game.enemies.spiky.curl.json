@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.spiky.curl",
+  "path": ".\\gen/graph\\game\\enemies\\spiky\\curl",
+  "input_hash": "sha256:82064baa0d091b2aa82617594a0cba525dc2e8c8949d6381e8cc0955120307b8",
+  "derivation_hash": "sha256:48ae5c88f96a740114cacf01d48ed9314bd21fa0f8ed4ff7aaa5acb2f2d9b17d",
+  "outputs": [
+    {
+      "id": "game.enemies.spiky.curl#node.json",
+      "path": ".\\gen/out\\game.enemies.spiky.curl\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:665be375862f7f72379c4016b9ea4cefccc15f38f36aac2bdb48883bb9d3674a",
+      "semantic_hash": "sha256:665be375862f7f72379c4016b9ea4cefccc15f38f36aac2bdb48883bb9d3674a",
+      "producer": "game.enemies.spiky.curl",
+      "version": 1
+    }
+  ]
+}

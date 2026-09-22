@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.dust_run.puff",
+  "sheet": "puff.png",
+  "frame": {
+    "w": 8,
+    "h": 8
+  },
+  "frames": 4,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": false,
+  "origin": {
+    "x": 4,
+    "y": 8
+  }
+}

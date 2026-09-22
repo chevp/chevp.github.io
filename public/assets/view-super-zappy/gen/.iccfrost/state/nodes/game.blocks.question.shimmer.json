@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.question.shimmer",
+  "path": ".\\gen/graph\\game\\blocks\\question\\shimmer",
+  "input_hash": "sha256:ac12cb463b285a12ade755f7723bfc1b25770e451fe98ee12268850f323b1947",
+  "derivation_hash": "sha256:7dbf9e8bacee804512a5c7b669f5fd5f27d67a2bd2109d7ef537ec3e39640f9d",
+  "outputs": [
+    {
+      "id": "game.blocks.question.shimmer#node.json",
+      "path": ".\\gen/out\\game.blocks.question.shimmer\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:abf115d0a7f056b5bba1ded1ce395f3cb1315ac8fcd314fbe0d2dbe4a0bd5aa2",
+      "semantic_hash": "sha256:abf115d0a7f056b5bba1ded1ce395f3cb1315ac8fcd314fbe0d2dbe4a0bd5aa2",
+      "producer": "game.blocks.question.shimmer",
+      "version": 1
+    }
+  ]
+}

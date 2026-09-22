@@ -1,0 +1,18 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.wisp",
+  "title": "Wisp",
+  "hitbox": {
+    "w": 12,
+    "h": 12
+  },
+  "hp": 1,
+  "score": 300,
+  "stomp": false,
+  "behavior": "folgt Zappy, erstarrt wenn er hinsieht",
+  "anims": [
+    "float",
+    "shy",
+    "vanish"
+  ]
+}

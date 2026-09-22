@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.backgrounds.cave",
+  "path": ".\\gen/graph\\game\\backgrounds\\cave",
+  "input_hash": "sha256:73733e9702ae058b3f2c668578d74c9099f757c0eacd61870628f5f5780aba0e",
+  "derivation_hash": "sha256:4058e5927baa24c715b3be051c439eaac61d8ce18ca51e4ac9ea9cf0b4fccff8",
+  "outputs": [
+    {
+      "id": "game.backgrounds.cave#node.json",
+      "path": ".\\gen/out\\game.backgrounds.cave\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:490e858feada7c319cef920ec9d15e7cc009ab4e7060bd2ecb4e17a0ce0de190",
+      "semantic_hash": "sha256:490e858feada7c319cef920ec9d15e7cc009ab4e7060bd2ecb4e17a0ce0de190",
+      "producer": "game.backgrounds.cave",
+      "version": 1
+    }
+  ]
+}

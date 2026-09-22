@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.bomby.fuse",
+  "path": ".\\gen/graph\\game\\enemies\\bomby\\fuse",
+  "input_hash": "sha256:518dfeaeb0a29f26d4768ac0e83924128620cad58d8595637dd47209b28e9ff3",
+  "derivation_hash": "sha256:c624f8195a06364cc1991c7019538d6347f1f3ca6c5ec12756e08c592b437256",
+  "outputs": [
+    {
+      "id": "game.enemies.bomby.fuse#node.json",
+      "path": ".\\gen/out\\game.enemies.bomby.fuse\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:85192180b3700f281f15969f8f52fedfd828bab21c1e9b398014d4f16bea86ec",
+      "semantic_hash": "sha256:85192180b3700f281f15969f8f52fedfd828bab21c1e9b398014d4f16bea86ec",
+      "producer": "game.enemies.bomby.fuse",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.coin.spin",
+  "path": ".\\gen/graph\\game\\items\\coin\\spin",
+  "input_hash": "sha256:9a69a896aee4b2bc8758b7e5f825277172ee0a8186f5aa240ea64ab9f0fc6c39",
+  "derivation_hash": "sha256:388470dbc877b4e14ecbfeee5cc8692feff2664e8f552a44b546f772db951c35",
+  "outputs": [
+    {
+      "id": "game.items.coin.spin#node.json",
+      "path": ".\\gen/out\\game.items.coin.spin\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:87c823f196922c854380e7eae0ce51f1c689e7e8fa891f70d0151892d1e54cb3",
+      "semantic_hash": "sha256:87c823f196922c854380e7eae0ce51f1c689e7e8fa891f70d0151892d1e54cb3",
+      "producer": "game.items.coin.spin",
+      "version": 1
+    }
+  ]
+}

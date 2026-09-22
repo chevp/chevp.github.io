@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.ui.cursor",
+  "path": ".\\gen/graph\\game\\ui\\cursor",
+  "input_hash": "sha256:6d8a7fbc3aea6c91723a51e1c98d864dd5139128f08549e9d0677ce6e900ca53",
+  "derivation_hash": "sha256:ab6a0f5ae5ddabcad20771b3505b69ba32dd7a04a0c0a4cf5eae58567b147728",
+  "outputs": [
+    {
+      "id": "game.ui.cursor#node.json",
+      "path": ".\\gen/out\\game.ui.cursor\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:422267355d16d3456db05290a04e7ed5253a7eecc23a5ec865fff90d987ebb31",
+      "semantic_hash": "sha256:422267355d16d3456db05290a04e7ed5253a7eecc23a5ec865fff90d987ebb31",
+      "producer": "game.ui.cursor",
+      "version": 1
+    }
+  ]
+}

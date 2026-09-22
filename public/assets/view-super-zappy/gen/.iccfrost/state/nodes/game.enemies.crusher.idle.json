@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.crusher.idle",
+  "path": ".\\gen/graph\\game\\enemies\\crusher\\idle",
+  "input_hash": "sha256:2398803ec06c983e7dd71be99e0e180c1bcbc773ff2e1b896e08773c04026ff1",
+  "derivation_hash": "sha256:96cf4f296dd7899d31ed225dcf376272726d3970bc3b43c00f7b708b034c9684",
+  "outputs": [
+    {
+      "id": "game.enemies.crusher.idle#node.json",
+      "path": ".\\gen/out\\game.enemies.crusher.idle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:65af26b029954c8031161d54ea3490739cd3d70d2793218c52e5681906b54853",
+      "semantic_hash": "sha256:65af26b029954c8031161d54ea3490739cd3d70d2793218c52e5681906b54853",
+      "producer": "game.enemies.crusher.idle",
+      "version": 1
+    }
+  ]
+}

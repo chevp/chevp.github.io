@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.heart.beat",
+  "path": ".\\gen/graph\\game\\items\\heart\\beat",
+  "input_hash": "sha256:96327afc67172c1a6b0263a3271a306ca307d2ebf95ac98cd30cf7a71a1b9670",
+  "derivation_hash": "sha256:6d8e0f22b5501d2b1d3973d2668a302363911f844fb8acb881c8e2bc13bc0a60",
+  "outputs": [
+    {
+      "id": "game.items.heart.beat#node.json",
+      "path": ".\\gen/out\\game.items.heart.beat\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:f7816a9e3861185c703316e20ddb1ded88179801cdbd8c86d7b1d08b6131d138",
+      "semantic_hash": "sha256:f7816a9e3861185c703316e20ddb1ded88179801cdbd8c86d7b1d08b6131d138",
+      "producer": "game.items.heart.beat",
+      "version": 1
+    }
+  ]
+}

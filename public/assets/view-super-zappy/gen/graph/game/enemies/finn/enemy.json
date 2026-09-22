@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.finn",
+  "title": "Finn",
+  "hitbox": {
+    "w": 12,
+    "h": 8
+  },
+  "hp": 1,
+  "score": 100,
+  "stomp": true,
+  "behavior": "schwimmt im Wasser, springt aus Lava-/Wassergruben",
+  "anims": [
+    "swim",
+    "jump"
+  ]
+}

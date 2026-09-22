@@ -1,0 +1,140 @@
+{
+  "kind": "zappy.tileset/1",
+  "id": "tiles.cave",
+  "sheet": "tiles.png",
+  "tile": 16,
+  "columns": 10,
+  "tiles": {
+    "ground_top": {
+      "x": 0,
+      "y": 0,
+      "solid": true
+    },
+    "ground_fill": {
+      "x": 1,
+      "y": 0,
+      "solid": true
+    },
+    "ground_topleft": {
+      "x": 2,
+      "y": 0,
+      "solid": true
+    },
+    "ground_topright": {
+      "x": 3,
+      "y": 0,
+      "solid": true
+    },
+    "brick": {
+      "x": 4,
+      "y": 0,
+      "solid": true
+    },
+    "stone": {
+      "x": 5,
+      "y": 0,
+      "solid": true
+    },
+    "plat_left": {
+      "x": 6,
+      "y": 0,
+      "solid": true
+    },
+    "plat_mid": {
+      "x": 7,
+      "y": 0,
+      "solid": true
+    },
+    "plat_right": {
+      "x": 8,
+      "y": 0,
+      "solid": true
+    },
+    "pipe_top_l": {
+      "x": 9,
+      "y": 0,
+      "solid": true
+    },
+    "pipe_top_r": {
+      "x": 0,
+      "y": 1,
+      "solid": true
+    },
+    "pipe_body_l": {
+      "x": 1,
+      "y": 1,
+      "solid": true
+    },
+    "pipe_body_r": {
+      "x": 2,
+      "y": 1,
+      "solid": true
+    },
+    "spikes": {
+      "x": 3,
+      "y": 1,
+      "solid": false
+    },
+    "ladder": {
+      "x": 4,
+      "y": 1,
+      "solid": false
+    },
+    "fence": {
+      "x": 5,
+      "y": 1,
+      "solid": false
+    },
+    "water_top": {
+      "x": 6,
+      "y": 1,
+      "solid": false
+    },
+    "water_fill": {
+      "x": 7,
+      "y": 1,
+      "solid": false
+    },
+    "lava_top": {
+      "x": 8,
+      "y": 1,
+      "solid": false
+    },
+    "lava_fill": {
+      "x": 9,
+      "y": 1,
+      "solid": false
+    }
+  },
+  "colors": {
+    "top": "#7868b8",
+    "top_hi": "#a898e8",
+    "top_d": "#483878",
+    "fill": "#4a4068",
+    "fill_d": "#302848",
+    "fill_l": "#6a5c90",
+    "brick": "#786898",
+    "brick_d": "#382c58",
+    "brick_hi": "#a898c8",
+    "stone": "#68788c",
+    "stone_d": "#384858",
+    "stone_l": "#a0b0c8",
+    "pipe": "#3898a8",
+    "pipe_d": "#186070",
+    "pipe_hi": "#88e0e8",
+    "plat": "#a88858",
+    "plat_d": "#684828",
+    "water": "#2060c8c0",
+    "water_l": "#78b0f0",
+    "lava": "#f83808",
+    "lava_l": "#ffa028",
+    "sky": [
+      "#100820",
+      "#181030",
+      "#201840",
+      "#2c2050"
+    ],
+    "far": "#2a2048",
+    "near": "#3a3060"
+  }
+}

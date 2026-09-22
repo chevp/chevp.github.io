@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.sparkle",
+  "path": ".\\gen/graph\\game\\fx\\sparkle",
+  "input_hash": "sha256:53cb60830d3e23cda9ae8fae8d4795171dfc9413ccba536a876551026df1bab3",
+  "derivation_hash": "sha256:dfee4b81878a5151e1f3e8cc45824ac006256d5f96bab83e81f9e79408042a3a",
+  "outputs": [
+    {
+      "id": "game.fx.sparkle#node.json",
+      "path": ".\\gen/out\\game.fx.sparkle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:097fdfd618032daafb6c082d74a14e9e5d64fa04d84fb7339623265bc4dbc37d",
+      "semantic_hash": "sha256:097fdfd618032daafb6c082d74a14e9e5d64fa04d84fb7339623265bc4dbc37d",
+      "producer": "game.fx.sparkle",
+      "version": 1
+    }
+  ]
+}

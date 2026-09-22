@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "blocks.brick.break",
+  "sheet": "break.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 4,
+  "fps": 14,
+  "frameMs": 71,
+  "loop": false,
+  "origin": {
+    "x": 16,
+    "y": 32
+  }
+}

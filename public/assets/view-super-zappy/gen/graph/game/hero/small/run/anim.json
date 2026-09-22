@@ -1,0 +1,31 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.small.run",
+  "sheet": "run.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 6,
+  "fps": 14,
+  "frameMs": 71,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 14
+  },
+  "events": {
+    "footstep": [
+      0,
+      3
+    ],
+    "dust": [
+      0,
+      3
+    ]
+  }
+}

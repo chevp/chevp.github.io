@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.voltking.die",
+  "path": ".\\gen/graph\\game\\enemies\\voltking\\die",
+  "input_hash": "sha256:9e5d7ac81ac7e06ef695c5486456abf6b1ff80fcdfc499a37a18c46828e09b01",
+  "derivation_hash": "sha256:b47fced911e9086c32dbb9a6efbc413bcce595098e4897b21050fd8976a9f731",
+  "outputs": [
+    {
+      "id": "game.enemies.voltking.die#node.json",
+      "path": ".\\gen/out\\game.enemies.voltking.die\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:2b021a8f000300c6781b478d7d426b6b26b48d5642561aebd642d157b907d1a0",
+      "semantic_hash": "sha256:2b021a8f000300c6781b478d7d426b6b26b48d5642561aebd642d157b907d1a0",
+      "producer": "game.enemies.voltking.die",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.blobby.angry",
+  "path": ".\\gen/graph\\game\\enemies\\blobby\\angry",
+  "input_hash": "sha256:9a618e051fd365aa8c51c16bcc78168f6bcf42eef034869a50b0f976463119ef",
+  "derivation_hash": "sha256:0ad1e2e43a7464a87f7939ca9dd3331d3e5d2b2c713e7f3fc52ababc6d86a619",
+  "outputs": [
+    {
+      "id": "game.enemies.blobby.angry#node.json",
+      "path": ".\\gen/out\\game.enemies.blobby.angry\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:9325ee2a2d76e2c0963d78923f0e4f5337af7a4eb28acae4a405b69eaf4ac12d",
+      "semantic_hash": "sha256:9325ee2a2d76e2c0963d78923f0e4f5337af7a4eb28acae4a405b69eaf4ac12d",
+      "producer": "game.enemies.blobby.angry",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.gem_pink",
+  "path": ".\\gen/graph\\game\\items\\gem_pink",
+  "input_hash": "sha256:7c58480e8cf1b946bc880b7a6b40823c18a07764a5928b3533d3f8e5472cea2b",
+  "derivation_hash": "sha256:8f68039276bcd7e566f63ccef3df4107adfdc69b0f39ea9c9855c13ab50f9d82",
+  "outputs": [
+    {
+      "id": "game.items.gem_pink#node.json",
+      "path": ".\\gen/out\\game.items.gem_pink\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:e8c4941965575a4c47f6bc69cec09605a47a26c0887aaf1d8384293afbd06c35",
+      "semantic_hash": "sha256:e8c4941965575a4c47f6bc69cec09605a47a26c0887aaf1d8384293afbd06c35",
+      "producer": "game.items.gem_pink",
+      "version": 1
+    }
+  ]
+}

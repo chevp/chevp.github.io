@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.coin.spin",
+  "sheet": "spin.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 6,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

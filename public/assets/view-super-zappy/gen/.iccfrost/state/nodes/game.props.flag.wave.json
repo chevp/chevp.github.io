@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.props.flag.wave",
+  "path": ".\\gen/graph\\game\\props\\flag\\wave",
+  "input_hash": "sha256:afab99567a7715063fc816a4a7273409f9dc9a7d8192cc5c2ab04b8c40944056",
+  "derivation_hash": "sha256:3bbf5751681290c1ddd291c6e00763f8309af4fa86e838a9cdbb4444539885d2",
+  "outputs": [
+    {
+      "id": "game.props.flag.wave#node.json",
+      "path": ".\\gen/out\\game.props.flag.wave\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:7012b5f7ef7776b75070e8f33973208acf62f3856a0f70cd9217262ecf68b762",
+      "semantic_hash": "sha256:7012b5f7ef7776b75070e8f33973208acf62f3856a0f70cd9217262ecf68b762",
+      "producer": "game.props.flag.wave",
+      "version": 1
+    }
+  ]
+}

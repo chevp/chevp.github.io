@@ -1,0 +1,20 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.voltking",
+  "title": "Volt King",
+  "hitbox": {
+    "w": 22,
+    "h": 26
+  },
+  "hp": 8,
+  "score": 5000,
+  "stomp": false,
+  "behavior": "Boss: lädt auf, feuert Blitzreihen, wird schneller je Treffer",
+  "anims": [
+    "idle",
+    "charge",
+    "attack",
+    "hurt",
+    "die"
+  ]
+}

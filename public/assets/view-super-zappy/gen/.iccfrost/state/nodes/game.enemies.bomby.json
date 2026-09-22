@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.bomby",
+  "path": ".\\gen/graph\\game\\enemies\\bomby",
+  "input_hash": "sha256:efe2582b80f0c19678bf8367ae76e483487bcdbe68b41b4ec551462fc9bbeb35",
+  "derivation_hash": "sha256:f4a20100614a42ee879a64f32d6cda96f9792807e7b3c03c285dc3b9f8a228db",
+  "outputs": [
+    {
+      "id": "game.enemies.bomby#node.json",
+      "path": ".\\gen/out\\game.enemies.bomby\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:90cee24f6627f1abb89f98699d2707229b6cd71c5e6bf0e5d06b849e6fa1f12c",
+      "semantic_hash": "sha256:90cee24f6627f1abb89f98699d2707229b6cd71c5e6bf0e5d06b849e6fa1f12c",
+      "producer": "game.enemies.bomby",
+      "version": 1
+    }
+  ]
+}

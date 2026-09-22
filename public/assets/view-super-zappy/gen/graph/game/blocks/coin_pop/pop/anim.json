@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "blocks.coin_pop.pop",
+  "sheet": "pop.png",
+  "frame": {
+    "w": 16,
+    "h": 32
+  },
+  "frames": 6,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 32
+  }
+}

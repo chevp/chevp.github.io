@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.wisp.float",
+  "sheet": "float.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 4,
+  "fps": 5,
+  "frameMs": 200,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 12,
+    "h": 12
+  }
+}

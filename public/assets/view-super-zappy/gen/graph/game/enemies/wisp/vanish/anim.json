@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.wisp.vanish",
+  "sheet": "vanish.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 4,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 12,
+    "h": 12
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.blobby",
+  "title": "Blobby",
+  "hitbox": {
+    "w": 12,
+    "h": 10
+  },
+  "hp": 1,
+  "score": 100,
+  "stomp": true,
+  "behavior": "läuft geradeaus, dreht an Wänden um",
+  "anims": [
+    "walk",
+    "angry",
+    "squash",
+    "flip"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.key.shine",
+  "sheet": "shine.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 3,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

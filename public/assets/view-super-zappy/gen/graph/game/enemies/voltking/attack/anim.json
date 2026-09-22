@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.voltking.attack",
+  "sheet": "attack.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 4,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": true,
+  "origin": {
+    "x": 16,
+    "y": 32
+  },
+  "hitbox": {
+    "w": 22,
+    "h": 26
+  }
+}

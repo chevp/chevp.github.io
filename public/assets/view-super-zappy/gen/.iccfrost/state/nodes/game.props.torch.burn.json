@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.props.torch.burn",
+  "path": ".\\gen/graph\\game\\props\\torch\\burn",
+  "input_hash": "sha256:2309a2ee4217a590c3628f525d6410c2251e79fc9c99d1720ededa2ae34c940e",
+  "derivation_hash": "sha256:71941b298782abf0b2f65a111f73d12178eea51c06ddfa5969bfe0d057c77566",
+  "outputs": [
+    {
+      "id": "game.props.torch.burn#node.json",
+      "path": ".\\gen/out\\game.props.torch.burn\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:7dfcf23da1f6e6d6d933c180b4ee576665d8d37dd25baca2e71486c6d4f6a139",
+      "semantic_hash": "sha256:7dfcf23da1f6e6d6d933c180b4ee576665d8d37dd25baca2e71486c6d4f6a139",
+      "producer": "game.props.torch.burn",
+      "version": 1
+    }
+  ]
+}

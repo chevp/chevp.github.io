@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.gem_blue",
+  "path": ".\\gen/graph\\game\\items\\gem_blue",
+  "input_hash": "sha256:6a37d5f9e12f4b9db3b5866832d7d8911f38edee386c5b9d25ea01caef5f9456",
+  "derivation_hash": "sha256:0f76e215b6c5f551db5dbc2767626585a5f677a40cc020c8539a233bc933ccbe",
+  "outputs": [
+    {
+      "id": "game.items.gem_blue#node.json",
+      "path": ".\\gen/out\\game.items.gem_blue\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:f9b1da4de18f1c752ba1a0afdad3c1285bc6c6b8b6f568ce4c43891df828ebf9",
+      "semantic_hash": "sha256:f9b1da4de18f1c752ba1a0afdad3c1285bc6c6b8b6f568ce4c43891df828ebf9",
+      "producer": "game.items.gem_blue",
+      "version": 1
+    }
+  ]
+}

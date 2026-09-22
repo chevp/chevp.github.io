@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.levels.1-1",
+  "path": "C:/chevp/apps/kosmos/tools/icc-frost/sadvanced/03-content.super-zappy\\gen/graph\\game\\levels\\1-1",
+  "input_hash": "sha256:de2eebfc512b28a5934bbc8b42375350772bde4ea942a3b29bc66447082e4dfe",
+  "derivation_hash": "sha256:3fba26e490b3bd808fcd48db4f0bd49a6bc6012eca16314cc3fa5165ea8d13d0",
+  "outputs": [
+    {
+      "id": "game.levels.1-1#node.json",
+      "path": "C:/chevp/apps/kosmos/tools/icc-frost/sadvanced/03-content.super-zappy\\gen/out\\game.levels.1-1\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:25f532c36b6388a3b9c761d8b947f345f34cf099832ca12522f4ad8b55339e4a",
+      "semantic_hash": "sha256:25f532c36b6388a3b9c761d8b947f345f34cf099832ca12522f4ad8b55339e4a",
+      "producer": "game.levels.1-1",
+      "version": 1
+    }
+  ]
+}

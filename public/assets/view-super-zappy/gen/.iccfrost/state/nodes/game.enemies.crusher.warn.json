@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.crusher.warn",
+  "path": ".\\gen/graph\\game\\enemies\\crusher\\warn",
+  "input_hash": "sha256:458fcc382c8bf0793ca7baf38e5009ce0c3c90b450a4f673b28523c3bc05c9a7",
+  "derivation_hash": "sha256:0552b9125c70b259c716d3132f3dda6cea78837668e55cabb60fb995f808d4c2",
+  "outputs": [
+    {
+      "id": "game.enemies.crusher.warn#node.json",
+      "path": ".\\gen/out\\game.enemies.crusher.warn\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:fd52a0130931046ae2afd5280dba73e927608f1063404ce61f5a3da036452662",
+      "semantic_hash": "sha256:fd52a0130931046ae2afd5280dba73e927608f1063404ce61f5a3da036452662",
+      "producer": "game.enemies.crusher.warn",
+      "version": 1
+    }
+  ]
+}

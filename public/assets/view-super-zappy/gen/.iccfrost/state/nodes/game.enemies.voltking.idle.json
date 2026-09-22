@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.voltking.idle",
+  "path": ".\\gen/graph\\game\\enemies\\voltking\\idle",
+  "input_hash": "sha256:84ca10d43fd34bb6fecd3fafbe5a64b130889706eb3e0c582685288b74847a38",
+  "derivation_hash": "sha256:399b8ca84a3e346f1cc2b7c024578dc84e76dfeb989b0bf5deaa169db09c7a7a",
+  "outputs": [
+    {
+      "id": "game.enemies.voltking.idle#node.json",
+      "path": ".\\gen/out\\game.enemies.voltking.idle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:134df0956fbc0d4e4430792b6e91155c3b1dba275e75e24d53e4bd651e3e5149",
+      "semantic_hash": "sha256:134df0956fbc0d4e4430792b6e91155c3b1dba275e75e24d53e4bd651e3e5149",
+      "producer": "game.enemies.voltking.idle",
+      "version": 1
+    }
+  ]
+}

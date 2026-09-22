@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.fall",
+  "path": ".\\gen/graph\\game\\hero\\small\\fall",
+  "input_hash": "sha256:2f81499565786da7f5fa52482104929d23528d0ad991b4982aeec03de5911f82",
+  "derivation_hash": "sha256:bc4c1c7e712a6d34a4d629349a28051c237a3375beda71bbe1f7e9b21d740ed4",
+  "outputs": [
+    {
+      "id": "game.hero.small.fall#node.json",
+      "path": ".\\gen/out\\game.hero.small.fall\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:165a615b5a63b4d1cffa679745105b93c82b995c8b72afd1dd4052a026c72995",
+      "semantic_hash": "sha256:165a615b5a63b4d1cffa679745105b93c82b995c8b72afd1dd4052a026c72995",
+      "producer": "game.hero.small.fall",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "zappy.background/1",
+  "id": "backgrounds.cave",
+  "theme": "cave",
+  "layers": [
+    {
+      "file": "sky.png",
+      "scroll": 0.0
+    },
+    {
+      "file": "far.png",
+      "scroll": 0.3
+    },
+    {
+      "file": "near.png",
+      "scroll": 0.6
+    }
+  ],
+  "tileableX": true
+}

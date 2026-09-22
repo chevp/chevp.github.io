@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.volt_flower.sway",
+  "sheet": "sway.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 4,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

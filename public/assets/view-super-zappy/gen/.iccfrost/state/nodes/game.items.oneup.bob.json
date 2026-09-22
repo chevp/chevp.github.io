@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.oneup.bob",
+  "path": ".\\gen/graph\\game\\items\\oneup\\bob",
+  "input_hash": "sha256:091edd83595435ba028e8dbffe947c3693f1af9b2e97538c3666be9d1cf79a27",
+  "derivation_hash": "sha256:1a38685f7a2f23be47eae2a4f2a8b524e6e63be841f67b566c644599aacf3d3e",
+  "outputs": [
+    {
+      "id": "game.items.oneup.bob#node.json",
+      "path": ".\\gen/out\\game.items.oneup.bob\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:ee6a2eecf03b9d60ac0911c84b2d1532174971d8f104094e6dd8b6ec2583e191",
+      "semantic_hash": "sha256:ee6a2eecf03b9d60ac0911c84b2d1532174971d8f104094e6dd8b6ec2583e191",
+      "producer": "game.items.oneup.bob",
+      "version": 1
+    }
+  ]
+}

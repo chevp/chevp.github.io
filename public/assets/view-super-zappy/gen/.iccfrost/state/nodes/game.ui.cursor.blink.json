@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.ui.cursor.blink",
+  "path": ".\\gen/graph\\game\\ui\\cursor\\blink",
+  "input_hash": "sha256:8d17b21779925b920d3ebaa3f80466080f497553b887e0f3eca10b038b76e39c",
+  "derivation_hash": "sha256:f9f45d07a48d33edba1f3e4a132c2550ed494f545446c22e2947f602ff1fb95b",
+  "outputs": [
+    {
+      "id": "game.ui.cursor.blink#node.json",
+      "path": ".\\gen/out\\game.ui.cursor.blink\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:b453bf51b60d3c677090b8a95b9338cfc24cd9daed328e4a7312b513c36042b5",
+      "semantic_hash": "sha256:b453bf51b60d3c677090b8a95b9338cfc24cd9daed328e4a7312b513c36042b5",
+      "producer": "game.ui.cursor.blink",
+      "version": 1
+    }
+  ]
+}

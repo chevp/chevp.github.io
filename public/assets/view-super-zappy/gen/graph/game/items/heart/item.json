@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.item/1",
+  "id": "items.heart",
+  "title": "Herz",
+  "effect": "+1 Leben-Herz",
+  "anims": [
+    "beat"
+  ]
+}

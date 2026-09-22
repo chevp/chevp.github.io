@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.grass.lava",
+  "path": ".\\gen/graph\\game\\tiles\\grass\\lava",
+  "input_hash": "sha256:5426f7f279b0a8bbefac69aa3ab5c3efb25c8fbff68d518d03bd4bba9c6aef1c",
+  "derivation_hash": "sha256:e3bff0d52d8c7eacbf09453c0603e023e95c38fd1102468a663e7d6d97a98bd6",
+  "outputs": [
+    {
+      "id": "game.tiles.grass.lava#node.json",
+      "path": ".\\gen/out\\game.tiles.grass.lava\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:0d3a6e8f1b33109573310c0324b07804fbb5c0ef26ff1a003d619231bb546138",
+      "semantic_hash": "sha256:0d3a6e8f1b33109573310c0324b07804fbb5c0ef26ff1a003d619231bb546138",
+      "producer": "game.tiles.grass.lava",
+      "version": 1
+    }
+  ]
+}

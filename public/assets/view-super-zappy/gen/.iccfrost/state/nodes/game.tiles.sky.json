@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.sky",
+  "path": ".\\gen/graph\\game\\tiles\\sky",
+  "input_hash": "sha256:85751338820bffe4762e5f005ca5bb99149ce7ee758d31b09b7241035b3eb3e8",
+  "derivation_hash": "sha256:4d8fef5bae6c5f171bd34e85fb77f0d4fee08bdfb6a8f7af9e13f449bcc5f23e",
+  "outputs": [
+    {
+      "id": "game.tiles.sky#node.json",
+      "path": ".\\gen/out\\game.tiles.sky\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:590ffe3766b8296494d8a318e5d82f66264f3317df14c6077b4b1fdb49fb3e7c",
+      "semantic_hash": "sha256:590ffe3766b8296494d8a318e5d82f66264f3317df14c6077b4b1fdb49fb3e7c",
+      "producer": "game.tiles.sky",
+      "version": 1
+    }
+  ]
+}

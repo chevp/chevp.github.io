@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.shellby.wake",
+  "path": ".\\gen/graph\\game\\enemies\\shellby\\wake",
+  "input_hash": "sha256:4467e72122fec3870a4edfe4ebeb469069a43bbe75e251813f3b52e26cfcaa95",
+  "derivation_hash": "sha256:2c0e98e15e85b9d9e865d719ac7951ae32c2787dc49040f4f516948377b2ff98",
+  "outputs": [
+    {
+      "id": "game.enemies.shellby.wake#node.json",
+      "path": ".\\gen/out\\game.enemies.shellby.wake\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:30995551da5e1ea9f8cb5bf4b43fb3b3a773ea6b693df7939c1641776f49bc81",
+      "semantic_hash": "sha256:30995551da5e1ea9f8cb5bf4b43fb3b3a773ea6b693df7939c1641776f49bc81",
+      "producer": "game.enemies.shellby.wake",
+      "version": 1
+    }
+  ]
+}

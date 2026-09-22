@@ -1,0 +1,2269 @@
+kind: koslayout/1
+name: 03-content.super-zappy
+description: Semantic Graph aus gen/graph/ (icc-frost, automatisch erzeugt)
+canvas:
+  width: 1420
+  height: 14560
+  background: '#1e1e1e'
+  grid: 20
+nodes:
+- id: game
+  kind: semantic-node
+  title: game
+  text: gen/graph/game · 1 Datei(en) · 11 Kind(er) · reused
+  position:
+  - 40.0
+  - 7240.0
+  size:
+    w: 280
+    h: 90
+- id: game.backgrounds
+  kind: semantic-node
+  title: game.backgrounds
+  text: gen/graph/game/backgrounds · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 380.0
+  - 220.0
+  size:
+    w: 280
+    h: 90
+- id: game.backgrounds.castle
+  kind: semantic-node
+  title: game.backgrounds.castle
+  text: gen/graph/game/backgrounds/castle · 4 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 40.0
+  size:
+    w: 280
+    h: 90
+- id: game.backgrounds.cave
+  kind: semantic-node
+  title: game.backgrounds.cave
+  text: gen/graph/game/backgrounds/cave · 4 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 160.0
+  size:
+    w: 280
+    h: 90
+- id: game.backgrounds.grass
+  kind: semantic-node
+  title: game.backgrounds.grass
+  text: gen/graph/game/backgrounds/grass · 4 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 280.0
+  size:
+    w: 280
+    h: 90
+- id: game.backgrounds.sky
+  kind: semantic-node
+  title: game.backgrounds.sky
+  text: gen/graph/game/backgrounds/sky · 4 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 400.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks
+  kind: semantic-node
+  title: game.blocks
+  text: gen/graph/game/blocks · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 380.0
+  - 880.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.brick
+  kind: semantic-node
+  title: game.blocks.brick
+  text: gen/graph/game/blocks/brick · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 720.0
+  - 640.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.brick.break
+  kind: semantic-node
+  title: game.blocks.brick.break
+  text: gen/graph/game/blocks/brick/break · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 520.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.brick.bump
+  kind: semantic-node
+  title: game.blocks.brick.bump
+  text: gen/graph/game/blocks/brick/bump · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 640.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.brick.idle
+  kind: semantic-node
+  title: game.blocks.brick.idle
+  text: gen/graph/game/blocks/brick/idle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 760.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.coin_pop
+  kind: semantic-node
+  title: game.blocks.coin_pop
+  text: gen/graph/game/blocks/coin_pop · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 880.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.coin_pop.pop
+  kind: semantic-node
+  title: game.blocks.coin_pop.pop
+  text: gen/graph/game/blocks/coin_pop/pop · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 880.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.question
+  kind: semantic-node
+  title: game.blocks.question
+  text: gen/graph/game/blocks/question · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 720.0
+  - 1120.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.question.bump
+  kind: semantic-node
+  title: game.blocks.question.bump
+  text: gen/graph/game/blocks/question/bump · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1000.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.question.shimmer
+  kind: semantic-node
+  title: game.blocks.question.shimmer
+  text: gen/graph/game/blocks/question/shimmer · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1120.0
+  size:
+    w: 280
+    h: 90
+- id: game.blocks.question.used
+  kind: semantic-node
+  title: game.blocks.question.used
+  text: gen/graph/game/blocks/question/used · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1240.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies
+  kind: semantic-node
+  title: game.enemies
+  text: gen/graph/game/enemies · 1 Datei(en) · 10 Kind(er) · reused
+  position:
+  - 380.0
+  - 3100.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.blobby
+  kind: semantic-node
+  title: game.enemies.blobby
+  text: gen/graph/game/enemies/blobby · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 720.0
+  - 1540.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.blobby.angry
+  kind: semantic-node
+  title: game.enemies.blobby.angry
+  text: gen/graph/game/enemies/blobby/angry · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1360.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.blobby.flip
+  kind: semantic-node
+  title: game.enemies.blobby.flip
+  text: gen/graph/game/enemies/blobby/flip · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1480.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.blobby.squash
+  kind: semantic-node
+  title: game.enemies.blobby.squash
+  text: gen/graph/game/enemies/blobby/squash · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1600.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.blobby.walk
+  kind: semantic-node
+  title: game.enemies.blobby.walk
+  text: gen/graph/game/enemies/blobby/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1720.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.bomby
+  kind: semantic-node
+  title: game.enemies.bomby
+  text: gen/graph/game/enemies/bomby · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 1900.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.bomby.fuse
+  kind: semantic-node
+  title: game.enemies.bomby.fuse
+  text: gen/graph/game/enemies/bomby/fuse · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1840.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.bomby.walk
+  kind: semantic-node
+  title: game.enemies.bomby.walk
+  text: gen/graph/game/enemies/bomby/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 1960.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chirp
+  kind: semantic-node
+  title: game.enemies.chirp
+  text: gen/graph/game/enemies/chirp · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 720.0
+  - 2200.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chirp.dive
+  kind: semantic-node
+  title: game.enemies.chirp.dive
+  text: gen/graph/game/enemies/chirp/dive · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2080.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chirp.flip
+  kind: semantic-node
+  title: game.enemies.chirp.flip
+  text: gen/graph/game/enemies/chirp/flip · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2200.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chirp.fly
+  kind: semantic-node
+  title: game.enemies.chirp.fly
+  text: gen/graph/game/enemies/chirp/fly · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2320.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chomper
+  kind: semantic-node
+  title: game.enemies.chomper
+  text: gen/graph/game/enemies/chomper · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 2500.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chomper.bite
+  kind: semantic-node
+  title: game.enemies.chomper.bite
+  text: gen/graph/game/enemies/chomper/bite · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2440.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.chomper.hide
+  kind: semantic-node
+  title: game.enemies.chomper.hide
+  text: gen/graph/game/enemies/chomper/hide · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2560.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.crusher
+  kind: semantic-node
+  title: game.enemies.crusher
+  text: gen/graph/game/enemies/crusher · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 720.0
+  - 2800.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.crusher.idle
+  kind: semantic-node
+  title: game.enemies.crusher.idle
+  text: gen/graph/game/enemies/crusher/idle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2680.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.crusher.slam
+  kind: semantic-node
+  title: game.enemies.crusher.slam
+  text: gen/graph/game/enemies/crusher/slam · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2800.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.crusher.warn
+  kind: semantic-node
+  title: game.enemies.crusher.warn
+  text: gen/graph/game/enemies/crusher/warn · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 2920.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.finn
+  kind: semantic-node
+  title: game.enemies.finn
+  text: gen/graph/game/enemies/finn · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 3100.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.finn.jump
+  kind: semantic-node
+  title: game.enemies.finn.jump
+  text: gen/graph/game/enemies/finn/jump · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3040.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.finn.swim
+  kind: semantic-node
+  title: game.enemies.finn.swim
+  text: gen/graph/game/enemies/finn/swim · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3160.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.shellby
+  kind: semantic-node
+  title: game.enemies.shellby
+  text: gen/graph/game/enemies/shellby · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 720.0
+  - 3460.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.shellby.shell
+  kind: semantic-node
+  title: game.enemies.shellby.shell
+  text: gen/graph/game/enemies/shellby/shell · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3280.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.shellby.spin
+  kind: semantic-node
+  title: game.enemies.shellby.spin
+  text: gen/graph/game/enemies/shellby/spin · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3400.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.shellby.wake
+  kind: semantic-node
+  title: game.enemies.shellby.wake
+  text: gen/graph/game/enemies/shellby/wake · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3520.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.shellby.walk
+  kind: semantic-node
+  title: game.enemies.shellby.walk
+  text: gen/graph/game/enemies/shellby/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3640.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.spiky
+  kind: semantic-node
+  title: game.enemies.spiky
+  text: gen/graph/game/enemies/spiky · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 3820.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.spiky.curl
+  kind: semantic-node
+  title: game.enemies.spiky.curl
+  text: gen/graph/game/enemies/spiky/curl · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3760.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.spiky.walk
+  kind: semantic-node
+  title: game.enemies.spiky.walk
+  text: gen/graph/game/enemies/spiky/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 3880.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking
+  kind: semantic-node
+  title: game.enemies.voltking
+  text: gen/graph/game/enemies/voltking · 1 Datei(en) · 5 Kind(er) · reused
+  position:
+  - 720.0
+  - 4240.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking.attack
+  kind: semantic-node
+  title: game.enemies.voltking.attack
+  text: gen/graph/game/enemies/voltking/attack · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4000.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking.charge
+  kind: semantic-node
+  title: game.enemies.voltking.charge
+  text: gen/graph/game/enemies/voltking/charge · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4120.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking.die
+  kind: semantic-node
+  title: game.enemies.voltking.die
+  text: gen/graph/game/enemies/voltking/die · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4240.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking.hurt
+  kind: semantic-node
+  title: game.enemies.voltking.hurt
+  text: gen/graph/game/enemies/voltking/hurt · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4360.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.voltking.idle
+  kind: semantic-node
+  title: game.enemies.voltking.idle
+  text: gen/graph/game/enemies/voltking/idle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4480.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.wisp
+  kind: semantic-node
+  title: game.enemies.wisp
+  text: gen/graph/game/enemies/wisp · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 720.0
+  - 4720.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.wisp.float
+  kind: semantic-node
+  title: game.enemies.wisp.float
+  text: gen/graph/game/enemies/wisp/float · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4600.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.wisp.shy
+  kind: semantic-node
+  title: game.enemies.wisp.shy
+  text: gen/graph/game/enemies/wisp/shy · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4720.0
+  size:
+    w: 280
+    h: 90
+- id: game.enemies.wisp.vanish
+  kind: semantic-node
+  title: game.enemies.wisp.vanish
+  text: gen/graph/game/enemies/wisp/vanish · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4840.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx
+  kind: semantic-node
+  title: game.fx
+  text: gen/graph/game/fx · 1 Datei(en) · 8 Kind(er) · reused
+  position:
+  - 380.0
+  - 5440.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.dust_land
+  kind: semantic-node
+  title: game.fx.dust_land
+  text: gen/graph/game/fx/dust_land · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 4960.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.dust_land.puff
+  kind: semantic-node
+  title: game.fx.dust_land.puff
+  text: gen/graph/game/fx/dust_land/puff · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 4960.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.dust_run
+  kind: semantic-node
+  title: game.fx.dust_run
+  text: gen/graph/game/fx/dust_run · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5080.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.dust_run.puff
+  kind: semantic-node
+  title: game.fx.dust_run.puff
+  text: gen/graph/game/fx/dust_run/puff · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5080.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.explosion
+  kind: semantic-node
+  title: game.fx.explosion
+  text: gen/graph/game/fx/explosion · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5200.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.explosion.boom
+  kind: semantic-node
+  title: game.fx.explosion.boom
+  text: gen/graph/game/fx/explosion/boom · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5200.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.impact
+  kind: semantic-node
+  title: game.fx.impact
+  text: gen/graph/game/fx/impact · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5320.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.impact.hit
+  kind: semantic-node
+  title: game.fx.impact.hit
+  text: gen/graph/game/fx/impact/hit · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5320.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.poof
+  kind: semantic-node
+  title: game.fx.poof
+  text: gen/graph/game/fx/poof · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5440.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.poof.poof
+  kind: semantic-node
+  title: game.fx.poof.poof
+  text: gen/graph/game/fx/poof/poof · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5440.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.sparkle
+  kind: semantic-node
+  title: game.fx.sparkle
+  text: gen/graph/game/fx/sparkle · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5560.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.sparkle.twinkle
+  kind: semantic-node
+  title: game.fx.sparkle.twinkle
+  text: gen/graph/game/fx/sparkle/twinkle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5560.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.splash
+  kind: semantic-node
+  title: game.fx.splash
+  text: gen/graph/game/fx/splash · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 5680.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.splash.splash
+  kind: semantic-node
+  title: game.fx.splash.splash
+  text: gen/graph/game/fx/splash/splash · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5680.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.zap
+  kind: semantic-node
+  title: game.fx.zap
+  text: gen/graph/game/fx/zap · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 5860.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.zap.fly
+  kind: semantic-node
+  title: game.fx.zap.fly
+  text: gen/graph/game/fx/zap/fly · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5800.0
+  size:
+    w: 280
+    h: 90
+- id: game.fx.zap.hit
+  kind: semantic-node
+  title: game.fx.zap.hit
+  text: gen/graph/game/fx/zap/hit · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 5920.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero
+  kind: semantic-node
+  title: game.hero
+  text: gen/graph/game/hero · 1 Datei(en) · 3 Kind(er) · reused
+  position:
+  - 380.0
+  - 8500.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small
+  kind: semantic-node
+  title: game.hero.small
+  text: gen/graph/game/hero/small · 1 Datei(en) · 20 Kind(er) · reused
+  position:
+  - 720.0
+  - 7180.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.climb
+  kind: semantic-node
+  title: game.hero.small.climb
+  text: gen/graph/game/hero/small/climb · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6040.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.crouch
+  kind: semantic-node
+  title: game.hero.small.crouch
+  text: gen/graph/game/hero/small/crouch · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6160.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.die
+  kind: semantic-node
+  title: game.hero.small.die
+  text: gen/graph/game/hero/small/die · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6280.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.fall
+  kind: semantic-node
+  title: game.hero.small.fall
+  text: gen/graph/game/hero/small/fall · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6400.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.hurt
+  kind: semantic-node
+  title: game.hero.small.hurt
+  text: gen/graph/game/hero/small/hurt · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6520.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.idle
+  kind: semantic-node
+  title: game.hero.small.idle
+  text: gen/graph/game/hero/small/idle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6640.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.idle_tap
+  kind: semantic-node
+  title: game.hero.small.idle_tap
+  text: gen/graph/game/hero/small/idle_tap · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6760.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.jump
+  kind: semantic-node
+  title: game.hero.small.jump
+  text: gen/graph/game/hero/small/jump · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 6880.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.land
+  kind: semantic-node
+  title: game.hero.small.land
+  text: gen/graph/game/hero/small/land · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7000.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.run
+  kind: semantic-node
+  title: game.hero.small.run
+  text: gen/graph/game/hero/small/run · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7120.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.skid
+  kind: semantic-node
+  title: game.hero.small.skid
+  text: gen/graph/game/hero/small/skid · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7240.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.sleep
+  kind: semantic-node
+  title: game.hero.small.sleep
+  text: gen/graph/game/hero/small/sleep · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7360.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.slide
+  kind: semantic-node
+  title: game.hero.small.slide
+  text: gen/graph/game/hero/small/slide · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7480.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.spin
+  kind: semantic-node
+  title: game.hero.small.spin
+  text: gen/graph/game/hero/small/spin · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7600.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.swim
+  kind: semantic-node
+  title: game.hero.small.swim
+  text: gen/graph/game/hero/small/swim · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7720.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.victory
+  kind: semantic-node
+  title: game.hero.small.victory
+  text: gen/graph/game/hero/small/victory · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7840.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.walk
+  kind: semantic-node
+  title: game.hero.small.walk
+  text: gen/graph/game/hero/small/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 7960.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.wall_slide
+  kind: semantic-node
+  title: game.hero.small.wall_slide
+  text: gen/graph/game/hero/small/wall_slide · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8080.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.wave
+  kind: semantic-node
+  title: game.hero.small.wave
+  text: gen/graph/game/hero/small/wave · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8200.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.small.zap
+  kind: semantic-node
+  title: game.hero.small.zap
+  text: gen/graph/game/hero/small/zap · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8320.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super
+  kind: semantic-node
+  title: game.hero.super
+  text: gen/graph/game/hero/super · 1 Datei(en) · 20 Kind(er) · reused
+  position:
+  - 720.0
+  - 9580.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.climb
+  kind: semantic-node
+  title: game.hero.super.climb
+  text: gen/graph/game/hero/super/climb · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8440.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.crouch
+  kind: semantic-node
+  title: game.hero.super.crouch
+  text: gen/graph/game/hero/super/crouch · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8560.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.die
+  kind: semantic-node
+  title: game.hero.super.die
+  text: gen/graph/game/hero/super/die · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8680.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.fall
+  kind: semantic-node
+  title: game.hero.super.fall
+  text: gen/graph/game/hero/super/fall · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8800.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.hurt
+  kind: semantic-node
+  title: game.hero.super.hurt
+  text: gen/graph/game/hero/super/hurt · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 8920.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.idle
+  kind: semantic-node
+  title: game.hero.super.idle
+  text: gen/graph/game/hero/super/idle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9040.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.idle_tap
+  kind: semantic-node
+  title: game.hero.super.idle_tap
+  text: gen/graph/game/hero/super/idle_tap · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9160.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.jump
+  kind: semantic-node
+  title: game.hero.super.jump
+  text: gen/graph/game/hero/super/jump · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9280.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.land
+  kind: semantic-node
+  title: game.hero.super.land
+  text: gen/graph/game/hero/super/land · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9400.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.run
+  kind: semantic-node
+  title: game.hero.super.run
+  text: gen/graph/game/hero/super/run · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9520.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.skid
+  kind: semantic-node
+  title: game.hero.super.skid
+  text: gen/graph/game/hero/super/skid · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9640.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.sleep
+  kind: semantic-node
+  title: game.hero.super.sleep
+  text: gen/graph/game/hero/super/sleep · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9760.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.slide
+  kind: semantic-node
+  title: game.hero.super.slide
+  text: gen/graph/game/hero/super/slide · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 9880.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.spin
+  kind: semantic-node
+  title: game.hero.super.spin
+  text: gen/graph/game/hero/super/spin · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10000.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.swim
+  kind: semantic-node
+  title: game.hero.super.swim
+  text: gen/graph/game/hero/super/swim · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10120.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.victory
+  kind: semantic-node
+  title: game.hero.super.victory
+  text: gen/graph/game/hero/super/victory · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10240.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.walk
+  kind: semantic-node
+  title: game.hero.super.walk
+  text: gen/graph/game/hero/super/walk · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10360.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.wall_slide
+  kind: semantic-node
+  title: game.hero.super.wall_slide
+  text: gen/graph/game/hero/super/wall_slide · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10480.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.wave
+  kind: semantic-node
+  title: game.hero.super.wave
+  text: gen/graph/game/hero/super/wave · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10600.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.super.zap
+  kind: semantic-node
+  title: game.hero.super.zap
+  text: gen/graph/game/hero/super/zap · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10720.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.transform
+  kind: semantic-node
+  title: game.hero.transform
+  text: gen/graph/game/hero/transform · 1 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 10900.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.transform.grow
+  kind: semantic-node
+  title: game.hero.transform.grow
+  text: gen/graph/game/hero/transform/grow · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10840.0
+  size:
+    w: 280
+    h: 90
+- id: game.hero.transform.shrink
+  kind: semantic-node
+  title: game.hero.transform.shrink
+  text: gen/graph/game/hero/transform/shrink · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 10960.0
+  size:
+    w: 280
+    h: 90
+- id: game.items
+  kind: semantic-node
+  title: game.items
+  text: gen/graph/game/items · 1 Datei(en) · 10 Kind(er) · reused
+  position:
+  - 380.0
+  - 11620.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.cell
+  kind: semantic-node
+  title: game.items.cell
+  text: gen/graph/game/items/cell · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11080.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.cell.pulse
+  kind: semantic-node
+  title: game.items.cell.pulse
+  text: gen/graph/game/items/cell/pulse · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11080.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.coin
+  kind: semantic-node
+  title: game.items.coin
+  text: gen/graph/game/items/coin · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11200.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.coin.spin
+  kind: semantic-node
+  title: game.items.coin.spin
+  text: gen/graph/game/items/coin/spin · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11200.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_blue
+  kind: semantic-node
+  title: game.items.gem_blue
+  text: gen/graph/game/items/gem_blue · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11320.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_blue.shimmer
+  kind: semantic-node
+  title: game.items.gem_blue.shimmer
+  text: gen/graph/game/items/gem_blue/shimmer · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11320.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_green
+  kind: semantic-node
+  title: game.items.gem_green
+  text: gen/graph/game/items/gem_green · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11440.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_green.shimmer
+  kind: semantic-node
+  title: game.items.gem_green.shimmer
+  text: gen/graph/game/items/gem_green/shimmer · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11440.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_pink
+  kind: semantic-node
+  title: game.items.gem_pink
+  text: gen/graph/game/items/gem_pink · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11560.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.gem_pink.shimmer
+  kind: semantic-node
+  title: game.items.gem_pink.shimmer
+  text: gen/graph/game/items/gem_pink/shimmer · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11560.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.heart
+  kind: semantic-node
+  title: game.items.heart
+  text: gen/graph/game/items/heart · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11680.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.heart.beat
+  kind: semantic-node
+  title: game.items.heart.beat
+  text: gen/graph/game/items/heart/beat · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11680.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.key
+  kind: semantic-node
+  title: game.items.key
+  text: gen/graph/game/items/key · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11800.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.key.shine
+  kind: semantic-node
+  title: game.items.key.shine
+  text: gen/graph/game/items/key/shine · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11800.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.oneup
+  kind: semantic-node
+  title: game.items.oneup
+  text: gen/graph/game/items/oneup · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 11920.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.oneup.bob
+  kind: semantic-node
+  title: game.items.oneup.bob
+  text: gen/graph/game/items/oneup/bob · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 11920.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.star
+  kind: semantic-node
+  title: game.items.star
+  text: gen/graph/game/items/star · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 12040.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.star.cycle
+  kind: semantic-node
+  title: game.items.star.cycle
+  text: gen/graph/game/items/star/cycle · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 12040.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.volt_flower
+  kind: semantic-node
+  title: game.items.volt_flower
+  text: gen/graph/game/items/volt_flower · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 12160.0
+  size:
+    w: 280
+    h: 90
+- id: game.items.volt_flower.sway
+  kind: semantic-node
+  title: game.items.volt_flower.sway
+  text: gen/graph/game/items/volt_flower/sway · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 12160.0
+  size:
+    w: 280
+    h: 90
+- id: game.levels
+  kind: semantic-node
+  title: game.levels
+  text: gen/graph/game/levels · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 380.0
+  - 12460.0
+  size:
+    w: 280
+    h: 90
+- id: game.levels.1-1
+  kind: semantic-node
+  title: game.levels.1-1
+  text: gen/graph/game/levels/1-1 · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 12280.0
+  size:
+    w: 280
+    h: 90
+- id: game.levels.1-2
+  kind: semantic-node
+  title: game.levels.1-2
+  text: gen/graph/game/levels/1-2 · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 12400.0
+  size:
+    w: 280
+    h: 90
+- id: game.levels.1-3
+  kind: semantic-node
+  title: game.levels.1-3
+  text: gen/graph/game/levels/1-3 · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 12520.0
+  size:
+    w: 280
+    h: 90
+- id: game.levels.1-4
+  kind: semantic-node
+  title: game.levels.1-4
+  text: gen/graph/game/levels/1-4 · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 12640.0
+  size:
+    w: 280
+    h: 90
+- id: game.palette
+  kind: semantic-node
+  title: game.palette
+  text: gen/graph/game/palette · 1 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 380.0
+  - 12760.0
+  size:
+    w: 280
+    h: 90
+- id: game.props
+  kind: semantic-node
+  title: game.props
+  text: gen/graph/game/props · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 380.0
+  - 13060.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.checkpoint
+  kind: semantic-node
+  title: game.props.checkpoint
+  text: gen/graph/game/props/checkpoint · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 12880.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.checkpoint.wave
+  kind: semantic-node
+  title: game.props.checkpoint.wave
+  text: gen/graph/game/props/checkpoint/wave · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 12880.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.flag
+  kind: semantic-node
+  title: game.props.flag
+  text: gen/graph/game/props/flag · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 13000.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.flag.wave
+  kind: semantic-node
+  title: game.props.flag.wave
+  text: gen/graph/game/props/flag/wave · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13000.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.static
+  kind: semantic-node
+  title: game.props.static
+  text: gen/graph/game/props/static · 17 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 13120.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.torch
+  kind: semantic-node
+  title: game.props.torch
+  text: gen/graph/game/props/torch · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 13240.0
+  size:
+    w: 280
+    h: 90
+- id: game.props.torch.burn
+  kind: semantic-node
+  title: game.props.torch.burn
+  text: gen/graph/game/props/torch/burn · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13240.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles
+  kind: semantic-node
+  title: game.tiles
+  text: gen/graph/game/tiles · 1 Datei(en) · 4 Kind(er) · reused
+  position:
+  - 380.0
+  - 13780.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.castle
+  kind: semantic-node
+  title: game.tiles.castle
+  text: gen/graph/game/tiles/castle · 2 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 13420.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.castle.lava
+  kind: semantic-node
+  title: game.tiles.castle.lava
+  text: gen/graph/game/tiles/castle/lava · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13360.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.castle.water
+  kind: semantic-node
+  title: game.tiles.castle.water
+  text: gen/graph/game/tiles/castle/water · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13480.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.cave
+  kind: semantic-node
+  title: game.tiles.cave
+  text: gen/graph/game/tiles/cave · 2 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 13660.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.cave.lava
+  kind: semantic-node
+  title: game.tiles.cave.lava
+  text: gen/graph/game/tiles/cave/lava · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13600.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.cave.water
+  kind: semantic-node
+  title: game.tiles.cave.water
+  text: gen/graph/game/tiles/cave/water · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13720.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.grass
+  kind: semantic-node
+  title: game.tiles.grass
+  text: gen/graph/game/tiles/grass · 2 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 13900.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.grass.lava
+  kind: semantic-node
+  title: game.tiles.grass.lava
+  text: gen/graph/game/tiles/grass/lava · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13840.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.grass.water
+  kind: semantic-node
+  title: game.tiles.grass.water
+  text: gen/graph/game/tiles/grass/water · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 13960.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.sky
+  kind: semantic-node
+  title: game.tiles.sky
+  text: gen/graph/game/tiles/sky · 2 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 720.0
+  - 14140.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.sky.lava
+  kind: semantic-node
+  title: game.tiles.sky.lava
+  text: gen/graph/game/tiles/sky/lava · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 14080.0
+  size:
+    w: 280
+    h: 90
+- id: game.tiles.sky.water
+  kind: semantic-node
+  title: game.tiles.sky.water
+  text: gen/graph/game/tiles/sky/water · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 14200.0
+  size:
+    w: 280
+    h: 90
+- id: game.ui
+  kind: semantic-node
+  title: game.ui
+  text: gen/graph/game/ui · 4 Datei(en) · 2 Kind(er) · reused
+  position:
+  - 380.0
+  - 14380.0
+  size:
+    w: 280
+    h: 90
+- id: game.ui.cursor
+  kind: semantic-node
+  title: game.ui.cursor
+  text: gen/graph/game/ui/cursor · 1 Datei(en) · 1 Kind(er) · reused
+  position:
+  - 720.0
+  - 14320.0
+  size:
+    w: 280
+    h: 90
+- id: game.ui.cursor.blink
+  kind: semantic-node
+  title: game.ui.cursor.blink
+  text: gen/graph/game/ui/cursor/blink · 2 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 1060.0
+  - 14320.0
+  size:
+    w: 280
+    h: 90
+- id: game.ui.popups
+  kind: semantic-node
+  title: game.ui.popups
+  text: gen/graph/game/ui/popups · 5 Datei(en) · 0 Kind(er) · reused
+  position:
+  - 720.0
+  - 14440.0
+  size:
+    w: 280
+    h: 90
+edges:
+- from: game
+  to: game.backgrounds
+  label: needs
+- from: game
+  to: game.blocks
+  label: needs
+- from: game
+  to: game.enemies
+  label: needs
+- from: game
+  to: game.fx
+  label: needs
+- from: game
+  to: game.hero
+  label: needs
+- from: game
+  to: game.items
+  label: needs
+- from: game
+  to: game.levels
+  label: needs
+- from: game
+  to: game.palette
+  label: needs
+- from: game
+  to: game.props
+  label: needs
+- from: game
+  to: game.tiles
+  label: needs
+- from: game
+  to: game.ui
+  label: needs
+- from: game.backgrounds
+  to: game.backgrounds.castle
+  label: needs
+- from: game.backgrounds
+  to: game.backgrounds.cave
+  label: needs
+- from: game.backgrounds
+  to: game.backgrounds.grass
+  label: needs
+- from: game.backgrounds
+  to: game.backgrounds.sky
+  label: needs
+- from: game.blocks
+  to: game.blocks.brick
+  label: needs
+- from: game.blocks
+  to: game.blocks.coin_pop
+  label: needs
+- from: game.blocks
+  to: game.blocks.question
+  label: needs
+- from: game.blocks.brick
+  to: game.blocks.brick.break
+  label: needs
+- from: game.blocks.brick
+  to: game.blocks.brick.bump
+  label: needs
+- from: game.blocks.brick
+  to: game.blocks.brick.idle
+  label: needs
+- from: game.blocks.coin_pop
+  to: game.blocks.coin_pop.pop
+  label: needs
+- from: game.blocks.question
+  to: game.blocks.question.bump
+  label: needs
+- from: game.blocks.question
+  to: game.blocks.question.shimmer
+  label: needs
+- from: game.blocks.question
+  to: game.blocks.question.used
+  label: needs
+- from: game.enemies
+  to: game.enemies.blobby
+  label: needs
+- from: game.enemies
+  to: game.enemies.bomby
+  label: needs
+- from: game.enemies
+  to: game.enemies.chirp
+  label: needs
+- from: game.enemies
+  to: game.enemies.chomper
+  label: needs
+- from: game.enemies
+  to: game.enemies.crusher
+  label: needs
+- from: game.enemies
+  to: game.enemies.finn
+  label: needs
+- from: game.enemies
+  to: game.enemies.shellby
+  label: needs
+- from: game.enemies
+  to: game.enemies.spiky
+  label: needs
+- from: game.enemies
+  to: game.enemies.voltking
+  label: needs
+- from: game.enemies
+  to: game.enemies.wisp
+  label: needs
+- from: game.enemies.blobby
+  to: game.enemies.blobby.angry
+  label: needs
+- from: game.enemies.blobby
+  to: game.enemies.blobby.flip
+  label: needs
+- from: game.enemies.blobby
+  to: game.enemies.blobby.squash
+  label: needs
+- from: game.enemies.blobby
+  to: game.enemies.blobby.walk
+  label: needs
+- from: game.enemies.bomby
+  to: game.enemies.bomby.fuse
+  label: needs
+- from: game.enemies.bomby
+  to: game.enemies.bomby.walk
+  label: needs
+- from: game.enemies.chirp
+  to: game.enemies.chirp.dive
+  label: needs
+- from: game.enemies.chirp
+  to: game.enemies.chirp.flip
+  label: needs
+- from: game.enemies.chirp
+  to: game.enemies.chirp.fly
+  label: needs
+- from: game.enemies.chomper
+  to: game.enemies.chomper.bite
+  label: needs
+- from: game.enemies.chomper
+  to: game.enemies.chomper.hide
+  label: needs
+- from: game.enemies.crusher
+  to: game.enemies.crusher.idle
+  label: needs
+- from: game.enemies.crusher
+  to: game.enemies.crusher.slam
+  label: needs
+- from: game.enemies.crusher
+  to: game.enemies.crusher.warn
+  label: needs
+- from: game.enemies.finn
+  to: game.enemies.finn.jump
+  label: needs
+- from: game.enemies.finn
+  to: game.enemies.finn.swim
+  label: needs
+- from: game.enemies.shellby
+  to: game.enemies.shellby.shell
+  label: needs
+- from: game.enemies.shellby
+  to: game.enemies.shellby.spin
+  label: needs
+- from: game.enemies.shellby
+  to: game.enemies.shellby.wake
+  label: needs
+- from: game.enemies.shellby
+  to: game.enemies.shellby.walk
+  label: needs
+- from: game.enemies.spiky
+  to: game.enemies.spiky.curl
+  label: needs
+- from: game.enemies.spiky
+  to: game.enemies.spiky.walk
+  label: needs
+- from: game.enemies.voltking
+  to: game.enemies.voltking.attack
+  label: needs
+- from: game.enemies.voltking
+  to: game.enemies.voltking.charge
+  label: needs
+- from: game.enemies.voltking
+  to: game.enemies.voltking.die
+  label: needs
+- from: game.enemies.voltking
+  to: game.enemies.voltking.hurt
+  label: needs
+- from: game.enemies.voltking
+  to: game.enemies.voltking.idle
+  label: needs
+- from: game.enemies.wisp
+  to: game.enemies.wisp.float
+  label: needs
+- from: game.enemies.wisp
+  to: game.enemies.wisp.shy
+  label: needs
+- from: game.enemies.wisp
+  to: game.enemies.wisp.vanish
+  label: needs
+- from: game.fx
+  to: game.fx.dust_land
+  label: needs
+- from: game.fx
+  to: game.fx.dust_run
+  label: needs
+- from: game.fx
+  to: game.fx.explosion
+  label: needs
+- from: game.fx
+  to: game.fx.impact
+  label: needs
+- from: game.fx
+  to: game.fx.poof
+  label: needs
+- from: game.fx
+  to: game.fx.sparkle
+  label: needs
+- from: game.fx
+  to: game.fx.splash
+  label: needs
+- from: game.fx
+  to: game.fx.zap
+  label: needs
+- from: game.fx.dust_land
+  to: game.fx.dust_land.puff
+  label: needs
+- from: game.fx.dust_run
+  to: game.fx.dust_run.puff
+  label: needs
+- from: game.fx.explosion
+  to: game.fx.explosion.boom
+  label: needs
+- from: game.fx.impact
+  to: game.fx.impact.hit
+  label: needs
+- from: game.fx.poof
+  to: game.fx.poof.poof
+  label: needs
+- from: game.fx.sparkle
+  to: game.fx.sparkle.twinkle
+  label: needs
+- from: game.fx.splash
+  to: game.fx.splash.splash
+  label: needs
+- from: game.fx.zap
+  to: game.fx.zap.fly
+  label: needs
+- from: game.fx.zap
+  to: game.fx.zap.hit
+  label: needs
+- from: game.hero
+  to: game.hero.small
+  label: needs
+- from: game.hero
+  to: game.hero.super
+  label: needs
+- from: game.hero
+  to: game.hero.transform
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.climb
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.crouch
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.die
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.fall
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.hurt
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.idle
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.idle_tap
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.jump
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.land
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.run
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.skid
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.sleep
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.slide
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.spin
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.swim
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.victory
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.walk
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.wall_slide
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.wave
+  label: needs
+- from: game.hero.small
+  to: game.hero.small.zap
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.climb
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.crouch
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.die
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.fall
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.hurt
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.idle
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.idle_tap
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.jump
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.land
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.run
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.skid
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.sleep
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.slide
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.spin
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.swim
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.victory
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.walk
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.wall_slide
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.wave
+  label: needs
+- from: game.hero.super
+  to: game.hero.super.zap
+  label: needs
+- from: game.hero.transform
+  to: game.hero.transform.grow
+  label: needs
+- from: game.hero.transform
+  to: game.hero.transform.shrink
+  label: needs
+- from: game.items
+  to: game.items.cell
+  label: needs
+- from: game.items
+  to: game.items.coin
+  label: needs
+- from: game.items
+  to: game.items.gem_blue
+  label: needs
+- from: game.items
+  to: game.items.gem_green
+  label: needs
+- from: game.items
+  to: game.items.gem_pink
+  label: needs
+- from: game.items
+  to: game.items.heart
+  label: needs
+- from: game.items
+  to: game.items.key
+  label: needs
+- from: game.items
+  to: game.items.oneup
+  label: needs
+- from: game.items
+  to: game.items.star
+  label: needs
+- from: game.items
+  to: game.items.volt_flower
+  label: needs
+- from: game.items.cell
+  to: game.items.cell.pulse
+  label: needs
+- from: game.items.coin
+  to: game.items.coin.spin
+  label: needs
+- from: game.items.gem_blue
+  to: game.items.gem_blue.shimmer
+  label: needs
+- from: game.items.gem_green
+  to: game.items.gem_green.shimmer
+  label: needs
+- from: game.items.gem_pink
+  to: game.items.gem_pink.shimmer
+  label: needs
+- from: game.items.heart
+  to: game.items.heart.beat
+  label: needs
+- from: game.items.key
+  to: game.items.key.shine
+  label: needs
+- from: game.items.oneup
+  to: game.items.oneup.bob
+  label: needs
+- from: game.items.star
+  to: game.items.star.cycle
+  label: needs
+- from: game.items.volt_flower
+  to: game.items.volt_flower.sway
+  label: needs
+- from: game.levels
+  to: game.levels.1-1
+  label: needs
+- from: game.levels
+  to: game.levels.1-2
+  label: needs
+- from: game.levels
+  to: game.levels.1-3
+  label: needs
+- from: game.levels
+  to: game.levels.1-4
+  label: needs
+- from: game.props
+  to: game.props.checkpoint
+  label: needs
+- from: game.props
+  to: game.props.flag
+  label: needs
+- from: game.props
+  to: game.props.static
+  label: needs
+- from: game.props
+  to: game.props.torch
+  label: needs
+- from: game.props.checkpoint
+  to: game.props.checkpoint.wave
+  label: needs
+- from: game.props.flag
+  to: game.props.flag.wave
+  label: needs
+- from: game.props.torch
+  to: game.props.torch.burn
+  label: needs
+- from: game.tiles
+  to: game.tiles.castle
+  label: needs
+- from: game.tiles
+  to: game.tiles.cave
+  label: needs
+- from: game.tiles
+  to: game.tiles.grass
+  label: needs
+- from: game.tiles
+  to: game.tiles.sky
+  label: needs
+- from: game.tiles.castle
+  to: game.tiles.castle.lava
+  label: needs
+- from: game.tiles.castle
+  to: game.tiles.castle.water
+  label: needs
+- from: game.tiles.cave
+  to: game.tiles.cave.lava
+  label: needs
+- from: game.tiles.cave
+  to: game.tiles.cave.water
+  label: needs
+- from: game.tiles.grass
+  to: game.tiles.grass.lava
+  label: needs
+- from: game.tiles.grass
+  to: game.tiles.grass.water
+  label: needs
+- from: game.tiles.sky
+  to: game.tiles.sky.lava
+  label: needs
+- from: game.tiles.sky
+  to: game.tiles.sky.water
+  label: needs
+- from: game.ui
+  to: game.ui.cursor
+  label: needs
+- from: game.ui
+  to: game.ui.popups
+  label: needs
+- from: game.ui.cursor
+  to: game.ui.cursor.blink
+  label: needs

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.walk",
+  "path": ".\\gen/graph\\game\\hero\\super\\walk",
+  "input_hash": "sha256:850ce94879f30e00a908c13c3739987a2ee0a56cebb8aa928aec56214ea9278f",
+  "derivation_hash": "sha256:3aa93ea7cd9c63b5f7e5c2a57e29877b7f6b4a8a10a72bd299b7241db7757f43",
+  "outputs": [
+    {
+      "id": "game.hero.super.walk#node.json",
+      "path": ".\\gen/out\\game.hero.super.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:c7530d5f156c2ae555be35f28f1c07df473a5d69b15233a9be5d7cc8963cf9f5",
+      "semantic_hash": "sha256:c7530d5f156c2ae555be35f28f1c07df473a5d69b15233a9be5d7cc8963cf9f5",
+      "producer": "game.hero.super.walk",
+      "version": 1
+    }
+  ]
+}

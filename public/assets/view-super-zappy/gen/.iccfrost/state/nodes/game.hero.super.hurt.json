@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.hurt",
+  "path": ".\\gen/graph\\game\\hero\\super\\hurt",
+  "input_hash": "sha256:b62546a22363e3eead997ab06c08bc83e149abda0b8f4cfbbd057e7c4ff46079",
+  "derivation_hash": "sha256:1645db39951e748f2ada8770b9e201f473262aece50bbab4b7f4c2589a33c1ce",
+  "outputs": [
+    {
+      "id": "game.hero.super.hurt#node.json",
+      "path": ".\\gen/out\\game.hero.super.hurt\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:dd56f32e3141996a94f2ab68c77b994daf718edb553e79afb672dbbfd82271e8",
+      "semantic_hash": "sha256:dd56f32e3141996a94f2ab68c77b994daf718edb553e79afb672dbbfd82271e8",
+      "producer": "game.hero.super.hurt",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.props",
+  "path": ".\\gen/graph\\game\\props",
+  "input_hash": "sha256:93fc91927691a2f9d5452902ca9b9c002f31458889fbbc73a8feab948183a84c",
+  "derivation_hash": "sha256:8c719f3e6115349e3d7b8bcfe8f8ce1fe240476ba9bdc395af2e58a498ac8ec9",
+  "outputs": [
+    {
+      "id": "game.props#node.json",
+      "path": ".\\gen/out\\game.props\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:301ffc4104cca0c6770838d6acb72594c0c5e7810a672d51b9a92c1d26daeb36",
+      "semantic_hash": "sha256:301ffc4104cca0c6770838d6acb72594c0c5e7810a672d51b9a92c1d26daeb36",
+      "producer": "game.props",
+      "version": 1
+    }
+  ]
+}

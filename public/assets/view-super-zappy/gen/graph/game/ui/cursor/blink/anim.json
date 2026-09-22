@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "ui.cursor.blink",
+  "sheet": "blink.png",
+  "frame": {
+    "w": 8,
+    "h": 8
+  },
+  "frames": 4,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": true,
+  "origin": {
+    "x": 4,
+    "y": 8
+  }
+}

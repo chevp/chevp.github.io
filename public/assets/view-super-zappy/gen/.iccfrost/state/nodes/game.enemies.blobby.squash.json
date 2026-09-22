@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.blobby.squash",
+  "path": ".\\gen/graph\\game\\enemies\\blobby\\squash",
+  "input_hash": "sha256:141bbc6fc87803d3fd2d8ddfbea0fa25823ff59cd9e4c59e4c8cfd0d97d9d26b",
+  "derivation_hash": "sha256:863c056a6d06d39bb07e2647b963fd5ea4fed36d4f4d7680011e31403da71362",
+  "outputs": [
+    {
+      "id": "game.enemies.blobby.squash#node.json",
+      "path": ".\\gen/out\\game.enemies.blobby.squash\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:6ac2229ec792da0eb74671de89f20fa4886bca2927239f2c6a9ae4bb1a859665",
+      "semantic_hash": "sha256:6ac2229ec792da0eb74671de89f20fa4886bca2927239f2c6a9ae4bb1a859665",
+      "producer": "game.enemies.blobby.squash",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.finn",
+  "path": ".\\gen/graph\\game\\enemies\\finn",
+  "input_hash": "sha256:c30832a3114c9f733dc2545eab8f6773e08cd8a550d09136340474fcfb624342",
+  "derivation_hash": "sha256:ec6a42040a918dda58ca9bcb6c89b001e44e5d8312a71c686ff0278e27644b41",
+  "outputs": [
+    {
+      "id": "game.enemies.finn#node.json",
+      "path": ".\\gen/out\\game.enemies.finn\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:da4506ecd60e4f234f4a69b73d75dc1c5ecdf71ecaf83189df02679df257e6a9",
+      "semantic_hash": "sha256:da4506ecd60e4f234f4a69b73d75dc1c5ecdf71ecaf83189df02679df257e6a9",
+      "producer": "game.enemies.finn",
+      "version": 1
+    }
+  ]
+}

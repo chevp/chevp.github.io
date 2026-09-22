@@ -1,0 +1,16 @@
+{
+  "kind": "zappy.items/1",
+  "id": "items",
+  "entries": [
+    "coin",
+    "gem_blue",
+    "gem_green",
+    "gem_pink",
+    "cell",
+    "star",
+    "volt_flower",
+    "heart",
+    "key",
+    "oneup"
+  ]
+}

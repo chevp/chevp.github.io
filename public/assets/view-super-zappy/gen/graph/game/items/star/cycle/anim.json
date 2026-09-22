@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.star.cycle",
+  "sheet": "cycle.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 4,
+  "fps": 10,
+  "frameMs": 100,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.wave",
+  "path": ".\\gen/graph\\game\\hero\\super\\wave",
+  "input_hash": "sha256:b2ae5324a378a1674daa67e115dbdd0eabd3545f245288f9fb4fc8b0e647e4c6",
+  "derivation_hash": "sha256:9efc9d69df5d9bcf1925016df59eb1f1140a6ef856c6567dd2a9d9994f73c14c",
+  "outputs": [
+    {
+      "id": "game.hero.super.wave#node.json",
+      "path": ".\\gen/out\\game.hero.super.wave\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:6f6831b19be8390e2fc1c9debbb2c36affd232f9ad73729146ca3111cbf273d5",
+      "semantic_hash": "sha256:6f6831b19be8390e2fc1c9debbb2c36affd232f9ad73729146ca3111cbf273d5",
+      "producer": "game.hero.super.wave",
+      "version": 1
+    }
+  ]
+}

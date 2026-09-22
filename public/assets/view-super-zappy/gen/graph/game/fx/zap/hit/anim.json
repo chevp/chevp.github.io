@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.zap.hit",
+  "sheet": "hit.png",
+  "frame": {
+    "w": 8,
+    "h": 8
+  },
+  "frames": 3,
+  "fps": 18,
+  "frameMs": 56,
+  "loop": false,
+  "origin": {
+    "x": 4,
+    "y": 8
+  }
+}

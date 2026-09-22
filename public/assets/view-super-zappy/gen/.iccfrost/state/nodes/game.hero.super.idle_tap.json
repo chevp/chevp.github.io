@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.idle_tap",
+  "path": ".\\gen/graph\\game\\hero\\super\\idle_tap",
+  "input_hash": "sha256:3c9a47ac1cf1c881f05e54cbeff47a5434f98ca4437898120a4c69452e6b3313",
+  "derivation_hash": "sha256:e62144a20cc6dd9cfd1e9f5f09f7d0db55439c05a3fce8d475a84d9b79b4ca12",
+  "outputs": [
+    {
+      "id": "game.hero.super.idle_tap#node.json",
+      "path": ".\\gen/out\\game.hero.super.idle_tap\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:42641a91e84cafb456b13a0b11dab0695541faf1c0ee499672c6a452db10ed8f",
+      "semantic_hash": "sha256:42641a91e84cafb456b13a0b11dab0695541faf1c0ee499672c6a452db10ed8f",
+      "producer": "game.hero.super.idle_tap",
+      "version": 1
+    }
+  ]
+}

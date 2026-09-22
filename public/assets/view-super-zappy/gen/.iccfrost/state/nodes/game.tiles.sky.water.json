@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.sky.water",
+  "path": ".\\gen/graph\\game\\tiles\\sky\\water",
+  "input_hash": "sha256:5f12eb155effc1846493de3ead383b36be372a8ce8290b754982653bb94c8e50",
+  "derivation_hash": "sha256:77f575fc7b7890f6f5bb9daf2a2b142dfa460c243ee5ec2798ad2305655ff37e",
+  "outputs": [
+    {
+      "id": "game.tiles.sky.water#node.json",
+      "path": ".\\gen/out\\game.tiles.sky.water\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:54d1ecd224772fbd8376cd68b89e3d8a94d249911addcd0e4db50a1cf45feba2",
+      "semantic_hash": "sha256:54d1ecd224772fbd8376cd68b89e3d8a94d249911addcd0e4db50a1cf45feba2",
+      "producer": "game.tiles.sky.water",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.impact",
+  "path": ".\\gen/graph\\game\\fx\\impact",
+  "input_hash": "sha256:9355c60a0c065bbd6b7acbbeceede41a5b74843b894199fe4e46cc02d38d25c3",
+  "derivation_hash": "sha256:486c405ef9396e035eee2ed9ff91a7af829d04386138d8fc269b0cadc433c4b1",
+  "outputs": [
+    {
+      "id": "game.fx.impact#node.json",
+      "path": ".\\gen/out\\game.fx.impact\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:6c1a0f88a200d1624bb76d339f0a9a46e79d532db466976665d92b9f3ed426b2",
+      "semantic_hash": "sha256:6c1a0f88a200d1624bb76d339f0a9a46e79d532db466976665d92b9f3ed426b2",
+      "producer": "game.fx.impact",
+      "version": 1
+    }
+  ]
+}

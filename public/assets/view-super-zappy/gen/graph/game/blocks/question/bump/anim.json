@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "blocks.question.bump",
+  "sheet": "bump.png",
+  "frame": {
+    "w": 16,
+    "h": 20
+  },
+  "frames": 5,
+  "fps": 16,
+  "frameMs": 62,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 20
+  }
+}

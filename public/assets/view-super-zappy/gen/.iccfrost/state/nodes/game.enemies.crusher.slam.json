@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.crusher.slam",
+  "path": ".\\gen/graph\\game\\enemies\\crusher\\slam",
+  "input_hash": "sha256:9d40948838414a5e7d9b3dd234f46cd3551f5656bbdf16254626d5d3b707676e",
+  "derivation_hash": "sha256:ad148a102bb41750e4c05e1d991f87183a2792cd8e1a9431351b693a1f230e96",
+  "outputs": [
+    {
+      "id": "game.enemies.crusher.slam#node.json",
+      "path": ".\\gen/out\\game.enemies.crusher.slam\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:fa8c8fd44d2f217c59a7b46fc6e34d54aa8cd8522c374272455f193421247ea4",
+      "semantic_hash": "sha256:fa8c8fd44d2f217c59a7b46fc6e34d54aa8cd8522c374272455f193421247ea4",
+      "producer": "game.enemies.crusher.slam",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "kind": "zappy.block/1",
+  "id": "blocks.brick",
+  "title": "Ziegel",
+  "anims": [
+    "idle",
+    "bump",
+    "break"
+  ]
+}

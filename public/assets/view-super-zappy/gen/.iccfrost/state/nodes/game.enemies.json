@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies",
+  "path": ".\\gen/graph\\game\\enemies",
+  "input_hash": "sha256:cff694f5df841c47b21588dddedbe3243395023b61976b880ae338819603b891",
+  "derivation_hash": "sha256:56e238a32d33696165bdc4c740f5f78a868355563addd16c65601624cb8d7636",
+  "outputs": [
+    {
+      "id": "game.enemies#node.json",
+      "path": ".\\gen/out\\game.enemies\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:2051abf3428a34a03c8c320b4d45b73d69f7cd771da977a156e8a4d0bbb7d3a1",
+      "semantic_hash": "sha256:2051abf3428a34a03c8c320b4d45b73d69f7cd771da977a156e8a4d0bbb7d3a1",
+      "producer": "game.enemies",
+      "version": 1
+    }
+  ]
+}

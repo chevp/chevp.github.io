@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.finn.jump",
+  "path": ".\\gen/graph\\game\\enemies\\finn\\jump",
+  "input_hash": "sha256:1bc1184c63e77ed4859ba268fe444c313615e43a8301a503c3749a99bcee291b",
+  "derivation_hash": "sha256:b7ef34d015fe162cb51acd2ea8a465b4c4f0fa37d2f5971ba3ff35a9db921111",
+  "outputs": [
+    {
+      "id": "game.enemies.finn.jump#node.json",
+      "path": ".\\gen/out\\game.enemies.finn.jump\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:8c4126dd48a7bbaa5254c71450fe8da654c878bb65eb33747440c158d7ebc3f0",
+      "semantic_hash": "sha256:8c4126dd48a7bbaa5254c71450fe8da654c878bb65eb33747440c158d7ebc3f0",
+      "producer": "game.enemies.finn.jump",
+      "version": 1
+    }
+  ]
+}

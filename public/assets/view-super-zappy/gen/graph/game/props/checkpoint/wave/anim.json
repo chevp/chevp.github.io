@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "props.checkpoint.wave",
+  "sheet": "wave.png",
+  "frame": {
+    "w": 16,
+    "h": 32
+  },
+  "frames": 4,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 32
+  }
+}

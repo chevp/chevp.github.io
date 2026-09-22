@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.dust_run.puff",
+  "path": ".\\gen/graph\\game\\fx\\dust_run\\puff",
+  "input_hash": "sha256:c0ea4de0f1e1ff09116d57416646125869156699c17d34ef167403b326bcf489",
+  "derivation_hash": "sha256:4a904f4b4b28057026dd25f808092c72ae6250bddbdb96feccf9b9b92d082b44",
+  "outputs": [
+    {
+      "id": "game.fx.dust_run.puff#node.json",
+      "path": ".\\gen/out\\game.fx.dust_run.puff\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:4eab02c137e2b377c3428478a56dca76e0e970e1f760a73f230513df92318d18",
+      "semantic_hash": "sha256:4eab02c137e2b377c3428478a56dca76e0e970e1f760a73f230513df92318d18",
+      "producer": "game.fx.dust_run.puff",
+      "version": 1
+    }
+  ]
+}

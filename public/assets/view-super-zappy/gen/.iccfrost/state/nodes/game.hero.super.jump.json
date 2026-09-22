@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.jump",
+  "path": ".\\gen/graph\\game\\hero\\super\\jump",
+  "input_hash": "sha256:3ffe012d0b2da53301c982df9a7a66532b6bcdeaac813c62fe6b00a7b79827fb",
+  "derivation_hash": "sha256:d3241eac66894eab8dba5e74d8c172e377108bcbea2c78873405c23ad3f73d40",
+  "outputs": [
+    {
+      "id": "game.hero.super.jump#node.json",
+      "path": ".\\gen/out\\game.hero.super.jump\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:91eb22df817c1c75cc0c04e56aa88f83847290dc99fe1d57aa3e838126100277",
+      "semantic_hash": "sha256:91eb22df817c1c75cc0c04e56aa88f83847290dc99fe1d57aa3e838126100277",
+      "producer": "game.hero.super.jump",
+      "version": 1
+    }
+  ]
+}

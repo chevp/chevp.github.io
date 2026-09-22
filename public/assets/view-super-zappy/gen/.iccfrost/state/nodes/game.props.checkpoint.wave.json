@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.props.checkpoint.wave",
+  "path": ".\\gen/graph\\game\\props\\checkpoint\\wave",
+  "input_hash": "sha256:495e2b904f091e2614ab61d690e0594cec692b1981264d8122f4462b622629eb",
+  "derivation_hash": "sha256:988bb7def23c3f3f46c894101c2c2cd542e3edd041deda0b815939741dbd3282",
+  "outputs": [
+    {
+      "id": "game.props.checkpoint.wave#node.json",
+      "path": ".\\gen/out\\game.props.checkpoint.wave\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:a3940adf465cea802f789b6f1f52b9922071d16cb6991acbc239da19ed6134a6",
+      "semantic_hash": "sha256:a3940adf465cea802f789b6f1f52b9922071d16cb6991acbc239da19ed6134a6",
+      "producer": "game.props.checkpoint.wave",
+      "version": 1
+    }
+  ]
+}

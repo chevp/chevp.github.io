@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.super.sleep",
+  "sheet": "sleep.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 4,
+  "fps": 3,
+  "frameMs": 333,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 22
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.grass",
+  "path": ".\\gen/graph\\game\\tiles\\grass",
+  "input_hash": "sha256:d61cf09dbd3ed4781e89a06c571ecd84a83f1ca0bb2886aeaf131867e8660e27",
+  "derivation_hash": "sha256:e801f22fae0eff2b3cc6a51df5ce3d707583dfa855ec59458d5fb160021800b5",
+  "outputs": [
+    {
+      "id": "game.tiles.grass#node.json",
+      "path": ".\\gen/out\\game.tiles.grass\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:66a43fba1ea6353d04fd384d02942989e0c6b8a214d35827f82df3b3d9445255",
+      "semantic_hash": "sha256:66a43fba1ea6353d04fd384d02942989e0c6b8a214d35827f82df3b3d9445255",
+      "producer": "game.tiles.grass",
+      "version": 1
+    }
+  ]
+}

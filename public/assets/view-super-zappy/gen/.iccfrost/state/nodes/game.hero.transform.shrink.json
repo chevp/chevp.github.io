@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.transform.shrink",
+  "path": ".\\gen/graph\\game\\hero\\transform\\shrink",
+  "input_hash": "sha256:bddcf3e474061ae2668d3d1cf892aa3a63b4e633a2e4cb0c370346b5d0944eba",
+  "derivation_hash": "sha256:7eaf9ff955040a739bb0d4abaec7a0e0f57344eed28f3e97c2c11c135efdf19c",
+  "outputs": [
+    {
+      "id": "game.hero.transform.shrink#node.json",
+      "path": ".\\gen/out\\game.hero.transform.shrink\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:0f63f8ade000b0524dab779e78d5b02c5c93cef37d6967a86429933d4a4f61ad",
+      "semantic_hash": "sha256:0f63f8ade000b0524dab779e78d5b02c5c93cef37d6967a86429933d4a4f61ad",
+      "producer": "game.hero.transform.shrink",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.swim",
+  "path": ".\\gen/graph\\game\\hero\\super\\swim",
+  "input_hash": "sha256:e93d1275f1cc857087b6375c2bc0a98b78dd20731d0abacbde869e547edb39b7",
+  "derivation_hash": "sha256:ed949351be0a3038cb0aad4b79bfdbf7755d2322db26c880919f98fac4ab0720",
+  "outputs": [
+    {
+      "id": "game.hero.super.swim#node.json",
+      "path": ".\\gen/out\\game.hero.super.swim\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:f5a88a7949a7bd843d37bc696d87a5b34babc1526c53eba5a76998b0a45444fd",
+      "semantic_hash": "sha256:f5a88a7949a7bd843d37bc696d87a5b34babc1526c53eba5a76998b0a45444fd",
+      "producer": "game.hero.super.swim",
+      "version": 1
+    }
+  ]
+}

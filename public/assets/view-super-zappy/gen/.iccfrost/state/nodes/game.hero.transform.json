@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.transform",
+  "path": ".\\gen/graph\\game\\hero\\transform",
+  "input_hash": "sha256:232f36598f0819fc9d1af1a74be3e900d83892c9db61051966ab5eb13c9e5537",
+  "derivation_hash": "sha256:1ad8cdf76daa68e7fdd076ac64db3fc232335ddd260c71c44abe9d50f2f61cb1",
+  "outputs": [
+    {
+      "id": "game.hero.transform#node.json",
+      "path": ".\\gen/out\\game.hero.transform\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:0795586b472b856b49ea84d48533a13db555ed99ac3750f7ea6b34d932c5b2db",
+      "semantic_hash": "sha256:0795586b472b856b49ea84d48533a13db555ed99ac3750f7ea6b34d932c5b2db",
+      "producer": "game.hero.transform",
+      "version": 1
+    }
+  ]
+}

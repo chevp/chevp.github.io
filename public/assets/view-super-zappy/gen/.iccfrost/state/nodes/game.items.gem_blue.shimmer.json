@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.gem_blue.shimmer",
+  "path": ".\\gen/graph\\game\\items\\gem_blue\\shimmer",
+  "input_hash": "sha256:d93d7d325d2cc51b14ef2152bc1175e4ad9839e6257cd9fa171af584fd9be83a",
+  "derivation_hash": "sha256:53eb5b9e7120209f741430207aa2907aaee1325001398864d3c87f22bd1a4f76",
+  "outputs": [
+    {
+      "id": "game.items.gem_blue.shimmer#node.json",
+      "path": ".\\gen/out\\game.items.gem_blue.shimmer\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:5683c7bd4026d1a3099766165f3fba8a8a1b8fd3b4ca4decf9d0ed93e0639f02",
+      "semantic_hash": "sha256:5683c7bd4026d1a3099766165f3fba8a8a1b8fd3b4ca4decf9d0ed93e0639f02",
+      "producer": "game.items.gem_blue.shimmer",
+      "version": 1
+    }
+  ]
+}

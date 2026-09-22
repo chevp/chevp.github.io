@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.brick.break",
+  "path": ".\\gen/graph\\game\\blocks\\brick\\break",
+  "input_hash": "sha256:fd5e5c48aec28c16244aecc506c3ca16af04825e592da6d8f2bdcd52d5590fca",
+  "derivation_hash": "sha256:546177113fce4f8f5ca88eb0c635b5814deb39b761ae4b307384760002f4df22",
+  "outputs": [
+    {
+      "id": "game.blocks.brick.break#node.json",
+      "path": ".\\gen/out\\game.blocks.brick.break\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:3178311c984cf0905f74c5da13a076eb63e1c3fa6f7491a208f92c7dac40b171",
+      "semantic_hash": "sha256:3178311c984cf0905f74c5da13a076eb63e1c3fa6f7491a208f92c7dac40b171",
+      "producer": "game.blocks.brick.break",
+      "version": 1
+    }
+  ]
+}

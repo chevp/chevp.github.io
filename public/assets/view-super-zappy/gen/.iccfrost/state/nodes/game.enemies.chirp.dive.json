@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.chirp.dive",
+  "path": ".\\gen/graph\\game\\enemies\\chirp\\dive",
+  "input_hash": "sha256:ab452700110fc815c550585a2aadd42effe58552cba682cfa936fe8ac696abd8",
+  "derivation_hash": "sha256:4b308b9a0373ff2ed80bf62bc99786bfac6db45920971876dee510d4f0330f3f",
+  "outputs": [
+    {
+      "id": "game.enemies.chirp.dive#node.json",
+      "path": ".\\gen/out\\game.enemies.chirp.dive\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:de596f39874634b5dcc0f34d21aca381fb1683950037e10349afe9a1edb22441",
+      "semantic_hash": "sha256:de596f39874634b5dcc0f34d21aca381fb1683950037e10349afe9a1edb22441",
+      "producer": "game.enemies.chirp.dive",
+      "version": 1
+    }
+  ]
+}

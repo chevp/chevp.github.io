@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.coin_pop.pop",
+  "path": ".\\gen/graph\\game\\blocks\\coin_pop\\pop",
+  "input_hash": "sha256:ab24fa1b40d60abcf21ad1d41bea121d6a35509138544d1875e490cb803d6383",
+  "derivation_hash": "sha256:fc51353a296729a11edc68f41e5364d49e9586d0c66e76f69c44a73a5c4ee226",
+  "outputs": [
+    {
+      "id": "game.blocks.coin_pop.pop#node.json",
+      "path": ".\\gen/out\\game.blocks.coin_pop.pop\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:e70cf6ad16b208cbc274fe53ab0485d8fdb696b07c8d9db81daacd98e2b3d90d",
+      "semantic_hash": "sha256:e70cf6ad16b208cbc274fe53ab0485d8fdb696b07c8d9db81daacd98e2b3d90d",
+      "producer": "game.blocks.coin_pop.pop",
+      "version": 1
+    }
+  ]
+}

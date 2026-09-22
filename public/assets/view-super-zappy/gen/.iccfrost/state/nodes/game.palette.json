@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.palette",
+  "path": ".\\gen/graph\\game\\palette",
+  "input_hash": "sha256:3e0a5b35410afe3d0fff82a40e99e65e5d79cff0e7239d8c34a3cfa984399e1a",
+  "derivation_hash": "sha256:973d1cfdb41dca736613ea15e395b0ccf869b13f809cdabc229b099f54e55a6e",
+  "outputs": [
+    {
+      "id": "game.palette#node.json",
+      "path": ".\\gen/out\\game.palette\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:9c84bdd448f052277e55dddb787d04d5d772c8aab4bc737f5dd894e9972a00d0",
+      "semantic_hash": "sha256:9c84bdd448f052277e55dddb787d04d5d772c8aab4bc737f5dd894e9972a00d0",
+      "producer": "game.palette",
+      "version": 1
+    }
+  ]
+}

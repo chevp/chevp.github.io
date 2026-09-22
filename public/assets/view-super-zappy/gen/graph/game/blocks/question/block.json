@@ -1,0 +1,10 @@
+{
+  "kind": "zappy.block/1",
+  "id": "blocks.question",
+  "title": "?-Block",
+  "anims": [
+    "shimmer",
+    "bump",
+    "used"
+  ]
+}

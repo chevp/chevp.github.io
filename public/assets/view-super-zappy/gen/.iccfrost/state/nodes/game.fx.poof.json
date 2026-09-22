@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.poof",
+  "path": ".\\gen/graph\\game\\fx\\poof",
+  "input_hash": "sha256:ed998c1c034595b4c82e1aaaff41cfa2a5874ef76d8c36749099fd5e29b7676e",
+  "derivation_hash": "sha256:b1c814c9d8f26d2e4da31f5e339e07a78d9c6d54aada50447cad77dbae624d6a",
+  "outputs": [
+    {
+      "id": "game.fx.poof#node.json",
+      "path": ".\\gen/out\\game.fx.poof\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:2dffb64e00e173da621466a5ee59f17e4b8b601d696e48ccb7045aec7f866a2f",
+      "semantic_hash": "sha256:2dffb64e00e173da621466a5ee59f17e4b8b601d696e48ccb7045aec7f866a2f",
+      "producer": "game.fx.poof",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.chomper.hide",
+  "sheet": "hide.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 3,
+  "fps": 8,
+  "frameMs": 125,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 12,
+    "h": 20
+  }
+}

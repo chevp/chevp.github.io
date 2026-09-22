@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.voltking.idle",
+  "sheet": "idle.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 4,
+  "fps": 5,
+  "frameMs": 200,
+  "loop": true,
+  "origin": {
+    "x": 16,
+    "y": 32
+  },
+  "hitbox": {
+    "w": 22,
+    "h": 26
+  }
+}

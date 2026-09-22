@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.cell.pulse",
+  "path": ".\\gen/graph\\game\\items\\cell\\pulse",
+  "input_hash": "sha256:849e3b0f4a08384602855f6a455c69580fc2cf56cc6d285a0b69e4fc5434bb88",
+  "derivation_hash": "sha256:48559a12ff730140bc607661ffafdadffde07bbad5408eed9cbfb6b31b840705",
+  "outputs": [
+    {
+      "id": "game.items.cell.pulse#node.json",
+      "path": ".\\gen/out\\game.items.cell.pulse\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:4c9801344665f74d1151ed3303528e0184fafeab792f515bbcc42a3abd4d8c6d",
+      "semantic_hash": "sha256:4c9801344665f74d1151ed3303528e0184fafeab792f515bbcc42a3abd4d8c6d",
+      "producer": "game.items.cell.pulse",
+      "version": 1
+    }
+  ]
+}

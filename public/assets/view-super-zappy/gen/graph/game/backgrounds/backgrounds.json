@@ -1,0 +1,14 @@
+{
+  "kind": "zappy.backgrounds/1",
+  "id": "backgrounds",
+  "size": {
+    "w": 256,
+    "h": 224
+  },
+  "themes": [
+    "grass",
+    "cave",
+    "sky",
+    "castle"
+  ]
+}

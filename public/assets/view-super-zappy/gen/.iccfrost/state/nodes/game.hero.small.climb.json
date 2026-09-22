@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.climb",
+  "path": ".\\gen/graph\\game\\hero\\small\\climb",
+  "input_hash": "sha256:e43f0ddbb12ba3433a44b2c8c5ecb9894d802c7cd05613b377a3618bbe6cd35b",
+  "derivation_hash": "sha256:f96600fedc0ed006aa397019d135469bf3b5e1bed26c776197d2d39849f373a2",
+  "outputs": [
+    {
+      "id": "game.hero.small.climb#node.json",
+      "path": ".\\gen/out\\game.hero.small.climb\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:0d411663a43804fe1f1c1927e07497179b394170dc78c00f11a122c600b0ceeb",
+      "semantic_hash": "sha256:0d411663a43804fe1f1c1927e07497179b394170dc78c00f11a122c600b0ceeb",
+      "producer": "game.hero.small.climb",
+      "version": 1
+    }
+  ]
+}

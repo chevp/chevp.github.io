@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.item/1",
+  "id": "items.volt_flower",
+  "title": "Blitzblume",
+  "effect": "Zap-Angriff",
+  "anims": [
+    "sway"
+  ]
+}

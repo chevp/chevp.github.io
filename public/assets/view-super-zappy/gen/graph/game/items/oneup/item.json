@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.item/1",
+  "id": "items.oneup",
+  "title": "Extra-Leben",
+  "effect": "+1 Leben",
+  "anims": [
+    "bob"
+  ]
+}

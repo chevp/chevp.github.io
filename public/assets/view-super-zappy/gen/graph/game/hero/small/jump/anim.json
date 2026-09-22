@@ -1,0 +1,27 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.small.jump",
+  "sheet": "jump.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 3,
+  "fps": 10,
+  "frameMs": 100,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 14
+  },
+  "events": {
+    "launch": [
+      0
+    ]
+  },
+  "next": "fall"
+}

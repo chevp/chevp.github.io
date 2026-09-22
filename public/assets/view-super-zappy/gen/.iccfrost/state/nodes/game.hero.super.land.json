@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.land",
+  "path": ".\\gen/graph\\game\\hero\\super\\land",
+  "input_hash": "sha256:434e1618327152f1e6081ba5577af04c84bf0c7572134a509fb4747f29dd5f42",
+  "derivation_hash": "sha256:b42ae0cab5ff562384befdac5c5f0ad3ab3987e97eec823a61b22d237d9ade56",
+  "outputs": [
+    {
+      "id": "game.hero.super.land#node.json",
+      "path": ".\\gen/out\\game.hero.super.land\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:fa802ae0eef214edf64315ff84a5535ae322b56acb816e4f5e35c1f420fce007",
+      "semantic_hash": "sha256:fa802ae0eef214edf64315ff84a5535ae322b56acb816e4f5e35c1f420fce007",
+      "producer": "game.hero.super.land",
+      "version": 1
+    }
+  ]
+}

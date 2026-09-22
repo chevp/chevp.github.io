@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.walk",
+  "path": ".\\gen/graph\\game\\hero\\small\\walk",
+  "input_hash": "sha256:f61c49af5cda06a2c81d95dc6ebe58fd7b3dfb275c91a8261ba12c564e616255",
+  "derivation_hash": "sha256:b4c89fbcfe44a20cf0e2850925949e1f01a220233cfbeaacddf4d5f4080be126",
+  "outputs": [
+    {
+      "id": "game.hero.small.walk#node.json",
+      "path": ".\\gen/out\\game.hero.small.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:be46a49649646f55d73e292c3fa2d65742fb75826db085c058f250ce36c5f350",
+      "semantic_hash": "sha256:be46a49649646f55d73e292c3fa2d65742fb75826db085c058f250ce36c5f350",
+      "producer": "game.hero.small.walk",
+      "version": 1
+    }
+  ]
+}

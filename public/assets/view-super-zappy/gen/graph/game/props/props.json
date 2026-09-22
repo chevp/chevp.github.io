@@ -1,0 +1,159 @@
+{
+  "kind": "zappy.props/1",
+  "id": "props",
+  "props": {
+    "cloud_s": {
+      "file": "cloud_s.png",
+      "w": 24,
+      "h": 15,
+      "origin": {
+        "x": 12,
+        "y": 15
+      }
+    },
+    "cloud_m": {
+      "file": "cloud_m.png",
+      "w": 36,
+      "h": 22,
+      "origin": {
+        "x": 18,
+        "y": 22
+      }
+    },
+    "cloud_l": {
+      "file": "cloud_l.png",
+      "w": 52,
+      "h": 32,
+      "origin": {
+        "x": 26,
+        "y": 32
+      }
+    },
+    "bush_s": {
+      "file": "bush_s.png",
+      "w": 24,
+      "h": 14,
+      "origin": {
+        "x": 12,
+        "y": 14
+      }
+    },
+    "bush_l": {
+      "file": "bush_l.png",
+      "w": 44,
+      "h": 24,
+      "origin": {
+        "x": 22,
+        "y": 24
+      }
+    },
+    "hill_s": {
+      "file": "hill_s.png",
+      "w": 48,
+      "h": 24,
+      "origin": {
+        "x": 24,
+        "y": 24
+      }
+    },
+    "hill_l": {
+      "file": "hill_l.png",
+      "w": 80,
+      "h": 40,
+      "origin": {
+        "x": 40,
+        "y": 40
+      }
+    },
+    "tree": {
+      "file": "tree.png",
+      "w": 24,
+      "h": 40,
+      "origin": {
+        "x": 12,
+        "y": 40
+      }
+    },
+    "sign": {
+      "file": "sign.png",
+      "w": 16,
+      "h": 16,
+      "origin": {
+        "x": 8,
+        "y": 16
+      }
+    },
+    "flagpole": {
+      "file": "flagpole.png",
+      "w": 16,
+      "h": 144,
+      "origin": {
+        "x": 8,
+        "y": 144
+      }
+    },
+    "castle": {
+      "file": "castle.png",
+      "w": 64,
+      "h": 64,
+      "origin": {
+        "x": 32,
+        "y": 64
+      }
+    },
+    "stalactite": {
+      "file": "stalactite.png",
+      "w": 16,
+      "h": 24,
+      "origin": {
+        "x": 8,
+        "y": 24
+      }
+    },
+    "crystal": {
+      "file": "crystal.png",
+      "w": 16,
+      "h": 24,
+      "origin": {
+        "x": 8,
+        "y": 24
+      }
+    },
+    "chain": {
+      "file": "chain.png",
+      "w": 8,
+      "h": 32,
+      "origin": {
+        "x": 4,
+        "y": 32
+      }
+    },
+    "banner": {
+      "file": "banner.png",
+      "w": 16,
+      "h": 32,
+      "origin": {
+        "x": 8,
+        "y": 32
+      }
+    },
+    "cannon": {
+      "file": "cannon.png",
+      "w": 16,
+      "h": 16,
+      "origin": {
+        "x": 8,
+        "y": 16
+      }
+    },
+    "crate": {
+      "file": "crate.png",
+      "w": 16,
+      "h": 16,
+      "origin": {
+        "x": 8,
+        "y": 16
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "kind": "zappy.character/1",
+  "id": "hero",
+  "name": "Zappy",
+  "forms": [
+    "small",
+    "super"
+  ],
+  "moves": [
+    "walk",
+    "run",
+    "skid",
+    "jump",
+    "fall",
+    "crouch",
+    "slide",
+    "spin",
+    "wall_slide",
+    "climb",
+    "swim",
+    "zap"
+  ],
+  "physics": {
+    "walk": 60,
+    "run": 110,
+    "jump": 260,
+    "gravity": 720,
+    "coyoteMs": 80
+  }
+}

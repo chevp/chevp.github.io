@@ -1,0 +1,26 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.small.slide",
+  "sheet": "slide.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 1,
+  "fps": 6,
+  "frameMs": 167,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 9
+  },
+  "events": {
+    "dust": [
+      0
+    ]
+  }
+}

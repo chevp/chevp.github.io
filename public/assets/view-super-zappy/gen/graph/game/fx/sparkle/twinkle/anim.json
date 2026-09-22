@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.sparkle.twinkle",
+  "sheet": "twinkle.png",
+  "frame": {
+    "w": 8,
+    "h": 8
+  },
+  "frames": 4,
+  "fps": 10,
+  "frameMs": 100,
+  "loop": true,
+  "origin": {
+    "x": 4,
+    "y": 8
+  }
+}

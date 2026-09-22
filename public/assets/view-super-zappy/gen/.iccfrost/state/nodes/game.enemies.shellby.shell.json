@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.shellby.shell",
+  "path": ".\\gen/graph\\game\\enemies\\shellby\\shell",
+  "input_hash": "sha256:e0489741d46554ee22cd86e9acb530695716b8bc1115c6e6544b0be1bb96f9be",
+  "derivation_hash": "sha256:6a8300feb66016ed742218b14b8a98ae8367bdf48db9d332af2648b4ed653341",
+  "outputs": [
+    {
+      "id": "game.enemies.shellby.shell#node.json",
+      "path": ".\\gen/out\\game.enemies.shellby.shell\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:1e14a3927a29897a4f434e5f60f39947bb5eb0ce9b554acd0ddde1bb1721aae7",
+      "semantic_hash": "sha256:1e14a3927a29897a4f434e5f60f39947bb5eb0ce9b554acd0ddde1bb1721aae7",
+      "producer": "game.enemies.shellby.shell",
+      "version": 1
+    }
+  ]
+}

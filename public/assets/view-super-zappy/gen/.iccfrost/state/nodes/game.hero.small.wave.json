@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.wave",
+  "path": ".\\gen/graph\\game\\hero\\small\\wave",
+  "input_hash": "sha256:d8567b14d1881388d3ec8cdd5943ac1d04aeb9c9ae4d9ac58aa70ebfaba37627",
+  "derivation_hash": "sha256:4a35ff402ceeac736410e9cd91be087a957576f14f5800a050906f7be6b42ae0",
+  "outputs": [
+    {
+      "id": "game.hero.small.wave#node.json",
+      "path": ".\\gen/out\\game.hero.small.wave\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:abb65fc1de21a01299115b3a13f3caa8143d9933888e272902f8325172491904",
+      "semantic_hash": "sha256:abb65fc1de21a01299115b3a13f3caa8143d9933888e272902f8325172491904",
+      "producer": "game.hero.small.wave",
+      "version": 1
+    }
+  ]
+}

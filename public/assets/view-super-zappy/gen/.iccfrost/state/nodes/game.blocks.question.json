@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.question",
+  "path": ".\\gen/graph\\game\\blocks\\question",
+  "input_hash": "sha256:cd4f20e03653204d8003703dc3bf760daf35a6c64607ea6b97b83cbffa93f9c3",
+  "derivation_hash": "sha256:aed4638c25fa1e43ef715fc29104c80a21f037f5279ea511354e6ba18df11e43",
+  "outputs": [
+    {
+      "id": "game.blocks.question#node.json",
+      "path": ".\\gen/out\\game.blocks.question\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:3ee86c501c8ceff8ee553db79d2319ca0057d174db0deb2f12db8c728b8d8b17",
+      "semantic_hash": "sha256:3ee86c501c8ceff8ee553db79d2319ca0057d174db0deb2f12db8c728b8d8b17",
+      "producer": "game.blocks.question",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.chomper.bite",
+  "path": ".\\gen/graph\\game\\enemies\\chomper\\bite",
+  "input_hash": "sha256:f7852016b3462ef89b11a3c23e77e705e9b3b5ce222112acac70d052d76d7ce2",
+  "derivation_hash": "sha256:83601e05825ea9e6b765d463f74a02b9f6d65e5555dbe49240065b785a6c571d",
+  "outputs": [
+    {
+      "id": "game.enemies.chomper.bite#node.json",
+      "path": ".\\gen/out\\game.enemies.chomper.bite\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:7a5fda6c2e4ca68b340f45ef66d36672cca6445a05faecd458c1d0ec1ce85e5b",
+      "semantic_hash": "sha256:7a5fda6c2e4ca68b340f45ef66d36672cca6445a05faecd458c1d0ec1ce85e5b",
+      "producer": "game.enemies.chomper.bite",
+      "version": 1
+    }
+  ]
+}

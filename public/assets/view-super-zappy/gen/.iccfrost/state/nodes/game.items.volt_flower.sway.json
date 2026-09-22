@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.volt_flower.sway",
+  "path": ".\\gen/graph\\game\\items\\volt_flower\\sway",
+  "input_hash": "sha256:335db4e7afe279c97f90b40ed2839249b6fd1c31b31ca513898e880035b6ee3e",
+  "derivation_hash": "sha256:356d9aabeeab62e50614e59f8015f0be36ce81f2b6ac00f139db7788c53a8c2a",
+  "outputs": [
+    {
+      "id": "game.items.volt_flower.sway#node.json",
+      "path": ".\\gen/out\\game.items.volt_flower.sway\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:886a419b48b584946f932580d833c4c511027eb19041c2443e6f5931c8997b2b",
+      "semantic_hash": "sha256:886a419b48b584946f932580d833c4c511027eb19041c2443e6f5931c8997b2b",
+      "producer": "game.items.volt_flower.sway",
+      "version": 1
+    }
+  ]
+}

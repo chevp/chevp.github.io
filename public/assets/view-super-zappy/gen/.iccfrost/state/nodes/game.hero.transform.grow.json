@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.transform.grow",
+  "path": ".\\gen/graph\\game\\hero\\transform\\grow",
+  "input_hash": "sha256:50d5d21f43a6bd01a437ea13b8974c6cc31d8e4ab3fa1c2ef92aff23fc6168eb",
+  "derivation_hash": "sha256:6ea2879307a08d989261bf5c4da68ee2b8de1f1ec3b02dbaa11b77f882d05df3",
+  "outputs": [
+    {
+      "id": "game.hero.transform.grow#node.json",
+      "path": ".\\gen/out\\game.hero.transform.grow\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:00e74fcb778b8df2fe637817982968dc7e6843d679a06ddd44af95ca940b144a",
+      "semantic_hash": "sha256:00e74fcb778b8df2fe637817982968dc7e6843d679a06ddd44af95ca940b144a",
+      "producer": "game.hero.transform.grow",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.items.heart",
+  "path": ".\\gen/graph\\game\\items\\heart",
+  "input_hash": "sha256:0dea8952ce45afdcd39f6ec66643a6d240d21ed492386429fb0689a78ae24941",
+  "derivation_hash": "sha256:b0ce1586b54fc173ddd3213afe7698c02669d2a3a210683172b505bea4edb1dc",
+  "outputs": [
+    {
+      "id": "game.items.heart#node.json",
+      "path": ".\\gen/out\\game.items.heart\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:04b3b1ce4cda62b12c6f4cb330cf4d072aa7465b146b31b7f3eb4f94d74137df",
+      "semantic_hash": "sha256:04b3b1ce4cda62b12c6f4cb330cf4d072aa7465b146b31b7f3eb4f94d74137df",
+      "producer": "game.items.heart",
+      "version": 1
+    }
+  ]
+}

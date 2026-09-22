@@ -1,0 +1,19 @@
+{
+  "kind": "zappy.enemy/1",
+  "id": "enemies.shellby",
+  "title": "Shellby",
+  "hitbox": {
+    "w": 12,
+    "h": 20
+  },
+  "hp": 2,
+  "score": 200,
+  "stomp": true,
+  "behavior": "läuft; Sprung darauf macht einen tretbaren Panzer",
+  "anims": [
+    "walk",
+    "shell",
+    "spin",
+    "wake"
+  ]
+}

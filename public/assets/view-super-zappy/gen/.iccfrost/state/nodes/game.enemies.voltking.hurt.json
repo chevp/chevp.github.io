@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.voltking.hurt",
+  "path": ".\\gen/graph\\game\\enemies\\voltking\\hurt",
+  "input_hash": "sha256:48f9b4a9cd01507ca3b3e444529cc393fc1edb27ce01d87cf5eaad88ad40176a",
+  "derivation_hash": "sha256:914bf71e14ee32fd7e9053f34aa159ae5af049e575a9cf0cc2e2f78eca233763",
+  "outputs": [
+    {
+      "id": "game.enemies.voltking.hurt#node.json",
+      "path": ".\\gen/out\\game.enemies.voltking.hurt\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:fc692254b4b4f474e9d5147302c07adfe71aafda74423a75219fb0386036d36b",
+      "semantic_hash": "sha256:fc692254b4b4f474e9d5147302c07adfe71aafda74423a75219fb0386036d36b",
+      "producer": "game.enemies.voltking.hurt",
+      "version": 1
+    }
+  ]
+}

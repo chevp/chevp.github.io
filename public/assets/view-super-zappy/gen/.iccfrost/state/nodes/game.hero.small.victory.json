@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.victory",
+  "path": ".\\gen/graph\\game\\hero\\small\\victory",
+  "input_hash": "sha256:5a3117e9dded2f00e4a020a0047c495c42d43ba50398481ad0c7dab742e00c7c",
+  "derivation_hash": "sha256:ea7ad59893ba4678d2d281980e960b2848c430b7ae7ab2cf042654e132cbdf47",
+  "outputs": [
+    {
+      "id": "game.hero.small.victory#node.json",
+      "path": ".\\gen/out\\game.hero.small.victory\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:03d4024d88ee767b0048fa5e5c217a99f30cd6021ec88a791f0a2f3b39a6b947",
+      "semantic_hash": "sha256:03d4024d88ee767b0048fa5e5c217a99f30cd6021ec88a791f0a2f3b39a6b947",
+      "producer": "game.hero.small.victory",
+      "version": 1
+    }
+  ]
+}

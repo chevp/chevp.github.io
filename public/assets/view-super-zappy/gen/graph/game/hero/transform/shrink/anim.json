@@ -1,0 +1,18 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.transform.shrink",
+  "sheet": "shrink.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 8,
+  "fps": 16,
+  "frameMs": 62,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "next": "idle"
+}

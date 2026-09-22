@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.voltking.charge",
+  "path": ".\\gen/graph\\game\\enemies\\voltking\\charge",
+  "input_hash": "sha256:cf79eed7da5c5c92e1faf0c75e1b35dfb0261bdfb88d5bdf10a10b41f0301b07",
+  "derivation_hash": "sha256:12f1333b2373805d9b32325461bb762f1bcf9419e29107953db639655f1dd411",
+  "outputs": [
+    {
+      "id": "game.enemies.voltking.charge#node.json",
+      "path": ".\\gen/out\\game.enemies.voltking.charge\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:6f8dfd360ac06bbab9d61beb526c1a5bd9fa8819a822ac27270c3b9a76f6dc8f",
+      "semantic_hash": "sha256:6f8dfd360ac06bbab9d61beb526c1a5bd9fa8819a822ac27270c3b9a76f6dc8f",
+      "producer": "game.enemies.voltking.charge",
+      "version": 1
+    }
+  ]
+}

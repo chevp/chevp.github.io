@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "items.oneup.bob",
+  "sheet": "bob.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 2,
+  "fps": 4,
+  "frameMs": 250,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  }
+}

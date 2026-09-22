@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.brick",
+  "path": ".\\gen/graph\\game\\blocks\\brick",
+  "input_hash": "sha256:948a4404eaab50af9ec2eb5b76971e69d6304da4627994728cb7069e6142a57f",
+  "derivation_hash": "sha256:a6b94e665ef4e8cfb6487b357c785684a39df53bfa71ac564d5115083278f756",
+  "outputs": [
+    {
+      "id": "game.blocks.brick#node.json",
+      "path": ".\\gen/out\\game.blocks.brick\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:b76da2bd92fa45c0a2af4c8a68497eaeae7b070f4121720e1bc5ba0a19f4a810",
+      "semantic_hash": "sha256:b76da2bd92fa45c0a2af4c8a68497eaeae7b070f4121720e1bc5ba0a19f4a810",
+      "producer": "game.blocks.brick",
+      "version": 1
+    }
+  ]
+}

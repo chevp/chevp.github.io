@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.blocks/1",
+  "id": "blocks",
+  "entries": [
+    "question",
+    "brick",
+    "coin_pop"
+  ]
+}

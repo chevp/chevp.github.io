@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.wisp.float",
+  "path": ".\\gen/graph\\game\\enemies\\wisp\\float",
+  "input_hash": "sha256:dbc313f3af1f4846457f0c8aa0bc991a5087c15e69fbf36af67035d203bc8ba4",
+  "derivation_hash": "sha256:7aca30fad2b6aeff35782aace5a696e8823bbd850e8ed91fdcfceab56f95b2eb",
+  "outputs": [
+    {
+      "id": "game.enemies.wisp.float#node.json",
+      "path": ".\\gen/out\\game.enemies.wisp.float\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:9e8b247ba842cd3c63062395254488f8ce930994f952b22ee706f12bc2eef4df",
+      "semantic_hash": "sha256:9e8b247ba842cd3c63062395254488f8ce930994f952b22ee706f12bc2eef4df",
+      "producer": "game.enemies.wisp.float",
+      "version": 1
+    }
+  ]
+}

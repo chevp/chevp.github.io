@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.spiky.curl",
+  "sheet": "curl.png",
+  "frame": {
+    "w": 16,
+    "h": 16
+  },
+  "frames": 3,
+  "fps": 14,
+  "frameMs": 71,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 16
+  },
+  "hitbox": {
+    "w": 14,
+    "h": 12
+  }
+}

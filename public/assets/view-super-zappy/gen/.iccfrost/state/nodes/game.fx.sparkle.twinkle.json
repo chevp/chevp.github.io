@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.sparkle.twinkle",
+  "path": ".\\gen/graph\\game\\fx\\sparkle\\twinkle",
+  "input_hash": "sha256:8024aa59fdaea0fccc416bf53df5da2a7a0870aae43aadb421efa269259f628d",
+  "derivation_hash": "sha256:fcc718f5ee383623736b6446ccb80d88dabb605cf2b0f0353be78aa28030fb12",
+  "outputs": [
+    {
+      "id": "game.fx.sparkle.twinkle#node.json",
+      "path": ".\\gen/out\\game.fx.sparkle.twinkle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:84bf48e8322e602ce0a7c498b19c1964751a3f94a38c9f013a977b2baef2f063",
+      "semantic_hash": "sha256:84bf48e8322e602ce0a7c498b19c1964751a3f94a38c9f013a977b2baef2f063",
+      "producer": "game.fx.sparkle.twinkle",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.zap",
+  "path": ".\\gen/graph\\game\\hero\\super\\zap",
+  "input_hash": "sha256:466a7dd4fcfff02e70c96f7917e722d9daba6cdc956113cdaf8c6960f10ba0b5",
+  "derivation_hash": "sha256:acae310f28d837aac2a5b1fa522b1bd95d1e2016986ba5afe3e2999f79d16a91",
+  "outputs": [
+    {
+      "id": "game.hero.super.zap#node.json",
+      "path": ".\\gen/out\\game.hero.super.zap\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:a298969755a297ca6a6bd7e9b7c4ff2d673fd54c35bb72138a06bdbad9867aa5",
+      "semantic_hash": "sha256:a298969755a297ca6a6bd7e9b7c4ff2d673fd54c35bb72138a06bdbad9867aa5",
+      "producer": "game.hero.super.zap",
+      "version": 1
+    }
+  ]
+}

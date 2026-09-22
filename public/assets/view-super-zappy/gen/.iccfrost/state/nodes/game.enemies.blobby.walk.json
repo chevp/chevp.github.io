@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.blobby.walk",
+  "path": ".\\gen/graph\\game\\enemies\\blobby\\walk",
+  "input_hash": "sha256:06b5938bd11c62f26b6a7c45acedef8350884e2ca5b69fc9b4f6efe32dda5b32",
+  "derivation_hash": "sha256:d2e3af39bac98885b7898e28a7249de3633ef2cd76647e55ee39b364b1fe07b3",
+  "outputs": [
+    {
+      "id": "game.enemies.blobby.walk#node.json",
+      "path": ".\\gen/out\\game.enemies.blobby.walk\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:816ada34f38d42894fa24535d906b6522dd004a4663e4965f1e8bf82e51c52a4",
+      "semantic_hash": "sha256:816ada34f38d42894fa24535d906b6522dd004a4663e4965f1e8bf82e51c52a4",
+      "producer": "game.enemies.blobby.walk",
+      "version": 1
+    }
+  ]
+}

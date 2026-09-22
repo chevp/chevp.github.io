@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.fx.splash.splash",
+  "path": ".\\gen/graph\\game\\fx\\splash\\splash",
+  "input_hash": "sha256:85e8d9755eba274261999e56d266963174e15c0d2d10bbe450751cc8a2cd8972",
+  "derivation_hash": "sha256:ca0e809b1fc80d9ded72264c492e88d287c8298b95b42fc159e867c0255aad52",
+  "outputs": [
+    {
+      "id": "game.fx.splash.splash#node.json",
+      "path": ".\\gen/out\\game.fx.splash.splash\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:79d393cb1fed6f45c03b80b2ecf2c071e9182ad1eb7e2e5b600b17080bc93c36",
+      "semantic_hash": "sha256:79d393cb1fed6f45c03b80b2ecf2c071e9182ad1eb7e2e5b600b17080bc93c36",
+      "producer": "game.fx.splash.splash",
+      "version": 1
+    }
+  ]
+}

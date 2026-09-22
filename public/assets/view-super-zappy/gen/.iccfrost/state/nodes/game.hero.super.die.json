@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.super.die",
+  "path": ".\\gen/graph\\game\\hero\\super\\die",
+  "input_hash": "sha256:39dbacc68cf5e7e5e395c8f257319302cfeafada319794b50e33f9c3d13a17e0",
+  "derivation_hash": "sha256:270f64f7c80b1edab3425377db04cde3850c3a47ebcb5540de6b7db6822a129c",
+  "outputs": [
+    {
+      "id": "game.hero.super.die#node.json",
+      "path": ".\\gen/out\\game.hero.super.die\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:0e67878d90bb4335a6305cc3bd4d219b12db15409fc0c45718d3bb85f6825df4",
+      "semantic_hash": "sha256:0e67878d90bb4335a6305cc3bd4d219b12db15409fc0c45718d3bb85f6825df4",
+      "producer": "game.hero.super.die",
+      "version": 1
+    }
+  ]
+}

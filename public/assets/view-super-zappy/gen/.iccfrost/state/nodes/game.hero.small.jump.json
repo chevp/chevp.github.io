@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.jump",
+  "path": ".\\gen/graph\\game\\hero\\small\\jump",
+  "input_hash": "sha256:5fa15bd1bb4c13185ae5fbbfb66aed49af9c70efe1bbab057019c169208b0d9c",
+  "derivation_hash": "sha256:91ba5fd58177d02e9f1b8c4169c90a944dfe95c6375633f591e25b71501345e2",
+  "outputs": [
+    {
+      "id": "game.hero.small.jump#node.json",
+      "path": ".\\gen/out\\game.hero.small.jump\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:4c3b44be2afae660186588187516947753cae1c6f57344a97d4cfad02a52b81b",
+      "semantic_hash": "sha256:4c3b44be2afae660186588187516947753cae1c6f57344a97d4cfad02a52b81b",
+      "producer": "game.hero.small.jump",
+      "version": 1
+    }
+  ]
+}

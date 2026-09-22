@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.hero.small.idle_tap",
+  "path": ".\\gen/graph\\game\\hero\\small\\idle_tap",
+  "input_hash": "sha256:367203752931fbb3beb0b204815a96bf4041eb2994ba84838f30efd97001d0d1",
+  "derivation_hash": "sha256:0c5148009547aeb71c946e462db71ce107badc534cd202c634a7642961048834",
+  "outputs": [
+    {
+      "id": "game.hero.small.idle_tap#node.json",
+      "path": ".\\gen/out\\game.hero.small.idle_tap\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:c3f4d98bd2c7de2a3c6835adcf2341d9da1ddccb1678c5f2527bf89519165eed",
+      "semantic_hash": "sha256:c3f4d98bd2c7de2a3c6835adcf2341d9da1ddccb1678c5f2527bf89519165eed",
+      "producer": "game.hero.small.idle_tap",
+      "version": 1
+    }
+  ]
+}

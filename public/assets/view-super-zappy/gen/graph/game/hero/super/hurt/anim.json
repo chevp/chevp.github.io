@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "hero.super.hurt",
+  "sheet": "hurt.png",
+  "frame": {
+    "w": 16,
+    "h": 24
+  },
+  "frames": 2,
+  "fps": 10,
+  "frameMs": 100,
+  "loop": true,
+  "origin": {
+    "x": 8,
+    "y": 24
+  },
+  "hitbox": {
+    "w": 10,
+    "h": 22
+  }
+}

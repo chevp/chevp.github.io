@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.brick.idle",
+  "path": ".\\gen/graph\\game\\blocks\\brick\\idle",
+  "input_hash": "sha256:e2bbdfeb9d454e1ec047d3d5bf3631db3d3ee414f761260f65515d18b09467dd",
+  "derivation_hash": "sha256:ebac3d6d81b1258103ff331e623ac415d1ab93d79e8b29a4c0c010024a7277e4",
+  "outputs": [
+    {
+      "id": "game.blocks.brick.idle#node.json",
+      "path": ".\\gen/out\\game.blocks.brick.idle\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:1428ce06f0e6ff8bc9e0f95fbad969a361e62e8e020688adc7dae52477af6a3e",
+      "semantic_hash": "sha256:1428ce06f0e6ff8bc9e0f95fbad969a361e62e8e020688adc7dae52477af6a3e",
+      "producer": "game.blocks.brick.idle",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "kind": "zappy.fx/1",
+  "id": "fx.zap",
+  "title": "Zap-Projektil",
+  "anims": [
+    "fly",
+    "hit"
+  ]
+}

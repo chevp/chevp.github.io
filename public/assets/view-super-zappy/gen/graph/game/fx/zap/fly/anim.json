@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.zap.fly",
+  "sheet": "fly.png",
+  "frame": {
+    "w": 8,
+    "h": 8
+  },
+  "frames": 4,
+  "fps": 16,
+  "frameMs": 62,
+  "loop": true,
+  "origin": {
+    "x": 4,
+    "y": 8
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.finn.swim",
+  "path": ".\\gen/graph\\game\\enemies\\finn\\swim",
+  "input_hash": "sha256:be3a82fc46679babfdf025c25c4b3daf25ad05d7687bca2506fe8d1ca78bc3f7",
+  "derivation_hash": "sha256:543e7fe4427a86268fced772ac10013e0b0241e57a9cfbbf115eeb5250c6d76d",
+  "outputs": [
+    {
+      "id": "game.enemies.finn.swim#node.json",
+      "path": ".\\gen/out\\game.enemies.finn.swim\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:02c51be37293316388c3d29ab13f5160262a92005f46ff63e87dc0122347d915",
+      "semantic_hash": "sha256:02c51be37293316388c3d29ab13f5160262a92005f46ff63e87dc0122347d915",
+      "producer": "game.enemies.finn.swim",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles",
+  "path": ".\\gen/graph\\game\\tiles",
+  "input_hash": "sha256:cbca6186c2df11536497fda5d819b2f2b331ad3add6cc473b7099c048939fd38",
+  "derivation_hash": "sha256:59bccf8cde17c477d2b3585db07a4c939f47ea737ece21bb0eec6afd22c66798",
+  "outputs": [
+    {
+      "id": "game.tiles#node.json",
+      "path": ".\\gen/out\\game.tiles\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:77567b6366add17cb2bbb6929db99280d500504115fdd0ca16e1583a01d51252",
+      "semantic_hash": "sha256:77567b6366add17cb2bbb6929db99280d500504115fdd0ca16e1583a01d51252",
+      "producer": "game.tiles",
+      "version": 1
+    }
+  ]
+}

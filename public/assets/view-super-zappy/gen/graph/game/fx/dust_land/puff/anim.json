@@ -1,0 +1,17 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "fx.dust_land.puff",
+  "sheet": "puff.png",
+  "frame": {
+    "w": 16,
+    "h": 8
+  },
+  "frames": 5,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": false,
+  "origin": {
+    "x": 8,
+    "y": 8
+  }
+}

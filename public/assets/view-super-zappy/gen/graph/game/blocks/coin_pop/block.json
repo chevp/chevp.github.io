@@ -1,0 +1,8 @@
+{
+  "kind": "zappy.block/1",
+  "id": "blocks.coin_pop",
+  "title": "Münze aus Block",
+  "anims": [
+    "pop"
+  ]
+}

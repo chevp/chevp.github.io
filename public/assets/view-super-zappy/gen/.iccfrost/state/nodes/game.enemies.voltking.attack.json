@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.enemies.voltking.attack",
+  "path": ".\\gen/graph\\game\\enemies\\voltking\\attack",
+  "input_hash": "sha256:770096ac3bfa7496881f87096d4bac95ab8b57db014778b3f68065861a69a749",
+  "derivation_hash": "sha256:843083c2b7a32e22d2be4aac2f80f650d3afbf8ec5a7522847207cd505960ea8",
+  "outputs": [
+    {
+      "id": "game.enemies.voltking.attack#node.json",
+      "path": ".\\gen/out\\game.enemies.voltking.attack\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:ef49fddc69be3a0e2a7c3157ae7699f48ee723b89d45efcd1b98e2a67fb265a9",
+      "semantic_hash": "sha256:ef49fddc69be3a0e2a7c3157ae7699f48ee723b89d45efcd1b98e2a67fb265a9",
+      "producer": "game.enemies.voltking.attack",
+      "version": 1
+    }
+  ]
+}

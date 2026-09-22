@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.blocks.brick.bump",
+  "path": ".\\gen/graph\\game\\blocks\\brick\\bump",
+  "input_hash": "sha256:1dc5083af39f977cad51f22f5ac575e3b3881c34a4a24db6ac1632ab833a427c",
+  "derivation_hash": "sha256:8b2c6177d5e369a6fb317b8f39e49fa7f3915928f0e01f741efc2a75bebd4806",
+  "outputs": [
+    {
+      "id": "game.blocks.brick.bump#node.json",
+      "path": ".\\gen/out\\game.blocks.brick.bump\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:7738d3f82d981bed15db57edc5975e91b409c12eaa55d5e0e64a7e1780e383ab",
+      "semantic_hash": "sha256:7738d3f82d981bed15db57edc5975e91b409c12eaa55d5e0e64a7e1780e383ab",
+      "producer": "game.blocks.brick.bump",
+      "version": 1
+    }
+  ]
+}

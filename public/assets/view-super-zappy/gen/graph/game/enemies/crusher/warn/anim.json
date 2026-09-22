@@ -1,0 +1,21 @@
+{
+  "kind": "zappy.anim/1",
+  "id": "enemies.crusher.warn",
+  "sheet": "warn.png",
+  "frame": {
+    "w": 32,
+    "h": 32
+  },
+  "frames": 3,
+  "fps": 12,
+  "frameMs": 83,
+  "loop": true,
+  "origin": {
+    "x": 16,
+    "y": 32
+  },
+  "hitbox": {
+    "w": 28,
+    "h": 28
+  }
+}

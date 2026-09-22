@@ -1,0 +1,18 @@
+{
+  "schema": "iccfrost.semantic.state/1",
+  "node": "game.tiles.cave.water",
+  "path": ".\\gen/graph\\game\\tiles\\cave\\water",
+  "input_hash": "sha256:c4ca8a04974cd0d232380e1e1dcb9a60b641464b9d59c102c60929ce7d9f0f8e",
+  "derivation_hash": "sha256:3a7ed09e658ac535281d16a1edd04e219a6314ab913467870fd68b7db8f9a7d7",
+  "outputs": [
+    {
+      "id": "game.tiles.cave.water#node.json",
+      "path": ".\\gen/out\\game.tiles.cave.water\\node.json",
+      "kind": "json",
+      "content_hash": "sha256:95f401136dcbacebcd8933c9941d3a73aae03c61ded94c36d96b86af0a22cded",
+      "semantic_hash": "sha256:95f401136dcbacebcd8933c9941d3a73aae03c61ded94c36d96b86af0a22cded",
+      "producer": "game.tiles.cave.water",
+      "version": 1
+    }
+  ]
+}
